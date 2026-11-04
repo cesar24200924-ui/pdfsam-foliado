@@ -139,7 +139,7 @@ class NuevasTest {
         List<String> n = foliarComprimido(new File(dir, "Expediente.tar.gz"), null, dir);
         assertTrue(n.contains("Expediente/acta.pdf"), n.toString());
         // en partes (.001, .002...)
-        correr(dir, "7z", "a", "-v20k", "partes.7z", "Expediente");
+        correr(dir, "7z", "a", "-mx0", "-v2k", "partes.7z", "Expediente");
         assertTrue(new File(dir, "partes.7z.002").isFile(), "se hizo en varias partes");
         List<String> p = foliarComprimido(new File(dir, "partes.7z.001"), null, dir);
         assertTrue(p.contains("Expediente/nota.txt"), p.toString());
