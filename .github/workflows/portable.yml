@@ -47,6 +47,29 @@ jobs:
           git archive --format=zip -o "entrega/PDFsam-Foliar-Indexar-codigo-fuente.zip" HEAD
           cd armar/PDFsam-Foliar-Indexar && 7z a -tzip "../../entrega/Manual-Foliar-Indexar-Girar.zip" Manual > /dev/null && cd ../..
           ls -la entrega
+      - name: Instalar WiX (para el instalador)
+        shell: bash
+        run: |
+          dotnet tool install --global wix --version 5.0.2
+          wix extension add -g WixToolset.Util.wixext/5.0.2 WixToolset.UI.wixext/5.0.2
+      - name: Armar el instalador
+        shell: bash
+        run: |
+          jpackage --type exe --app-image "armar/PDFsam-Foliar-Indexar" --dest instalador \
+            --name "PDFsam-Foliar-Indexar" --app-version 6.0.11 \
+            --description "PDFsam Basic con Foliar, Indexar PDF y Girar" \
+            --vendor "PDFsam Foliar Indexar" \
+            --icon pdfsam-basic/src/assembly/resources/pdfsam.ico \
+            --win-menu --win-menu-group "PDFsam Foliar Indexar" --win-shortcut --win-dir-chooser \
+            --win-upgrade-uuid 7b0f6c58-3f1e-4c6a-9a0e-5d2f1b7e9c41
+          ls -la instalador
+          cp instalador/*.exe "entrega/PDFsam-Foliar-Indexar-instalador.exe"
+      - name: Juntar todo en un ZIP
+        shell: bash
+        run: |
+          cd entrega
+          7z a -tzip "PDFsam-Foliar-Indexar-TODO.zip" "PDFsam-Foliar-Indexar-portable.zip" "PDFsam-Foliar-Indexar-instalador.exe" "PDFsam-Foliar-Indexar-codigo-fuente.zip" "Manual-Foliar-Indexar-Girar.zip" > /dev/null
+          ls -la
       - name: Publicar
         uses: softprops/action-gh-release@v2
         with:
