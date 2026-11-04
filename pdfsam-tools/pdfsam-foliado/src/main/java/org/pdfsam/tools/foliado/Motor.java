@@ -304,11 +304,15 @@ public final class Motor {
     public static final class Hoja {
         public final float ancho, alto;
         private final float a, b, c, d, e, f; // X = a*x + c*y + e ; Y = b*x + d*y + f
+        final PDPage pagina;
+        final int giro;
 
         public Hoja(PDPage p) {
+            pagina = p;
             PDRectangle r = p.getCropBox();
             float llx = r.getLowerLeftX(), lly = r.getLowerLeftY(), w = r.getWidth(), h = r.getHeight();
             int giro = ((p.getRotation() % 360) + 360) % 360;
+            this.giro = giro;
             if (giro == 90) {
                 ancho = h;
                 alto = w;
@@ -352,6 +356,11 @@ public final class Motor {
             return new float[] { a * x + c * y + e, b * x + d * y + f };
         }
 
+        /** La parte que gira de la matriz del texto (sin mover). */
+        float[] giroTexto() {
+            return new float[] { a, b, -c, -d };
+        }
+
         /** Matriz del texto: el renglón empieza en (x, y = línea base) y se lee derecho, como se ve. */
         Matrix matrizTexto(float x, float y) {
             float[] p = real(x, y);
@@ -379,6 +388,7 @@ public final class Motor {
                 if (!INTEGRADAS.contains(f) && archivo.isFile()) {
                     try {
                         r = PDType0Font.load(doc, archivo);
+                        Editables.recordar(r, archivo);
                     } catch (IOException | RuntimeException e) {
                         r = PDType1Font.HELVETICA(); // la letra no se pudo usar: se queda la básica
                     }
@@ -446,6 +456,10 @@ public final class Motor {
 
     private static void texto(PDPageContentStream cs, Hoja h, float x, float y, String t, PDFont letra,
             float tamano, Color color) throws IOException {
+        Editables ed = Editables.ACTUAL.get();
+        if (ed != null && ed.campo(h, x, y, t, letra, tamano, color)) {
+            return; // se puso como casilla que se puede cambiar en Adobe ("Rellenar y firmar")
+        }
         cs.beginText();
         cs.setFont(letra, tamano);
         cs.setNonStrokingColor(color);
@@ -530,13 +544,16 @@ public final class Motor {
         Letras letras = new Letras(doc);
         List<Integer> elegidas = hojasFoliadas(doc.getNumberOfPages(), o, paginas, porHoja);
         long total = o.inicio + elegidas.size() - 1;
-        for (int n = 0; n < elegidas.size(); n++) {
-            if (avance != null && n % 5 == 0) {
-                avance.accept(n, elegidas.size());
+        Editables.con(o.editable ? doc : null, "Folio", () -> {
+            for (int n = 0; n < elegidas.size(); n++) {
+                if (avance != null && n % 5 == 0) {
+                    avance.accept(n, elegidas.size());
+                }
+                int i = elegidas.get(n);
+                foliarHoja(doc, doc.getPage(i), o.inicio + n, total, o, porHoja == null ? null : porHoja.get(i),
+                        letras);
             }
-            int i = elegidas.get(n);
-            foliarHoja(doc, doc.getPage(i), o.inicio + n, total, o, porHoja == null ? null : porHoja.get(i), letras);
-        }
+        });
         if (avance != null) {
             avance.accept(elegidas.size(), elegidas.size());
         }
@@ -674,8 +691,25 @@ public final class Motor {
         return i > 0 ? nombre.substring(0, i) : nombre;
     }
 
+    /** Las 5 leyendas de Indexar, en este orden (para moverlas una por una). */
+    public static final String[] LEYENDAS = { "Arriba a la izquierda", "Abajo a la izquierda", "Arriba a la derecha",
+            "N\u00famero en letras", "Numeraci\u00f3n de abajo" };
+
+    /** Dónde quedó una leyenda en la hoja (como se ve, en puntos, y hacia abajo). */
+    public record Marco(int leyenda, float x0, float y0, float x1, float y1) {
+        public boolean contiene(double x, double y, double holgura) {
+            return x >= x0 - holgura && x <= x1 + holgura && y >= y0 - holgura && y <= y1 + holgura;
+        }
+    }
+
     public static void indexarHoja(PDDocument doc, PDPage p, long numero, long total, String nombreSinExt,
             OpcionesIndexar o, ReglaHoja cambios, Letras letras) throws IOException {
+        indexarHoja(doc, p, numero, total, nombreSinExt, o, cambios, letras, null);
+    }
+
+    /** marcos: si no es null, se anota dónde quedó cada leyenda (para agarrarlas con el ratón). */
+    public static void indexarHoja(PDDocument doc, PDPage p, long numero, long total, String nombreSinExt,
+            OpcionesIndexar o, ReglaHoja cambios, Letras letras, List<Marco> marcos) throws IOException {
         Color color = o.color;
         float tam = o.tamano;
         String fuente = o.fuente;
@@ -705,13 +739,20 @@ public final class Motor {
         Hoja h = new Hoja(p);
         float lateral = o.lateral, yArriba = o.vertical, yAbajo = h.alto - o.vertical;
         boolean caja = o.recuadro;
+        // cuánto se mueve cada leyenda: lo de todas las hojas + lo de esta hoja (sola) + lo de esta hoja (todas juntas)
+        float[] mx = new float[LEYENDAS.length], my = new float[LEYENDAS.length];
+        for (int k = 0; k < LEYENDAS.length; k++) {
+            mx[k] = dx + o.movX[k] + (cambios == null ? 0 : cambios.ldx[k]);
+            my[k] = dy + o.movY[k] + (cambios == null ? 0 : cambios.ldy[k]);
+        }
         try (PDPageContentStream cs = lienzo(doc, p)) {
             if (o.izqOn && !nulo(o.izqTexto).isBlank()) {
-                leyenda(cs, h, lateral + dx, yArriba + dy, limpiar(letra, o.izqTexto.trim()), letra, tam, color, caja);
+                leyenda(cs, h, lateral + mx[0], yArriba + my[0], limpiar(letra, o.izqTexto.trim()), letra, tam, color,
+                        caja, 0, marcos);
             }
             if (o.abajoIzqOn && !nulo(o.abajoIzqTexto).isBlank()) {
-                leyenda(cs, h, lateral + dx, yAbajo + dy, limpiar(letra, o.abajoIzqTexto.trim()), letra, tam, color,
-                        caja);
+                leyenda(cs, h, lateral + mx[1], yAbajo + my[1], limpiar(letra, o.abajoIzqTexto.trim()), letra, tam,
+                        color, caja, 1, marcos);
             }
             if (o.derOn) {
                 String parte = textoDerechoIndexar(nombreSinExt, o);
@@ -719,34 +760,37 @@ public final class Motor {
                 String t = ((parte.isEmpty() ? "" : parte) + (parte.isEmpty() || num.isEmpty() ? "" : " ") + num).trim();
                 if (!t.isEmpty()) {
                     t = limpiar(letra, t);
-                    leyenda(cs, h, h.ancho - lateral - anchoTexto(letra, t, tam) + dx, yArriba + dy, t, letra, tam,
-                            color, caja);
+                    leyenda(cs, h, h.ancho - lateral - anchoTexto(letra, t, tam) + mx[2], yArriba + my[2], t, letra,
+                            tam, color, caja, 2, marcos);
                 }
             }
             if (o.letrasOn) {
                 // el número de hoja en letras, justo debajo de la leyenda de arriba a la derecha
                 String t = limpiar(letra, (nulo(o.letrasTexto) + numeroALetras(numero)).trim());
-                leyenda(cs, h, h.ancho - lateral - anchoTexto(letra, t, tam) + dx,
-                        yArriba + tam * (caja ? 1.45f : 1.2f) + dy, t, letra, tam, color, caja);
+                leyenda(cs, h, h.ancho - lateral - anchoTexto(letra, t, tam) + mx[3],
+                        yArriba + tam * (caja ? 1.45f : 1.2f) + my[3], t, letra, tam, color, caja, 3, marcos);
             }
             if (o.extraOn) {
                 String t = limpiar(letra, formatoNumeracion(o.extraFormato, numero, total));
                 float x = "bottom_center".equals(o.extraPos) ?
                         (h.ancho - anchoTexto(letra, t, tam)) / 2 :
                         h.ancho - lateral - anchoTexto(letra, t, tam);
-                leyenda(cs, h, x + dx, yAbajo + dy, t, letra, tam, color, caja);
+                leyenda(cs, h, x + mx[4], yAbajo + my[4], t, letra, tam, color, caja, 4, marcos);
             }
         }
     }
 
     /** Una leyenda (y, si se pidió, su recuadro). y = línea base del renglón. */
     private static void leyenda(PDPageContentStream cs, Hoja h, float x, float y, String t, PDFont letra, float tam,
-            Color color, boolean caja) throws IOException {
+            Color color, boolean caja, int cual, List<Marco> marcos) throws IOException {
+        float w = anchoTexto(letra, t, tam), cap = altoMayusculas(letra) * tam;
         if (caja) {
-            float w = anchoTexto(letra, t, tam), cap = altoMayusculas(letra) * tam;
             recuadro(cs, h, x - 4, y - cap - 4, x + w + 4, y + tam * 0.25f + 3, color);
         }
         texto(cs, h, x, y, t, letra, tam, color);
+        if (marcos != null) {
+            marcos.add(new Marco(cual, x - 4, y - cap - 4, x + w + 4, y + tam * 0.25f + 3));
+        }
     }
 
     /**
@@ -803,14 +847,16 @@ public final class Motor {
             List<Integer> elegidas = hojasIndexadas(doc.getNumberOfPages(), o,
                     listaPaginasFlexible(o.paginas, doc.getNumberOfPages()), porHoja);
             int total = elegidas.size();
-            for (int n = 0; n < total; n++) {
-                if (avance != null && n % 5 == 0) {
-                    avance.accept(n, total);
+            Editables.con(o.editable ? doc : null, "Indice", () -> {
+                for (int n = 0; n < total; n++) {
+                    if (avance != null && n % 5 == 0) {
+                        avance.accept(n, total);
+                    }
+                    int i = elegidas.get(n);
+                    indexarHoja(doc, doc.getPage(i), n + 1, total, nombre, o, porHoja == null ? null : porHoja.get(i),
+                            letras);
                 }
-                int i = elegidas.get(n);
-                indexarHoja(doc, doc.getPage(i), n + 1, total, nombre, o, porHoja == null ? null : porHoja.get(i),
-                        letras);
-            }
+            });
             if (avance != null) {
                 avance.accept(total, total);
             }

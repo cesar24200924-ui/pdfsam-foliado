@@ -66,13 +66,20 @@ class IndexarPanel extends BorderPane {
     record Item(File origen, String relativa) {
         @Override
         public String toString() {
-            return relativa;
+            return Lote.nombreVisible(relativa);
         }
     }
 
+    /** Un comprimido (ZIP, RAR, 7z...) abierto en una carpeta temporal: sus PDF van a la lista y al guardar se arma
+     * "carpeta/Nombre.zip" con todo lo que traía (RAR no se puede crear con programas libres: va en ZIP). */
+    record Abierto(File archivo, Lote lote, String marcada) {
+    }
+
+    private final List<Abierto> abiertos = new ArrayList<>();
+
     private final List<Item> items = new ArrayList<>();
     private final ListView<Item> lista = new ListView<>();
-    private final Label lblArchivos = Controles.nota("Arrastre aquí PDF o carpetas (se incluyen las subcarpetas).");
+    private final Label lblArchivos = Controles.nota("Arrastre aquí PDF, carpetas o comprimidos (ZIP, RAR, 7z...).");
     private int actual = -1;
     /** contraseñas que ya dio el usuario (para la vista previa y al guardar) */
     private final Map<File, String> claves = new java.util.HashMap<>();
@@ -102,7 +109,15 @@ class IndexarPanel extends BorderPane {
     private final Controles.SelectorColor color;
     private final Spinner<Integer> tamano;
     private final CheckBox recuadro = new CheckBox("Con recuadro");
+    private final CheckBox editable = new CheckBox("Texto editable en Adobe (Rellenar y firmar)");
     private final Spinner<Integer> lateral, vertical, saltar;
+    /** Mover cada leyenda en todas las hojas (puntos), en el orden de Motor.LEYENDAS. */
+    @SuppressWarnings("unchecked")
+    private final Spinner<Integer>[] movX = new Spinner[Motor.LEYENDAS.length], movY = new Spinner[Motor.LEYENDAS.length];
+    /** Dónde quedó cada leyenda en la hoja que se ve (para agarrarlas con el ratón). */
+    private volatile List<Motor.Marco> marcos = List.of();
+    private volatile int marcosHoja = -1;
+    private Motor.Marco agarrada;
     private final TextField hojas = Ui.campo("");
     private final Button btnIndexar;
     private final VistaPrevia vista;
@@ -148,9 +163,14 @@ class IndexarPanel extends BorderPane {
         formatoPropio = Ui.campo(conocido == null ? d.extraFormato : "{pagina}/{total}");
         tamano = Controles.numero(6, 48, Math.round(d.tamano), r);
         recuadro.setSelected(d.recuadro);
+        editable.setSelected(d.editable);
         lateral = Controles.numero(0, 300, Math.round(d.lateral), r);
         vertical = Controles.numero(0, 300, Math.round(d.vertical), r);
         saltar = Controles.numero(0, 999, 0, r);
+        for (int k = 0; k < Motor.LEYENDAS.length; k++) {
+            movX[k] = Controles.numero(-2000, 2000, Math.round(d.movX[k]), r);
+            movY[k] = Controles.numero(-2000, 2000, Math.round(d.movY[k]), r);
+        }
         letra = new Controles.SelectorLetra(d.fuente, d.negrita, r);
         color = new Controles.SelectorColor(d.color, COLORES, r);
 
@@ -167,8 +187,14 @@ class IndexarPanel extends BorderPane {
                 recibir(List.of(f));
             }
         });
+        Button agregarComprimido = Ui.boton("Agregar ZIP / RAR / 7z", UniconsLine.FILE_ALT, () -> {
+            File f = Ui.elegirComprimido(this);
+            if (f != null) {
+                recibir(List.of(f));
+            }
+        });
         Button limpiar = Ui.boton("Limpiar", UniconsLine.TRASH_ALT, this::limpiar);
-        FlowPane fb = new FlowPane(4, 4, agregarPdf, agregarCarpeta, limpiar);
+        FlowPane fb = new FlowPane(4, 4, agregarPdf, agregarCarpeta, agregarComprimido, limpiar);
         lista.setPrefHeight(120);
         lista.getSelectionModel().selectedIndexProperty().addListener((o, a, b) -> {
             if (b != null && b.intValue() >= 0 && b.intValue() != actual) {
@@ -227,9 +253,32 @@ class IndexarPanel extends BorderPane {
         g3.add(Controles.conEtiqueta("Distancia de los lados", lateral), 0, 0);
         g3.add(Controles.conEtiqueta("Distancia de arriba y abajo", vertical), 1, 0);
         g3.add(Controles.conEtiqueta("Hojas sin leyendas al inicio", saltar), 0, 1);
-        VBox pMas = Controles.bloque(recuadro, g3, Controles.nota(
+        javafx.scene.layout.GridPane g4 = new javafx.scene.layout.GridPane();
+        g4.setHgap(6);
+        g4.setVgap(4);
+        g4.add(new Label("Leyenda"), 0, 0);
+        g4.add(new Label("→ Derecha (−izq.)"), 1, 0);
+        g4.add(new Label("↓ Abajo (−arriba)"), 2, 0);
+        for (int k = 0; k < Motor.LEYENDAS.length; k++) {
+            Label n = new Label(Motor.LEYENDAS[k]);
+            n.setWrapText(true);
+            g4.add(n, 0, k + 1);
+            g4.add(movX[k], 1, k + 1);
+            g4.add(movY[k], 2, k + 1);
+        }
+        Button aSuLugar = Ui.boton("Poner todas en su lugar", UniconsLine.REDO, () -> {
+            for (int k = 0; k < Motor.LEYENDAS.length; k++) {
+                movX[k].getValueFactory().setValue(0);
+                movY[k].getValueFactory().setValue(0);
+            }
+        });
+        VBox pMas = Controles.bloque(recuadro, editable, Controles.nota("Así, en Adobe (Acrobat o Reader) con \"Rellenar y firmar\" le da clic al texto y lo cambia. Se ve y se imprime igual."), g3, Controles.nota(
                 "Distancias en puntos (28 puntos ≈ 1 cm). Las hojas del inicio que se saltan no cuentan en la "
                         + "numeración: la primera hoja con leyendas es la 1."),
+                Controles.titulo("Mover cada leyenda por separado"), g4, aSuLugar,
+                Controles.nota("Esto mueve la leyenda en todas las hojas, sin mover las demás. También puede "
+                        + "agarrar una leyenda con el ratón en la vista previa y arrastrarla: al soltarla le pregunta "
+                        + "si es solo para esa hoja o para todas."),
                 Controles.titulo("Hojas a indexar"), hojas,
                 Controles.nota("Vacío = todas. Ej.: 3-50. Vale para todos los PDF de la lista."));
 
@@ -282,18 +331,32 @@ class IndexarPanel extends BorderPane {
         vista.raton(new VistaPrevia.Raton() {
             @Override
             public void clic(double fx, double fy) {
+                agarrada = leyendaEn(fx, fy);
             }
 
             @Override
             public void arrastre(double fx, double fy, double dx, double dy) {
-                if (editor.editando()) {
+                if (agarrada != null) {
+                    // el recuadro punteado muestra dónde quedará la leyenda agarrada
+                    float[] t = vista.tamanoHoja();
+                    Motor.Marco m = agarrada;
+                    double cx = (m.x0() + m.x1()) / 2 + dx, cy = (m.y0() + m.y1()) / 2 + dy;
+                    vista.marcaRecuadro(cx / t[0], cy / t[1], m.x1() - m.x0(), m.y1() - m.y0(),
+                            javafx.scene.paint.Color.web("#2b7de9"));
+                } else if (editor.editando()) {
                     vista.marcaFlecha(dx, dy);
                 }
             }
 
             @Override
             public void soltar(double fx, double fy, double dx, double dy) {
-                if (editor.editando() && editor.grupo.contains(vista.indice())) {
+                Motor.Marco m = agarrada;
+                agarrada = null;
+                if (m != null) {
+                    if (Math.abs(dx) >= 1 || Math.abs(dy) >= 1) {
+                        moverLeyenda(m.leyenda(), (float) dx, (float) dy);
+                    }
+                } else if (editor.editando() && editor.grupo.contains(vista.indice())) {
                     editor.mover((float) dx, (float) dy);
                 }
             }
@@ -330,7 +393,7 @@ class IndexarPanel extends BorderPane {
         }
         String marca = editor.reglas.containsKey(vista.indice()) ? "  ✎ personalizada" : "";
         vista.lblHoja.setText("Hoja " + (vista.indice() + 1) + " de " + vista.total() + marca);
-        vista.lblAyuda.setText("Vista previa (todavía no se guarda nada).  ·  " + items.get(actual).relativa());
+        vista.lblAyuda.setText("Vista previa (todavía no se guarda nada).  ·  " + Lote.nombreVisible(items.get(actual).relativa()));
     }
 
     // ------------------------------------------------------------ opciones
@@ -367,10 +430,15 @@ class IndexarPanel extends BorderPane {
         o.fuente = letra.ruta();
         o.negrita = letra.negritaEfectiva();
         o.recuadro = recuadro.isSelected();
+        o.editable = editable.isSelected();
         o.lateral = Controles.valor(lateral, 51);
         o.vertical = Controles.valor(vertical, 23);
         o.saltar = Controles.valor(saltar, 0);
         o.paginas = hojas.getText() == null ? "" : hojas.getText().trim();
+        for (int k = 0; k < Motor.LEYENDAS.length; k++) {
+            o.movX[k] = Controles.valor(movX[k], 0);
+            o.movY[k] = Controles.valor(movY[k], 0);
+        }
         return o;
     }
 
@@ -396,8 +464,13 @@ class IndexarPanel extends BorderPane {
         o.fuente = Config.texto("indexar.fuente", o.fuente);
         o.negrita = Config.si("indexar.negrita", o.negrita);
         o.recuadro = Config.si("indexar.recuadro", o.recuadro);
+        o.editable = Config.si("indexar.editable", false);
         o.lateral = Config.numero("indexar.lateral", o.lateral);
         o.vertical = Config.numero("indexar.vertical", o.vertical);
+        for (int k = 0; k < o.movX.length; k++) {
+            o.movX[k] = Config.numero("indexar.movX" + k, 0);
+            o.movY[k] = Config.numero("indexar.movY" + k, 0);
+        }
         return o;
     }
 
@@ -422,8 +495,13 @@ class IndexarPanel extends BorderPane {
         Config.poner("indexar.fuente", o.fuente);
         Config.poner("indexar.negrita", letra.negrita.isSelected());
         Config.poner("indexar.recuadro", o.recuadro);
+        Config.poner("indexar.editable", o.editable);
         Config.poner("indexar.lateral", o.lateral);
         Config.poner("indexar.vertical", o.vertical);
+        for (int k = 0; k < o.movX.length; k++) {
+            Config.poner("indexar.movX" + k, o.movX[k]);
+            Config.poner("indexar.movY" + k, o.movY[k]);
+        }
         Config.guardar();
     }
 
@@ -465,12 +543,115 @@ class IndexarPanel extends BorderPane {
         }
         long numero = pos + 1, total = elegidas.size();
         ReglaHoja regla = porHoja.get(i);
-        return (doc, hoja, letras) -> Motor.indexarHoja(doc, hoja, numero, total, nombre, o, regla, letras);
+        return (doc, hoja, letras) -> {
+            List<Motor.Marco> m = new ArrayList<>();
+            Motor.indexarHoja(doc, hoja, numero, total, nombre, o, regla, letras, m);
+            marcos = m;
+            marcosHoja = i;
+        };
+    }
+
+    /** La leyenda que está debajo del ratón (fx, fy = fracción de la hoja), o null. */
+    private Motor.Marco leyendaEn(double fx, double fy) {
+        if (!vista.hayPdf() || marcosHoja != vista.indice()) {
+            return null;
+        }
+        float[] t = vista.tamanoHoja();
+        double x = fx * t[0], y = fy * t[1];
+        Motor.Marco mejor = null;
+        for (Motor.Marco m : marcos) {
+            if (m.contiene(x, y, 4)) {
+                mejor = m;
+            }
+        }
+        return mejor;
+    }
+
+    /** Después de arrastrar UNA leyenda: solo en esta hoja o en todas. */
+    private void moverLeyenda(int cual, float dx, float dy) {
+        int r = Ui.elegir(this, "Mover \"" + Motor.LEYENDAS[cual] + "\"",
+                "¿La muevo solo en esta hoja o en todas las hojas? Las demás leyendas se quedan donde están.",
+                "Solo en esta hoja", "En todas las hojas");
+        if (r == 0) {
+            editor.moverLeyenda(vista.indice(), cual, dx, dy);
+        } else if (r == 1) {
+            movX[cual].getValueFactory().setValue(Controles.valor(movX[cual], 0) + Math.round(dx));
+            movY[cual].getValueFactory().setValue(Controles.valor(movY[cual], 0) + Math.round(dy));
+        } else {
+            refrescar();
+        }
     }
 
     // ------------------------------------------------------------ archivos
     void recibir(List<File> rutas) {
-        List<Item> nuevos = new ArrayList<>();
+        // los comprimidos (sueltos o dentro de las carpetas) se abren aparte, en segundo plano
+        List<File[]> comprimidos = new ArrayList<>(); // {archivo, carpeta base de la salida}
+        for (File r : rutas) {
+            if (r.isFile() && Comprimidos.es(r.getName())) {
+                comprimidos.add(new File[] { r.getAbsoluteFile(), null });
+            } else if (r.isDirectory()) {
+                Path carpeta = r.getAbsoluteFile().toPath();
+                Path base = carpeta.getParent() == null ? carpeta : carpeta.getParent();
+                try (Stream<Path> s = Files.walk(carpeta)) {
+                    s.filter(Files::isRegularFile).filter(p -> Comprimidos.es(p.getFileName().toString()))
+                            .sorted().forEach(p -> comprimidos.add(new File[] { p.toFile(), base.toFile() }));
+                } catch (IOException e) {
+                    // se ven abajo
+                }
+            }
+        }
+        if (!comprimidos.isEmpty()) {
+            abrirComprimidos(comprimidos, rutas.stream().filter(f -> !(f.isFile() && Comprimidos.es(f.getName())))
+                    .toList());
+            return;
+        }
+        agregar(rutas, List.of());
+    }
+
+    private void abrirComprimidos(List<File[]> comprimidos, List<File> resto) {
+        Ui.enSegundoPlano(this, "Abriendo comprimidos", false, p -> {
+            List<Item> nuevos = new ArrayList<>();
+            List<String> problemas = new ArrayList<>();
+            int k = 0;
+            for (File[] c : comprimidos) {
+                p.poner((double) k++ / comprimidos.size(), "Abriendo " + c[0].getName());
+                Lote L = new Lote(c[0]);
+                L.pide = (archivo, mala) -> Ui.enFx(() -> Ui.pedirClaveComprimido(this, archivo, mala));
+                try {
+                    L.preparar();
+                } catch (Exception e) {
+                    L.limpiar();
+                    problemas.add(c[0].getName() + ": " + Ui.textoError(e));
+                    continue;
+                }
+                String prefijo = c[1] == null ? "" :
+                        c[1].toPath().relativize(c[0].toPath().getParent()).toString().replace('\\', '/');
+                String marcada = (prefijo.isEmpty() ? "" : prefijo + "/") + Comprimidos.base(c[0].getName())
+                        + "_indexado.zip" + Lote.MARCA_ZIP;
+                abiertos.add(new Abierto(c[0], L, marcada));
+                for (String rel : L.procesables) {
+                    nuevos.add(new Item(L.raiz.resolve(rel).toFile(), marcada + "/" + rel.replace('\\', '/')));
+                }
+                for (Lote.Fallido f : L.fallidos) {
+                    problemas.add(c[0].getName() + " › " + f.visible() + ": " + f.mensaje);
+                }
+            }
+            return new Object[] { nuevos, problemas };
+        }, res -> {
+            @SuppressWarnings("unchecked")
+            List<Item> nuevos = (List<Item>) ((Object[]) res)[0];
+            @SuppressWarnings("unchecked")
+            List<String> problemas = (List<String>) ((Object[]) res)[1];
+            if (!problemas.isEmpty()) {
+                Ui.aviso(this, "Algunos comprimidos no se abrieron completos:\n\n" + String.join("\n",
+                        problemas.subList(0, Math.min(10, problemas.size()))));
+            }
+            agregar(resto, nuevos);
+        }, e -> Ui.error(this, Ui.textoError(e)));
+    }
+
+    private void agregar(List<File> rutas, List<Item> deComprimidos) {
+        List<Item> nuevos = new ArrayList<>(deComprimidos);
         for (File r : rutas) {
             if (r.isDirectory()) {
                 Path carpeta = r.getAbsoluteFile().toPath();
@@ -500,7 +681,7 @@ class IndexarPanel extends BorderPane {
             }
         }
         if (agregados == 0) {
-            if (!rutas.isEmpty() && nuevos.isEmpty()) {
+            if (nuevos.isEmpty()) {
                 Ui.aviso(this, "No se encontraron archivos PDF.");
             }
             return;
@@ -519,12 +700,16 @@ class IndexarPanel extends BorderPane {
         editor.setManaged(false);
         items.clear();
         claves.clear();
+        for (Abierto a : abiertos) {
+            a.lote().limpiar();
+        }
+        abiertos.clear();
         actual = -1;
         lista.getItems().clear();
         btnIndexar.setDisable(true);
         vista.cerrar();
         vista.lblAyuda.setText("Vista previa (todavía no se guarda nada).");
-        lblArchivos.setText("Arrastre aquí PDF o carpetas (se incluyen las subcarpetas).");
+        lblArchivos.setText("Arrastre aquí PDF, carpetas o comprimidos (ZIP, RAR, 7z...).");
         refrescar();
     }
 
@@ -572,8 +757,15 @@ class IndexarPanel extends BorderPane {
         }
         Path destino = carpeta.getAbsoluteFile().toPath().normalize();
         // nunca encima de los originales: la carpeta de salida no puede contener ningún original
+        List<File> originales = new ArrayList<>();
         for (Item it : items) {
-            if (it.origen().getAbsoluteFile().toPath().normalize().startsWith(destino)) {
+            originales.add(it.origen());
+        }
+        for (Abierto a : abiertos) {
+            originales.add(a.archivo());
+        }
+        for (File f : originales) {
+            if (f.getAbsoluteFile().toPath().normalize().startsWith(destino)) {
                 Ui.aviso(this, "Esa carpeta tiene adentro los PDF originales y se reemplazarían. Elija otra carpeta "
                         + "de salida (por ejemplo, una carpeta nueva).");
                 return;
@@ -606,7 +798,7 @@ class IndexarPanel extends BorderPane {
                 } catch (Motor.ErrorProtegido e) {
                     protegidos.add(it);
                 } catch (Exception e) {
-                    fallidos.add(it.relativa() + ": " + Ui.textoError(e));
+                    fallidos.add(Lote.nombreVisible(it.relativa()) + ": " + Ui.textoError(e));
                 }
             }
             p.poner(1, "");
@@ -623,9 +815,9 @@ class IndexarPanel extends BorderPane {
         List<Item> protegidos = (List<Item>) res[3];
         // los PDF con contraseña: se pide la contraseña de cada uno y se vuelven a intentar
         for (Item it : protegidos) {
-            String c = Ui.pedirClave(this, it.relativa(), "Si no la sabe, ese archivo no se indexa.");
+            String c = Ui.pedirClave(this, Lote.nombreVisible(it.relativa()), "Si no la sabe, ese archivo no se indexa.");
             if (c == null) {
-                fallidos.add(it.relativa() + ": tiene contraseña");
+                fallidos.add(Lote.nombreVisible(it.relativa()) + ": tiene contraseña");
                 continue;
             }
             try {
@@ -634,9 +826,57 @@ class IndexarPanel extends BorderPane {
                 salidas.add(salida);
                 hojas += Motor.contarHojas(salida, null);
             } catch (Exception e) {
-                fallidos.add(it.relativa() + ": " + Ui.textoError(e));
+                fallidos.add(Lote.nombreVisible(it.relativa()) + ": " + Ui.textoError(e));
             }
         }
+        List<Abierto> usados = new ArrayList<>();
+        for (Abierto a : abiertos) {
+            if (copia.stream().anyMatch(it -> it.relativa().startsWith(a.marcada() + "/"))) {
+                usados.add(a);
+            }
+        }
+        if (!usados.isEmpty()) {
+            // los comprimidos: se arma el ZIP con lo indexado y todo lo demás que traían
+            int hojasFin = hojas;
+            Ui.enSegundoPlano(this, "Armando los ZIP", false, p -> {
+                for (Abierto a : usados) {
+                    p.poner(-1, a.archivo().getName());
+                    armarZip(destino, a);
+                }
+                return null;
+            }, r -> resumen(salidas, fallidos, hojasFin, destino, true),
+                    e -> Ui.error(this, Ui.textoError(e)));
+            return;
+        }
+        resumen(salidas, fallidos, hojas, destino, false);
+    }
+
+    /** destino/…/Nombre_indexado.zip con lo indexado y, tal cual, todo lo demás que traía el comprimido. */
+    private static void armarZip(Path destino, Abierto a) throws IOException {
+        Path m = destino.resolve(a.marcada());
+        Lote L = a.lote();
+        Files.createDirectories(m);
+        for (String c : L.carpetas) {
+            Files.createDirectories(m.resolve(c));
+        }
+        for (String rel : L.archivos) {
+            Path t = m.resolve(rel);
+            if (!Files.exists(t)) {
+                Lote.copiar(L.raiz.resolve(rel), t);
+            }
+        }
+        Lote.cerrarZipsInternos(m);
+        String n = m.getFileName().toString();
+        String zip = n.substring(0, n.length() - Lote.MARCA_ZIP.length());
+        Path fin = m.resolveSibling(zip);
+        for (int i = 2; Files.exists(fin); i++) {
+            fin = m.resolveSibling(zip.substring(0, zip.length() - 4) + " (" + i + ").zip");
+        }
+        Lote.comprimirCarpeta(m, fin);
+        Lote.borrar(m);
+    }
+
+    private void resumen(List<File> salidas, List<String> fallidos, int hojas, Path destino, boolean conZip) {
         StringBuilder d = new StringBuilder(salidas.size() + " archivos · " + hojas + " hojas indexadas");
         if (!fallidos.isEmpty()) {
             d.append("\n\nNo se pudieron procesar:\n");
@@ -644,6 +884,11 @@ class IndexarPanel extends BorderPane {
                 d.append(fallidos.get(i)).append('\n');
             }
         }
-        Ui.terminado(this, salidas.size() == 1 ? salidas.get(0) : destino.toFile(), "PDF indexados", d.toString());
+        if (conZip) {
+            d.append("\n\nLo que venía en comprimidos (ZIP, RAR, 7z...) quedó en un ZIP con el mismo nombre y "
+                    + "\"_indexado\" al final, con todas sus carpetas y archivos.");
+        }
+        Ui.terminado(this, salidas.size() == 1 && !conZip ? salidas.get(0) : destino.toFile(), "PDF indexados",
+                d.toString());
     }
 }

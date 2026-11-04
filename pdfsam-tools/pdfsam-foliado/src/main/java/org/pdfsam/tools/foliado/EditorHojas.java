@@ -302,11 +302,22 @@ class EditorHojas extends VBox {
             if (dx == null) {
                 r.dx = 0;
                 r.dy = 0;
+                java.util.Arrays.fill(r.ldx, 0);
+                java.util.Arrays.fill(r.ldy, 0);
             } else {
                 r.dx += dx;
                 r.dy += dy;
             }
         }
+        alCambiar.run();
+    }
+
+    /** Mueve UNA leyenda (Indexar) solo en esta hoja; las demás se quedan quietas. */
+    void moverLeyenda(int hoja, int cual, float dx, float dy) {
+        ReglaHoja r = reglas.computeIfAbsent(hoja, k -> new ReglaHoja());
+        r.ldx[cual] += dx;
+        r.ldy[cual] += dy;
+        mostrarLista();
         alCambiar.run();
     }
 

@@ -23,6 +23,8 @@ public class ReglaHoja {
     public String fuente;
     public Boolean negrita;
     public Boolean recuadro;
+    /** Cuánto se mueve cada leyenda sola en esta hoja (Indexar; orden de Motor.LEYENDAS). */
+    public float[] ldx = new float[5], ldy = new float[5];
 
     public ReglaHoja copia() {
         ReglaHoja r = new ReglaHoja();
@@ -34,6 +36,8 @@ public class ReglaHoja {
         r.fuente = fuente;
         r.negrita = negrita;
         r.recuadro = recuadro;
+        r.ldx = ldx.clone();
+        r.ldy = ldy.clone();
         return r;
     }
 }

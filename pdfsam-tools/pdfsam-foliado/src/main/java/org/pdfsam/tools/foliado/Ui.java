@@ -127,6 +127,48 @@ final class Ui {
         return d.showAndWait().map(String::trim).filter(s -> !s.isEmpty()).orElse(null);
     }
 
+    /** La contraseña de un comprimido (RAR, 7z, ZIP...). null = no la sabe. */
+    static String pedirClaveComprimido(Node n, String archivo, boolean incorrecta) {
+        Dialog<String> d = new Dialog<>();
+        preparar(d, n, "Contraseña");
+        d.setHeaderText("Este archivo comprimido tiene contraseña:\n" + archivo);
+        PasswordField campo = new PasswordField();
+        campo.setPromptText("Escriba la contraseña");
+        VBox caja = new VBox(8);
+        if (incorrecta) {
+            Label mal = new Label("La contraseña no es correcta. Pruebe otra vez.");
+            mal.setStyle("-fx-text-fill: #d32f2f; -fx-font-weight: bold;");
+            caja.getChildren().add(mal);
+        }
+        Label nota = new Label("Si no la sabe, toque Cancelar: el archivo se copia tal cual, sin abrirlo.");
+        nota.setWrapText(true);
+        caja.getChildren().addAll(new Label("Contraseña:"), campo, nota);
+        caja.setPadding(new Insets(10));
+        d.getDialogPane().setContent(caja);
+        ButtonType ok = new ButtonType("Aceptar", ButtonBar.ButtonData.OK_DONE);
+        d.getDialogPane().getButtonTypes().addAll(ok, ButtonType.CANCEL);
+        d.setResultConverter(b -> b == ok ? campo.getText() : null);
+        Platform.runLater(campo::requestFocus);
+        return d.showAndWait().filter(t -> !t.isEmpty()).orElse(null);
+    }
+
+    /** Hace algo en la pantalla y espera la respuesta (para preguntar desde un trabajo en segundo plano). */
+    static <T> T enFx(java.util.function.Supplier<T> que) {
+        if (Platform.isFxApplicationThread()) {
+            return que.get();
+        }
+        java.util.concurrent.FutureTask<T> t = new java.util.concurrent.FutureTask<>(que::get);
+        Platform.runLater(t);
+        try {
+            return t.get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return null;
+        } catch (java.util.concurrent.ExecutionException e) {
+            return null;
+        }
+    }
+
     static String pedirClave(Node n, String archivo, String nota) {
         Dialog<String> d = new Dialog<>();
         preparar(d, n, "Contraseña");
@@ -177,10 +219,12 @@ final class Ui {
         return r;
     }
 
-    static File elegirZip(Node n) {
+    static File elegirComprimido(Node n) {
         FileChooser fc = new FileChooser();
-        fc.setTitle("Elegir ZIP");
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("ZIP", "*.zip", "*.ZIP"));
+        fc.setTitle("Elegir archivo comprimido (ZIP, RAR, 7z...)");
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Comprimidos (ZIP, RAR, 7z, TAR, GZ...)",
+                Comprimidos.patrones()));
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Todos los archivos", "*.*"));
         fc.setInitialDirectory(inicio(null));
         File f = fc.showOpenDialog(ventana(n));
         if (f != null) {

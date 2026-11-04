@@ -72,7 +72,7 @@ import java.util.concurrent.Executors;
  * <li>Arrastrar una hoja: cambiarla de lugar. Doble clic: verla en grande.</li>
  * <li>Insertar otro PDF u hoja en blanco, guardar solo las elegidas como PDF nuevo.</li>
  * <li>Deshacer / Rehacer (Ctrl + Z / Ctrl + Y). Supr: quitar las elegidas.</li>
- * <li>Girar una carpeta o un ZIP completo, respetando las subcarpetas.</li>
+ * <li>Girar una carpeta o un comprimido (ZIP, RAR, 7z...) completo, respetando las subcarpetas.</li>
  * </ul>
  * El PDF original nunca se modifica: se guarda una copia.
  */
@@ -140,7 +140,7 @@ class GirarPanel extends BorderPane {
 
         // ---------- barra de arriba
         Button elegir = Ui.boton("Elegir PDF", UniconsLine.FILE_ALT, this::elegir);
-        Button lote = Ui.boton("Girar una carpeta o ZIP", UniconsLine.FOLDER, () -> {
+        Button lote = Ui.boton("Girar una carpeta o comprimido", UniconsLine.FOLDER, () -> {
         });
         ContextMenu menu = new ContextMenu();
         MenuItem mc = new MenuItem("Elegir carpeta");
@@ -150,9 +150,9 @@ class GirarPanel extends BorderPane {
                 girarLote(f);
             }
         });
-        MenuItem mz = new MenuItem("Elegir ZIP");
+        MenuItem mz = new MenuItem("Elegir comprimido (ZIP, RAR, 7z...)");
         mz.setOnAction(e -> {
-            File f = Ui.elegirZip(this);
+            File f = Ui.elegirComprimido(this);
             if (f != null) {
                 girarLote(f);
             }
@@ -210,7 +210,7 @@ class GirarPanel extends BorderPane {
         t1.setStyle("-fx-font-size: 1.25em; -fx-font-weight: bold;");
         Label t2 = new Label("O elíjalo con el botón. Verá todas sus hojas en miniatura.");
         Button bElegir = Ui.boton("Elegir PDF", UniconsLine.FILE_ALT, this::elegir);
-        Button bLote = Ui.boton("Girar una carpeta o ZIP", UniconsLine.FOLDER,
+        Button bLote = Ui.boton("Girar una carpeta o comprimido", UniconsLine.FOLDER,
                 () -> menu.show(lote, Side.BOTTOM, 0, 0));
         HBox bz = new HBox(8, bElegir, bLote);
         bz.setAlignment(Pos.CENTER);
@@ -256,7 +256,7 @@ class GirarPanel extends BorderPane {
         Button sQuitar = conPdf(Ui.boton("Quitar seleccionadas", UniconsLine.TRASH_ALT, this::quitarSeleccion));
         sQuitar.setStyle("-fx-text-fill: #e05252;");
         Button sExtraer = conPdf(Ui.boton("Guardar selección como PDF", UniconsLine.FILE_EXPORT, this::extraer));
-        Button sLote = Ui.boton("Girar una carpeta o ZIP", UniconsLine.FOLDER, () -> menu.show(lote, Side.BOTTOM, 0, 0));
+        Button sLote = Ui.boton("Girar una carpeta o comprimido", UniconsLine.FOLDER, () -> menu.show(lote, Side.BOTTOM, 0, 0));
         for (Button b : List.of(sDer, sIzq, sQuitar, sExtraer, sLote)) {
             b.setMaxWidth(Double.MAX_VALUE);
         }
@@ -333,7 +333,7 @@ class GirarPanel extends BorderPane {
             return;
         }
         File primero = rutas.get(0);
-        if (rutas.size() == 1 && (primero.isDirectory() || primero.getName().toLowerCase().endsWith(".zip"))) {
+        if (rutas.size() == 1 && (primero.isDirectory() || Comprimidos.es(primero.getName()))) {
             girarLote(primero);
             return;
         }
@@ -1135,7 +1135,7 @@ class GirarPanel extends BorderPane {
         if (w != null) {
             v.initOwner(w);
         }
-        v.setTitle("Girar una carpeta o ZIP");
+        v.setTitle("Girar una carpeta o comprimido");
         Label t = new Label("Se giran TODAS las hojas de todos los PDF.");
         t.setStyle("-fx-font-weight: bold;");
         Label nombre = new Label(origen.getName());

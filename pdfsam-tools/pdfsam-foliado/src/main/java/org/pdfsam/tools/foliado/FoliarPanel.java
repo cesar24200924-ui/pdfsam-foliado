@@ -41,7 +41,7 @@ import java.util.Map;
  * Foliar: numeración tipo folio (Folio 001, 002…) en la esquina que se elija o en cualquier lugar (clic o arrastrar
  * en la vista previa). Color libre, letras de la computadora, y cada hoja se folia en la misma esquina tal como se
  * LEE (aunque la hoja esté girada o sea de otro tamaño). La vista previa usa exactamente la misma función que al
- * guardar. También para carpetas o ZIP completos, con numeración continua (expediente).
+ * guardar. También para carpetas o comprimidos completos, con numeración continua (expediente).
  */
 class FoliarPanel extends BorderPane {
     private static final String[][] COLORES = { { "Rojo", "#bf0000" }, { "Negro", "#000000" }, { "Azul", "#0d33a6" } };
@@ -67,6 +67,7 @@ class FoliarPanel extends BorderPane {
     private final Controles.SelectorColor color;
     private final Controles.SelectorLetra letra;
     private final CheckBox recuadro = new CheckBox("Con recuadro");
+    private final CheckBox editable = new CheckBox("Texto editable en Adobe (Rellenar y firmar)");
     private final TextField hojas = Ui.campo("");
     private final Button btnFoliar;
     private final VistaPrevia vista;
@@ -88,11 +89,12 @@ class FoliarPanel extends BorderPane {
         enLetras.setSelected(Config.si("foliar.enLetras", false));
         conNumeros.setSelected(Config.si("foliar.conNumeros", true));
         recuadro.setSelected(Config.si("foliar.recuadro", false));
+        editable.setSelected(Config.si("foliar.editable", false));
 
         // ---------- 1. archivo
         Button elegir = Ui.boton("Elegir PDF", UniconsLine.FILE_ALT, this::elegir);
         elegir.setMaxWidth(Double.MAX_VALUE);
-        Button carpeta = Ui.boton("Foliar una carpeta o ZIP", UniconsLine.FOLDER, () -> {
+        Button carpeta = Ui.boton("Foliar una carpeta o comprimido", UniconsLine.FOLDER, () -> {
         });
         carpeta.setMaxWidth(Double.MAX_VALUE);
         ContextMenu menu = new ContextMenu();
@@ -103,9 +105,9 @@ class FoliarPanel extends BorderPane {
                 lote(f);
             }
         });
-        MenuItem mz = new MenuItem("Elegir ZIP");
+        MenuItem mz = new MenuItem("Elegir comprimido (ZIP, RAR, 7z...)");
         mz.setOnAction(e -> {
-            File f = Ui.elegirZip(this);
+            File f = Ui.elegirComprimido(this);
             if (f != null) {
                 lote(f);
             }
@@ -114,7 +116,7 @@ class FoliarPanel extends BorderPane {
         carpeta.setOnAction(e -> menu.show(carpeta, Side.BOTTOM, 0, 0));
         lblArchivo.setWrapText(true);
         VBox pArchivo = Controles.bloque(elegir, carpeta, lblArchivo,
-                Controles.nota("También puede arrastrar el PDF, una carpeta o un ZIP a la vista previa."));
+                Controles.nota("También puede arrastrar el PDF, una carpeta o un comprimido (ZIP, RAR, 7z...) a la vista previa."));
 
         // ---------- 2. texto
         GridPane g = new GridPane();
@@ -188,7 +190,7 @@ class FoliarPanel extends BorderPane {
         }
         g3.add(Controles.conEtiqueta("Distancia del borde", margen), 0, 0);
         g3.add(Controles.conEtiqueta("Hojas sin folio al inicio", saltar), 1, 0);
-        VBox pMas = Controles.bloque(recuadro, g3);
+        VBox pMas = Controles.bloque(recuadro, g3, editable, Controles.nota("Así, en Adobe (Acrobat o Reader) con \"Rellenar y firmar\" le da clic al texto y lo cambia. Se ve y se imprime igual."));
         VBox pHojas = Controles.bloque(hojas, Controles.nota("Vacío = todas. Ej.: 3-50"));
 
         VBox opciones = new VBox(Style.DEFAULT_SPACING);
@@ -311,6 +313,7 @@ class FoliarPanel extends BorderPane {
         o.textoLetras = textoLetras.getText();
         o.conNumeros = conNumeros.isSelected();
         o.recuadro = recuadro.isSelected();
+        o.editable = editable.isSelected();
         String pos = posicion.getSelectedToggle() == null ? "sup_der" :
                 String.valueOf(posicion.getSelectedToggle().getUserData());
         o.libre = "libre".equals(pos);
@@ -341,6 +344,7 @@ class FoliarPanel extends BorderPane {
         Config.poner("foliar.textoLetras", o.textoLetras);
         Config.poner("foliar.conNumeros", o.conNumeros);
         Config.poner("foliar.recuadro", o.recuadro);
+        Config.poner("foliar.editable", o.editable);
         Config.poner("foliar.posicion", o.libre ? "libre" : o.posicion);
         Config.poner("foliar.libreX", o.libreX);
         Config.poner("foliar.libreY", o.libreY);
@@ -399,9 +403,9 @@ class FoliarPanel extends BorderPane {
             return;
         }
         File primero = rutas.get(0);
-        if (rutas.size() == 1 && (primero.isDirectory() || primero.getName().toLowerCase().endsWith(".zip"))) {
+        if (rutas.size() == 1 && (primero.isDirectory() || Comprimidos.es(primero.getName()))) {
             if (Ui.pregunta(this, "¿Foliar todos los PDF de \"" + primero.getName() + "\"?\n\n"
-                    + "Se respetan las carpetas y subcarpetas, y el resultado se guarda aparte.", "Foliar una carpeta o ZIP")) {
+                    + "Se respetan las carpetas y subcarpetas, y el resultado se guarda aparte.", "Foliar una carpeta o comprimido")) {
                 lote(primero);
             }
             return;
@@ -409,7 +413,7 @@ class FoliarPanel extends BorderPane {
         File pdf = rutas.stream().filter(f -> f.isFile() && f.getName().toLowerCase().endsWith(".pdf")).findFirst()
                 .orElse(null);
         if (pdf == null) {
-            Ui.aviso(this, "Eso no es un PDF. Elija un archivo .pdf, una carpeta o un ZIP.");
+            Ui.aviso(this, "Eso no es un PDF. Elija un archivo .pdf, una carpeta o un comprimido (ZIP, RAR, 7z...).");
             return;
         }
         String c = null;

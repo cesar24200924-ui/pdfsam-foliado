@@ -40,4 +40,10 @@ public class OpcionesIndexar {
     public float vertical = 0.80f * Motor.CM;
     public int saltar = 0;
     public String paginas = "";
+    /** El texto queda como casilla de formulario: se puede cambiar en Adobe con "Rellenar y firmar". */
+    public boolean editable = false;
+    /** Cuánto se mueve cada leyenda en TODAS las hojas (puntos; + a la derecha / + hacia abajo), en el orden de
+     * Motor.LEYENDAS. */
+    public float[] movX = new float[5];
+    public float[] movY = new float[5];
 }
