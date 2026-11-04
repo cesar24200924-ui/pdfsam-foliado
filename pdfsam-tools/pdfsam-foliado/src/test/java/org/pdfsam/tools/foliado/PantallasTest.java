@@ -126,4 +126,21 @@ class PantallasTest {
         Thread.sleep(2500);
         foto(s, "pantalla_indexar.png");
     }
+
+    @Test
+    void girar() throws Exception {
+        File dir = Files.createTempDirectory("pp").toFile();
+        File pdf = MotorTest.pdfDePrueba(dir, "acta.pdf");
+        GirarPanel panel = enFx(GirarPanel::new);
+        Scene s = enFx(() -> escena(panel));
+        foto(s, "pantalla_girar.png");
+        enFx(() -> {
+            panel.recibir(List.of(pdf));
+            return null;
+        });
+        Thread.sleep(1500);
+        foto(s, "pantalla_girar.png");
+        Thread.sleep(3000);
+        foto(s, "pantalla_girar.png");
+    }
 }

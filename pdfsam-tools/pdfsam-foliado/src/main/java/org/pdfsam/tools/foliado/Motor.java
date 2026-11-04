@@ -16,6 +16,7 @@ import org.sejda.sambox.output.WriteOption;
 import org.sejda.sambox.pdmodel.PDDocument;
 import org.sejda.sambox.pdmodel.PDPage;
 import org.sejda.sambox.pdmodel.PDPageContentStream;
+import org.sejda.sambox.pdmodel.PDPageTree;
 import org.sejda.sambox.pdmodel.common.PDRectangle;
 import org.sejda.sambox.pdmodel.encryption.InvalidPasswordException;
 import org.sejda.sambox.pdmodel.font.PDFont;
@@ -750,6 +751,73 @@ public final class Motor {
             }
             if (avance != null) {
                 avance.accept(total, total);
+            }
+            guardar(doc, salida);
+        }
+    }
+
+    // ------------------------------------------------------------------ girar y ordenar
+    /** Una hoja en la pantalla de Girar: de qué hoja del original viene y cuánto se giró (0, 90, 180, 270). */
+    public record HojaGirada(int origen, int giro) {
+    }
+
+    private static final COSName[] HEREDABLES = { COSName.RESOURCES, COSName.MEDIA_BOX, COSName.CROP_BOX,
+            COSName.ROTATE };
+
+    /**
+     * Guarda el PDF con las hojas en el orden de 'hojas' y con su giro. Las hojas que no están en la lista no se
+     * guardan.
+     */
+    public static void girarYOrdenar(File entrada, File salida, String clave, List<HojaGirada> hojas,
+            BiConsumer<Integer, Integer> avance) throws IOException {
+        try (PDDocument doc = abrir(entrada, clave)) {
+            int total = doc.getNumberOfPages();
+            List<PDPage> originales = new ArrayList<>();
+            for (int i = 0; i < total; i++) {
+                originales.add(doc.getPage(i));
+            }
+            boolean mismoOrden = hojas.size() == total;
+            for (int k = 0; mismoOrden && k < total; k++) {
+                mismoOrden = hojas.get(k).origen() == k;
+            }
+            if (!mismoOrden) {
+                // lo que la hoja heredaba de las carpetas del PDF se le pone a ella misma, así no se pierde al moverla
+                for (PDPage p : originales) {
+                    for (COSName clave2 : HEREDABLES) {
+                        if (p.getCOSObject().getItem(clave2) == null) {
+                            COSBase v = PDPageTree.getInheritableAttribute(p.getCOSObject(), clave2);
+                            if (v != null) {
+                                p.getCOSObject().setItem(clave2, v);
+                            }
+                        }
+                    }
+                }
+                for (PDPage p : originales) {
+                    doc.getPages().remove(p);
+                }
+                for (HojaGirada h : hojas) {
+                    doc.getPages().add(originales.get(h.origen()));
+                }
+            }
+            int n = 0;
+            for (HojaGirada h : hojas) {
+                if (h.giro() % 360 != 0) {
+                    PDPage p = originales.get(h.origen());
+                    p.setRotation((((p.getRotation() + h.giro()) % 360) + 360) % 360);
+                }
+                if (avance != null && ++n % 20 == 0) {
+                    avance.accept(n, hojas.size());
+                }
+            }
+            guardar(doc, salida);
+        }
+    }
+
+    /** Gira TODAS las hojas (para carpetas y ZIP). grados: 90, -90 o 180. */
+    public static void girarTodo(File entrada, File salida, String clave, int grados) throws IOException {
+        try (PDDocument doc = abrir(entrada, clave)) {
+            for (PDPage p : doc.getPages()) {
+                p.setRotation((((p.getRotation() + grados) % 360) + 360) % 360);
             }
             guardar(doc, salida);
         }

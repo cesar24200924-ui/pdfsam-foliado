@@ -35,5 +35,6 @@ module org.pdfsam.tools.rotate {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.unicons;
 
-    provides Tool with RotateTool;
+    // Reemplazado por "Girar" (con miniaturas) en pdfsam-foliado
+    // provides Tool with RotateTool;
 }

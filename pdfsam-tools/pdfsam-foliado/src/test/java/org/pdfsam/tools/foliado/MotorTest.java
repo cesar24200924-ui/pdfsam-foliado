@@ -320,4 +320,32 @@ class MotorTest {
         // los originales no cambiaron
         assertFalse(texto(new File(origen, "uno.pdf")).contains("Folio"));
     }
+
+    @Test
+    void girarYOrdenar() throws Exception {
+        File dir = Files.createTempDirectory("pg").toFile();
+        File pdf = pdfDePrueba(dir, "a.pdf");
+        File salida = new File(dir, "girado.pdf");
+        // nuevo orden: 3, 1, 2, 5, 4 ; la 1 girada a la derecha, la 5 volteada
+        Motor.girarYOrdenar(pdf, salida, null, List.of(new Motor.HojaGirada(2, 0), new Motor.HojaGirada(0, 90),
+                new Motor.HojaGirada(1, 0), new Motor.HojaGirada(4, 180), new Motor.HojaGirada(3, 270)), null);
+        try (PDDocument d = Motor.abrir(salida, null)) {
+            assertEquals(5, d.getNumberOfPages());
+            assertEquals(270, d.getPage(0).getRotation()); // la hoja 3 ya tenía 270
+            assertEquals(90, d.getPage(1).getRotation()); // hoja 1: 0 + 90
+            assertEquals(90, d.getPage(2).getRotation()); // hoja 2: ya tenía 90
+            assertEquals(180, d.getPage(3).getRotation()); // hoja 5: 0 + 180
+            assertEquals(90, d.getPage(4).getRotation()); // hoja 4: 180 + 270
+            String t = new PDFTextStripper().getText(d);
+            assertTrue(t.indexOf("HOJA 3") < t.indexOf("HOJA 1") && t.indexOf("HOJA 1") < t.indexOf("HOJA 2"), t);
+        }
+        imagenes(salida, "girar_ordenado");
+        // solo girar (mismo orden)
+        File s2 = new File(dir, "g2.pdf");
+        Motor.girarTodo(pdf, s2, null, -90);
+        try (PDDocument d = Motor.abrir(s2, null)) {
+            assertEquals(270, d.getPage(0).getRotation());
+            assertEquals(0, d.getPage(1).getRotation());
+        }
+    }
 }

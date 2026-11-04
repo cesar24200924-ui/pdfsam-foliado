@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>Manual — Foliar e Indexar PDF (PDFsam)</title>
+<title>Manual — Foliar, Indexar y Girar PDF (PDFsam)</title>
 <style>
   body { font-family: "Segoe UI", Arial, sans-serif; max-width: 900px; margin: 30px auto; padding: 0 20px; color: #222; line-height: 1.55; }
   h1 { color: #b00000; border-bottom: 3px solid #b00000; padding-bottom: 6px; }
@@ -21,9 +21,9 @@
 </head>
 <body>
 
-<h1>Manual de Foliar e Indexar PDF</h1>
-<p>Esta versión de <b>PDFsam Basic</b> trae dos herramientas nuevas: <b>Foliar</b> y <b>Indexar PDF</b>.
-Las dos tienen <b>vista previa real</b>: lo que ve en pantalla es exactamente lo que queda en el PDF, y se actualiza solo cada vez que cambia una opción.
+<h1>Manual de Foliar, Indexar y Girar PDF</h1>
+<p>Esta versión de <b>PDFsam Basic</b> trae dos herramientas nuevas, <b>Foliar</b> e <b>Indexar PDF</b>, y un <b>Girar</b> nuevo, con miniaturas.
+Todas tienen <b>vista previa real</b>: lo que ve en pantalla es exactamente lo que queda en el PDF, y se actualiza solo cada vez que cambia una opción.
 Los PDF originales <b>nunca</b> se modifican: el resultado siempre se guarda aparte.</p>
 
 <div class="indice">
@@ -35,6 +35,7 @@ Los PDF originales <b>nunca</b> se modifican: el resultado siempre se guarda apa
   <li><a href="#indexar">Indexar PDF — paso a paso</a></li>
   <li><a href="#personalizar">Personalizar hojas (solo algunas hojas)</a></li>
   <li><a href="#letras">Letras, colores y números en letras</a></li>
+  <li><a href="#girar">Girar — viendo las hojas en miniatura</a></li>
   <li><a href="#faq">Preguntas frecuentes</a></li>
 </ol>
 </div>
@@ -176,7 +177,48 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
   <li>Con las letras básicas (★) algunos símbolos raros no existen; si escribe uno, sale “?”. Las tildes y la Ñ sí funcionan.</li>
 </ul>
 
-<h2 id="faq">7. Preguntas frecuentes</h2>
+<h2 id="girar">7. Girar — viendo las hojas en miniatura</h2>
+<p>El <b>Girar</b> de PDFsam ahora es interactivo: ve todas las hojas en pequeño (miniaturas) y las gira viéndolas, una por una, varias o todas. También puede cambiarlas de lugar arrastrándolas. El PDF original no se toca: se guarda una copia.</p>
+
+<h3>Paso 1 — Abrir el PDF</h3>
+<div class="paso">En el menú de PDFsam toque <b>Girar</b>. Luego <b>Elegir PDF</b>, o arrastre el PDF a la pantalla. Aparecen todas las hojas en miniatura (las imágenes se van cargando, primero las que se están viendo).</div>
+
+<h3>Paso 2 — Elegir hojas</h3>
+<table>
+<tr><th>Para…</th><th>Haga esto</th></tr>
+<tr><td>Elegir una hoja</td><td>Un clic sobre ella (queda con borde azul).</td></tr>
+<tr><td>Elegir varias sueltas</td><td><b>Ctrl</b> + clic en cada una.</td></tr>
+<tr><td>Elegir un rango (de la 3 a la 10)</td><td>Clic en la 3, después <b>Shift</b> + clic en la 10.</td></tr>
+<tr><td>Elegir todas</td><td><b>Ctrl + A</b> o el botón <b>Seleccionar todo</b>.</td></tr>
+<tr><td>Quitar la selección</td><td>Clic en un espacio vacío entre las hojas.</td></tr>
+</table>
+<p>A la derecha, en <b>Selección</b>, dice qué hojas eligió y cuáles ya están giradas.</p>
+
+<h3>Paso 3 — Girar</h3>
+<ul>
+  <li><b>Una sola hoja, rápido:</b> pase el ratón sobre la hoja; arriba aparecen dos botones con flechas: a la <b>izquierda</b> y a la <b>derecha</b>.</li>
+  <li><b>Las elegidas:</b> botones <b>Girar izq.</b>, <b>Girar der.</b> o <b>Voltear 180°</b> (arriba), o <b>Girar seleccionadas…</b> (a la derecha).</li>
+  <li><b>Todas:</b> <b>Todas a la izq.</b> o <b>Todas a la der.</b></li>
+</ul>
+<p>Cada hoja girada muestra una etiqueta amarilla con los grados (ej. <i>↻ 90°</i>).</p>
+
+<h3>Paso 4 — Cambiar hojas de lugar (opcional)</h3>
+<div class="paso">Arrastre una hoja y suéltela sobre otra: una raya azul indica si quedará antes (lado izquierdo) o después (lado derecho). Si tenía varias elegidas y arrastra una de ellas, se mueven todas juntas. Debajo de cada hoja se ve su número nuevo y, si se movió, <i>(antes 7)</i>.</div>
+
+<h3>Paso 5 — Ver en grande</h3>
+<div class="paso">Doble clic sobre una hoja la abre en grande. Ahí puede girarla, pasar a la anterior o a la siguiente (también con las flechas del teclado) y cerrar con <b>Esc</b>.</div>
+
+<h3>Paso 6 — Deshacer y guardar</h3>
+<ul>
+  <li><b>Deshacer</b> / <b>Rehacer</b> (o <b>Ctrl + Z</b> / <b>Ctrl + Y</b>) regresan o repiten los cambios.</li>
+  <li><b>Tamaño</b>: la barrita de arriba agranda o achica las miniaturas.</li>
+  <li><b>Guardar PDF</b>: elija dónde guardarlo; el nombre sugerido termina en <code>_girado</code>.</li>
+</ul>
+
+<h3>Girar una carpeta o un ZIP</h3>
+<div class="paso">Toque <b>Girar una carpeta o ZIP</b> (o arrastre la carpeta o el ZIP a la pantalla), elija <b>A la derecha</b>, <b>A la izquierda</b> o <b>Voltear (180°)</b> y toque <b>Girar</b>. Se giran <b>todas las hojas de todos los PDF</b>, igual que al foliar una carpeta: vista previa del árbol, misma estructura de subcarpetas, ZIP dentro de ZIP, lo que no es PDF se copia igual y al final se avisa de los PDF con contraseña.</div>
+
+<h2 id="faq">8. Preguntas frecuentes</h2>
 
 <h3>Generales</h3>
 <details><summary>¿Se modifica mi PDF original?</summary>
@@ -190,7 +232,7 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
 <details><summary>Windows dice “Windows protegió su PC”. ¿Es un virus?</summary>
 <p>No. Sale porque el programa no tiene una firma digital comprada. Toque <b>Más información</b> → <b>Ejecutar de todas formas</b>.</p></details>
 <details><summary>¿Las demás herramientas de PDFsam siguen igual?</summary>
-<p>Sí: Unir, Dividir, Girar, Extraer, Mezclar, etc. funcionan igual que siempre. Solo se agregaron Foliar e Indexar PDF.</p></details>
+<p>Sí: Unir, Dividir, Extraer, Mezclar, etc. funcionan igual que siempre. Se agregaron Foliar e Indexar PDF, y Girar ahora es con miniaturas.</p></details>
 <details><summary>¿Dónde se guardan las opciones que el programa recuerda?</summary>
 <p>En la carpeta de su usuario, en <code>.pdfsam-foliado\opciones.properties</code>. Si borra ese archivo, todo vuelve a lo normal.</p></details>
 <details><summary>¿Por qué los textos de las herramientas nuevas están en español aunque PDFsam esté en otro idioma?</summary>
@@ -235,6 +277,22 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
 <p>Sí. Elija el PDF en la lista y personalice sus hojas; cada PDF guarda las suyas.</p></details>
 <details><summary>¿Puedo poner “Página 1 de 10” en vez de “1/10” abajo?</summary>
 <p>Sí: marque <b>Repetir la numeración abajo</b> y elija el formato, o “Personalizado…” y escriba lo que quiera con <code>{pagina}</code> y <code>{total}</code>.</p></details>
+
+<h3>Girar</h3>
+<details><summary>¿Dónde quedó el Girar de antes de PDFsam?</summary>
+<p>Se cambió por este, con miniaturas. Lo que hacía el de antes (girar muchos PDF de una vez) se hace con <b>Girar una carpeta o ZIP</b>.</p></details>
+<details><summary>¿Girar le baja la calidad al PDF?</summary>
+<p>No. Solo se cambia el giro de la hoja; las imágenes y el texto quedan exactamente igual.</p></details>
+<details><summary>Giré una hoja de más. ¿Cómo la regreso?</summary>
+<p>Con <b>Deshacer</b> (Ctrl + Z), o girándola al otro lado.</p></details>
+<details><summary>Las miniaturas tardan en aparecer.</summary>
+<p>En PDF muy grandes se van cargando poco a poco, primero las que está viendo. Puede girar aunque una miniatura todavía no aparezca.</p></details>
+<details><summary>¿Puedo girar y cambiar el orden de las hojas al mismo tiempo?</summary>
+<p>Sí. Todo se guarda junto al tocar <b>Guardar PDF</b>.</p></details>
+<details><summary>¿Los marcadores (índice) del PDF se pierden si cambio hojas de lugar?</summary>
+<p>No: siguen apuntando a la misma hoja, esté donde esté.</p></details>
+<details><summary>Quiero girar todas las hojas de 30 PDF.</summary>
+<p>Póngalos en una carpeta y use <b>Girar una carpeta o ZIP</b>.</p></details>
 
 <h3>Letras y colores</h3>
 <details><summary>No encuentro una letra que tengo instalada.</summary>
