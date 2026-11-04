@@ -14,7 +14,6 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.pdfsam.theme.Light;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -78,12 +77,6 @@ class PantallasTest {
 
     static Scene escena(Pane p) {
         Scene s = new Scene(p, 1400, 860);
-        for (String css : new Light().stylesheets()) {
-            var url = Light.class.getResource(css);
-            if (url != null) {
-                s.getStylesheets().add(url.toExternalForm());
-            }
-        }
         p.getStyleClass().addAll("pdfsam-container", "content-pane");
         return s;
     }

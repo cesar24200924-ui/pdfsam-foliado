@@ -40,12 +40,5 @@
 			<groupId>org.kordamp.ikonli</groupId>
 			<artifactId>ikonli-javafx</artifactId>
 		</dependency>
-		<!-- solo para la prueba de pantallas -->
-		<dependency>
-			<groupId>org.pdfsam</groupId>
-			<artifactId>pdfsam-themes</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 </project>
