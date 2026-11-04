@@ -71,7 +71,7 @@ class ManualPanel extends BorderPane {
         contenido.setPadding(new Insets(20, 30, 40, 30));
         contenido.setMaxWidth(980);
         contenido.setFillWidth(true);
-        // colores pastel, siempre claros (aunque PDFsam esté en tema oscuro)
+        // colores pastel, siempre claros (aunque el programa esté en tema oscuro)
         contenido.setStyle("-fx-background-color: #fdfcf8;");
         scroll.setStyle("-fx-background: #fdfcf8; -fx-background-color: #fdfcf8;");
         setStyle("-fx-background-color: #fdfcf8;");

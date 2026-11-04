@@ -1,0 +1,86 @@
+name: auditoria
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: auditoria
+      - name: Descargar Java 25 (con JavaFX)
+        shell: bash
+        working-directory: ${{ runner.temp }}
+        run: curl -fsSL -o jdk.zip "https://github.com/bell-sw/Liberica/releases/download/25.0.5.0.3+5/bellsoft-jdk25.0.5.0.3+5-windows-amd64-full.zip"
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'jdkfile'
+          jdkFile: ${{ runner.temp }}/jdk.zip
+          java-version: '25.0.5'
+          architecture: x64
+          cache: 'maven'
+      - name: Instalar scoop
+        uses: MinoruSekine/setup-scoop@v4
+      - name: Instalar gettext
+        run: scoop install gettext
+      - name: Armar el programa
+        shell: bash
+        run: mvn clean install -DskipTests -Drelease -Dgpg.skip=true -Dmaven.javadoc.skip=true --batch-mode
+      - name: Preparar el portable
+        shell: bash
+        run: |
+          mkdir entrega armar
+          cd armar
+          7z x ../pdfsam-basic/target/pdfsam-basic-*-windows*.zip > /dev/null
+          mv pdfsam-basic-*/AuditoriaPDF "Auditoria PDF"
+          M=../pdfsam-tools/pdfsam-foliado/src/main/resources/org/pdfsam/tools/foliado/manual
+          mkdir -p "Auditoria PDF/Manual"
+          cp -r $M/* "Auditoria PDF/Manual/"
+          cp ../CAMBIOS-Y-LICENCIA.txt "Auditoria PDF/"
+          rm -f "Auditoria PDF/pdfsam.bat"
+          ls "Auditoria PDF"
+          7z a -tzip "../entrega/Auditoria-PDF-portable.zip" "Auditoria PDF" > /dev/null
+          cd ..
+          git archive --format=zip -o "entrega/Auditoria-PDF-codigo-fuente.zip" HEAD
+      - name: Instalar WiX (para el instalador)
+        shell: bash
+        run: |
+          dotnet tool install --global wix --version 5.0.2
+          wix extension add -g WixToolset.Util.wixext/5.0.2 WixToolset.UI.wixext/5.0.2
+      - name: Armar el instalador
+        shell: bash
+        run: |
+          jpackage --type exe --app-image "armar/Auditoria PDF" --dest instalador \
+            --name "AuditoriaPDF" --app-version 1.0.0 \
+            --description "Auditoria PDF - foliar, indexar, girar, unir y dividir PDF" \
+            --vendor "Auditoria PDF" \
+            --copyright "Basado en PDFsam Basic (AGPL v3)" \
+            --icon pdfsam-basic/src/assembly/resources/pdfsam.ico \
+            --license-file LICENSE \
+            --win-menu --win-menu-group "Auditoria PDF" --win-shortcut --win-dir-chooser \
+            --win-upgrade-uuid 3d6a2c41-8b7e-4f0a-9c55-1e2b7a4d6f90
+          ls -la instalador
+          cp instalador/*.exe "entrega/Auditoria-PDF-instalador.exe"
+      - name: Juntar todo en un ZIP (3 carpetas)
+        shell: bash
+        run: |
+          mkdir -p todo/"1 - Portable" todo/"2 - Instalador" todo/"3 - Codigo fuente"
+          cp -r "armar/Auditoria PDF" todo/"1 - Portable"/
+          cp entrega/Auditoria-PDF-instalador.exe todo/"2 - Instalador"/
+          cp entrega/Auditoria-PDF-codigo-fuente.zip todo/"3 - Codigo fuente"/
+          cp CAMBIOS-Y-LICENCIA.txt LICENSE todo/
+          cd todo && 7z a -tzip "../entrega/Auditoria-PDF-TODO.zip" "1 - Portable" "2 - Instalador" "3 - Codigo fuente" CAMBIOS-Y-LICENCIA.txt LICENSE > /dev/null
+          cd .. && ls -la entrega
+      - name: Publicar
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: auditoria
+          target_commitish: auditoria
+          name: Auditoría PDF (portable, instalador y código fuente)
+          prerelease: false
+          files: entrega/*

@@ -63,7 +63,7 @@ final class Config {
         try {
             ARCHIVO.getParentFile().mkdirs();
             try (OutputStream out = new FileOutputStream(ARCHIVO)) {
-                datos().store(out, "PDFsam - Foliar e Indexar");
+                datos().store(out, "Foliar e Indexar");
             }
         } catch (IOException e) {
             // no es grave: la próxima vez empieza con lo normal

@@ -1,0 +1,30 @@
+AUDITORÍA PDF — AVISO DE LICENCIA Y CAMBIOS
+============================================
+
+Auditoría PDF es una versión modificada de PDFsam Basic
+(https://pdfsam.org, https://github.com/torakiki/pdfsam),
+Copyright Sober Lemur S.r.l., publicado bajo la licencia
+GNU Affero General Public License versión 3 (AGPL v3).
+
+Auditoría PDF se publica bajo la misma licencia GNU AGPL v3
+(ver LICENSE.txt). No tiene garantía de ningún tipo.
+
+Código fuente completo de esta versión:
+  https://github.com/cesar24200924-ui/pdfsam-foliado/tree/auditoria
+También viene en la carpeta "Codigo fuente" de la entrega.
+
+"PDFsam" y su logo son marcas de sus dueños. Esta versión NO es el
+programa oficial PDFsam ni está respaldada por sus autores; por eso
+tiene nombre y logo propios.
+
+CAMBIOS HECHOS (noviembre de 2026)
+----------------------------------
+- Herramientas nuevas: "Foliar", "Indexar PDF" y "Manual"
+  (módulo pdfsam-tools/pdfsam-foliado).
+- "Girar" reemplazado por una versión con miniaturas: girar, quitar,
+  duplicar, reordenar, insertar PDF, hojas en blanco y guardar selección.
+- Nombre, logo, íconos y pantalla de inicio propios ("Auditoría PDF").
+- Sin búsqueda de actualizaciones, noticias, módulos pagados ni pedidos
+  de donación de PDFsam. Idioma español por defecto.
+- Ventana "Acerca de" con los créditos a PDFsam Basic y la licencia.
+- Armado del portable y del instalador sin firma digital.

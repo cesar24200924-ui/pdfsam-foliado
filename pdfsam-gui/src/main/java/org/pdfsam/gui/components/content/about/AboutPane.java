@@ -75,8 +75,6 @@ public class AboutPane extends HBox {
         addHyperlink(UniconsLine.COPYRIGHT, appBrand.property(VENDOR_URL), appBrand.property(COPYRIGHT), left);
         addHyperlink(UniconsLine.BALANCE_SCALE, appBrand.property(LICENSE_URL), appBrand.property(LICENSE_NAME), left);
         addHyperlink(UniconsLine.HOME, appBrand.property(HOME_URL), appBrand.property(HOME_LABEL), left);
-        addHyperlink(UniconsLine.RSS, appBrand.property(FEED_URL), i18n().tr("Subscribe to the official news feed"),
-                left);
 
         addSectionTitle(i18n().tr("Environment"), left);
         var runtime = new Label(String.format("%s %s", System.getProperty("java.runtime.name"),
@@ -105,19 +103,12 @@ public class AboutPane extends HBox {
         left.getChildren().addAll(runtime, vendor, runtimePath, fx, sejda, memory, copyButton);
 
         VBox right = new VBox(6);
-        addSectionTitle(i18n().tr("Support"), right);
-        addHyperlink(UniconsLine.BUG, appBrand.property(TRACKER_URL), i18n().tr("Bug and feature requests"), right);
-        addHyperlink(UniconsLine.QUESTION_CIRCLE, appBrand.property(SUPPORT_URL), i18n().tr("Support"), right);
-        addHyperlink(UniconsLine.BOOK, appBrand.property(DOCUMENTATION_URL), i18n().tr("Documentation"), right);
-
-        addSectionTitle(i18n().tr("Contribute"), right);
-        addHyperlink(UniconsLine.GITHUB, appBrand.property(SCM_URL), i18n().tr("Fork PDFsam on GitHub"), right);
-        addHyperlink(UniconsLine.LANGUAGE, appBrand.property(TRANSLATE_URL), i18n().tr("Translate"), right);
-        addHyperlink(UniconsLine.DOLLAR_ALT, appBrand.property(DONATE_URL), i18n().tr("Donate"), right);
-
-        addSectionTitle(i18n().tr("Social"), right);
-        addHyperlink(null, appBrand.property(BLUESKY_URL), i18n().tr("Follow us on Bluesky"), right);
-        addHyperlink(UniconsLine.FACEBOOK, appBrand.property(FACEBOOK_URL), i18n().tr("Like us on Facebook"), right);
+        addSectionTitle("Créditos", right);
+        right.getChildren().add(new Label("Auditoría PDF es una versión modificada de PDFsam Basic,"));
+        right.getChildren().add(new Label("software libre bajo la licencia GNU AGPL v3."));
+        addHyperlink(UniconsLine.HOME, "https://pdfsam.org", "PDFsam Basic (pdfsam.org)", right);
+        addHyperlink(UniconsLine.GITHUB, appBrand.property(SCM_URL), "Código fuente de Auditoría PDF", right);
+        addHyperlink(UniconsLine.BUG, appBrand.property(TRACKER_URL), "Reportar un problema", right);
         getChildren().addAll(left, right);
     }
 

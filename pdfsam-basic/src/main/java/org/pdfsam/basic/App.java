@@ -41,6 +41,13 @@ import java.util.Objects;
 public class App {
 
     public static void main(String[] args) {
+        // Auditoría PDF: sin buscar actualizaciones ni noticias de PDFsam, sin pedidos de donación y en español
+        porDefecto("org.pdfsam.disable.updates", "true");
+        porDefecto("org.pdfsam.default.checkforupdate", "false");
+        porDefecto("org.pdfsam.default.checkfornews", "false");
+        porDefecto("org.pdfsam.default.donate.notification", "false");
+        porDefecto("org.pdfsam.default.fetch.premium.modules", "false");
+        porDefecto("org.pdfsam.default.locale", "es");
         if (Arrays.stream(args).filter(Objects::nonNull).map(String::toLowerCase)
                 .anyMatch(s -> "--verbose".equals(s) || "-verbose".equals(s) || "-v".equals(s))) {
             System.setProperty("tinylog.configuration", "tinylog-verbose.properties");
@@ -53,4 +60,10 @@ public class App {
         Application.launch(PdfsamApp.class, args);
     }
 
+
+    private static void porDefecto(String clave, String valor) {
+        if (System.getProperty(clave) == null) {
+            System.setProperty(clave, valor);
+        }
+    }
 }

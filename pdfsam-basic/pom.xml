@@ -294,14 +294,13 @@
                                         <argument>--app-version</argument>
 										<argument>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</argument>
                                         <argument>-n</argument>
-                                        <argument>pdfsam</argument>
+                                        <argument>AuditoriaPDF</argument>
                                         <argument>--description</argument>
-                                        <argument>"Open source desktop application to split, merge, rotate, extract pages and mix PDF files"
-                                        </argument>
+                                        <argument>"Auditoria PDF - foliar, indexar, girar, unir y dividir PDF"</argument>
                                         <argument>--copyright</argument>
-                                        <argument>"Copyright 2026, Sober Lemur S.r.l."</argument>
+                                        <argument>"Basado en PDFsam Basic, Copyright 2026 Sober Lemur S.r.l. (AGPL v3)"</argument>
                                         <argument>--vendor</argument>
-                                        <argument>"Sober Lemur S.r.l."</argument>
+                                        <argument>"Auditoria PDF"</argument>
                                         <argument>--icon</argument>
                                         <argument>"${basedir}/src/assembly/resources/pdfsam.ico"</argument>
                                         <argument>--app-content</argument>

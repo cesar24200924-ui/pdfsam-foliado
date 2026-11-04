@@ -1,18 +1,20 @@
-# PDFsam Basic + Foliar e Indexar PDF
+# Auditoría PDF
 
-Versión modificada de [PDFsam Basic](https://github.com/torakiki/pdfsam) con estas herramientas nuevas:
+**Auditoría PDF** es una versión modificada de [PDFsam Basic](https://github.com/torakiki/pdfsam) (Copyright Sober Lemur S.r.l.), publicada bajo la misma licencia **GNU AGPL v3**. No es el programa oficial PDFsam ni está respaldada por sus autores.
 
-- **Foliar**: pone el folio (Folio 001, 002…) en cada hoja, con vista previa real, posición en cualquier esquina o libre (arrastrando con el ratón), folio en letras, color y letras de la computadora, personalizar hojas, y foliado de carpetas o ZIP completos con numeración continua.
-- **Girar** (reemplaza al de PDFsam): con miniaturas, girar, quitar, duplicar y arrastrar hojas, insertar otro PDF u hojas en blanco, guardar solo las elegidas, ver en grande, deshacer/rehacer y carpetas o ZIP completos.
-- **Indexar PDF**: pone leyendas en cada hoja de muchos PDF a la vez (DPOT arriba a la izquierda, parte del nombre del archivo con 1/10 arriba a la derecha, pie de página, numeración abajo), respetando las subcarpetas.
+Además de lo que trae PDFsam Basic (unir, dividir, extraer, mezclar…), tiene:
 
-El código de las herramientas nuevas está en `pdfsam-tools/pdfsam-foliado`. El manual (con imágenes) está en `pdfsam-tools/pdfsam-foliado/src/main/resources/org/pdfsam/tools/foliado/manual` y también dentro del programa (menú "Manual").
+- **Foliar**: folio en cada hoja con vista previa real, cualquier esquina o posición libre, folio en letras, color y letras de la computadora, personalizar hojas, carpetas y ZIP completos con numeración continua.
+- **Indexar PDF**: leyendas en muchos PDF a la vez (DPOT, parte del nombre del archivo con 1/10, pie de página, numeración), respetando las subcarpetas.
+- **Girar** con miniaturas: girar, quitar, duplicar, reordenar, insertar PDF u hojas en blanco, guardar solo las elegidas, carpetas y ZIP.
+- **Manual** dentro del programa, con imágenes y preguntas frecuentes.
 
-## Programa portable para Windows
+Los cambios están detallados en `CAMBIOS-Y-LICENCIA.txt`. El código de las herramientas nuevas está en `pdfsam-tools/pdfsam-foliado`.
 
-En **Releases** está `PDFsam-Foliar-Indexar-portable.zip`: se descomprime y se abre `PDFsam-Foliar-Indexar\pdfsam.exe`, sin instalar nada.
-Se arma solo con GitHub Actions (flujo `portable`) cada vez que se crea una etiqueta `v…`.
+## Descargas
+
+En **Releases → auditoria**: `Auditoria-PDF-TODO.zip` con tres carpetas (Portable, Instalador y Código fuente). Se arma con el flujo de GitHub Actions `auditoria`.
 
 ## Licencia
 
-PDFsam Basic es software libre bajo la licencia GNU Affero General Public License v3 (ver `LICENSE`). Esta versión modificada se publica bajo la misma licencia.
+GNU Affero General Public License v3 (ver `LICENSE`).
