@@ -33,4 +33,11 @@ public class OpcionesIndexar {
     public Color color = new Color(255, 0, 0);
     public String fuente = "Helvetica";
     public boolean negrita = false;
+    /** Más opciones: recuadro, distancia de los lados y de arriba/abajo (en puntos), hojas sin leyendas al inicio y
+     * hojas a indexar ("3-50"; vacío = todas). */
+    public boolean recuadro = false;
+    public float lateral = 1.8f * Motor.CM;
+    public float vertical = 0.80f * Motor.CM;
+    public int saltar = 0;
+    public String paginas = "";
 }

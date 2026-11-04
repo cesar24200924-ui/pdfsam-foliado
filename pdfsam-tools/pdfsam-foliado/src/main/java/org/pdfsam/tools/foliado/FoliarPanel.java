@@ -227,6 +227,9 @@ class FoliarPanel extends BorderPane {
         editor.setVisible(false);
         editor.setManaged(false);
         vista.ponerDebajoDeNavegacion(editor);
+        // al cambiar la letra general, cambia en todas las hojas (también en las personalizadas)
+        letra.nombre.addListener((ob, a, b) -> editor.cambiarLetraEnTodas(b, null));
+        letra.negrita.selectedProperty().addListener((ob, a, b) -> editor.cambiarLetraEnTodas(null, b));
         vista.alCambiarHoja(this::rotular);
         vista.dibujo(this::dibujo);
         vista.raton(new VistaPrevia.Raton() {

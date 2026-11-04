@@ -703,13 +703,15 @@ public final class Motor {
         }
         PDFont letra = letras.de(fuente, negrita);
         Hoja h = new Hoja(p);
-        float lateral = 1.8f * CM, yArriba = 0.80f * CM, yAbajo = h.alto - 0.80f * CM;
+        float lateral = o.lateral, yArriba = o.vertical, yAbajo = h.alto - o.vertical;
+        boolean caja = o.recuadro;
         try (PDPageContentStream cs = lienzo(doc, p)) {
             if (o.izqOn && !nulo(o.izqTexto).isBlank()) {
-                texto(cs, h, lateral + dx, yArriba + dy, limpiar(letra, o.izqTexto.trim()), letra, tam, color);
+                leyenda(cs, h, lateral + dx, yArriba + dy, limpiar(letra, o.izqTexto.trim()), letra, tam, color, caja);
             }
             if (o.abajoIzqOn && !nulo(o.abajoIzqTexto).isBlank()) {
-                texto(cs, h, lateral + dx, yAbajo + dy, limpiar(letra, o.abajoIzqTexto.trim()), letra, tam, color);
+                leyenda(cs, h, lateral + dx, yAbajo + dy, limpiar(letra, o.abajoIzqTexto.trim()), letra, tam, color,
+                        caja);
             }
             if (o.derOn) {
                 String parte = textoDerechoIndexar(nombreSinExt, o);
@@ -717,24 +719,80 @@ public final class Motor {
                 String t = ((parte.isEmpty() ? "" : parte) + (parte.isEmpty() || num.isEmpty() ? "" : " ") + num).trim();
                 if (!t.isEmpty()) {
                     t = limpiar(letra, t);
-                    texto(cs, h, h.ancho - lateral - anchoTexto(letra, t, tam) + dx, yArriba + dy, t, letra, tam,
-                            color);
+                    leyenda(cs, h, h.ancho - lateral - anchoTexto(letra, t, tam) + dx, yArriba + dy, t, letra, tam,
+                            color, caja);
                 }
             }
             if (o.letrasOn) {
                 // el número de hoja en letras, justo debajo de la leyenda de arriba a la derecha
                 String t = limpiar(letra, (nulo(o.letrasTexto) + numeroALetras(numero)).trim());
-                texto(cs, h, h.ancho - lateral - anchoTexto(letra, t, tam) + dx, yArriba + tam * 1.2f + dy, t, letra,
-                        tam, color);
+                leyenda(cs, h, h.ancho - lateral - anchoTexto(letra, t, tam) + dx,
+                        yArriba + tam * (caja ? 1.45f : 1.2f) + dy, t, letra, tam, color, caja);
             }
             if (o.extraOn) {
                 String t = limpiar(letra, formatoNumeracion(o.extraFormato, numero, total));
                 float x = "bottom_center".equals(o.extraPos) ?
                         (h.ancho - anchoTexto(letra, t, tam)) / 2 :
                         h.ancho - lateral - anchoTexto(letra, t, tam);
-                texto(cs, h, x + dx, yAbajo + dy, t, letra, tam, color);
+                leyenda(cs, h, x + dx, yAbajo + dy, t, letra, tam, color, caja);
             }
         }
+    }
+
+    /** Una leyenda (y, si se pidió, su recuadro). y = línea base del renglón. */
+    private static void leyenda(PDPageContentStream cs, Hoja h, float x, float y, String t, PDFont letra, float tam,
+            Color color, boolean caja) throws IOException {
+        if (caja) {
+            float w = anchoTexto(letra, t, tam), cap = altoMayusculas(letra) * tam;
+            recuadro(cs, h, x - 4, y - cap - 4, x + w + 4, y + tam * 0.25f + 3, color);
+        }
+        texto(cs, h, x, y, t, letra, tam, color);
+    }
+
+    /**
+     * Las hojas que llevan leyendas, en orden: las de 'paginas' (null = todas), sin las primeras 'saltar' y sin las
+     * que se dejaron en blanco con "Personalizar hojas". La numeración 1/10 cuenta solo estas.
+     */
+    public static List<Integer> hojasIndexadas(int totalHojas, OpcionesIndexar o, List<Integer> paginas,
+            Map<Integer, ReglaHoja> porHoja) {
+        List<Integer> r = new ArrayList<>();
+        for (int i = 0; i < totalHojas; i++) {
+            ReglaHoja regla = porHoja == null ? null : porHoja.get(i);
+            if (i >= o.saltar && (paginas == null || paginas.contains(i)) && (regla == null || !regla.omitir)) {
+                r.add(i);
+            }
+        }
+        return r;
+    }
+
+    /** Como listaPaginas, pero sin error si el rango pasa del final (para muchos PDF de distinto largo). */
+    public static List<Integer> listaPaginasFlexible(String texto, int total) {
+        if (texto == null || texto.isBlank()) {
+            return null;
+        }
+        List<Integer> r = new ArrayList<>();
+        for (String trozo : texto.split("[;,]")) {
+            trozo = trozo.trim();
+            if (trozo.isEmpty()) {
+                continue;
+            }
+            Matcher m = Pattern.compile("(\\d*)\\s*-\\s*(\\d*)").matcher(trozo);
+            int a, b;
+            if (m.matches()) {
+                a = m.group(1).isEmpty() ? 1 : Integer.parseInt(m.group(1));
+                b = m.group(2).isEmpty() ? total : Integer.parseInt(m.group(2));
+            } else if (trozo.matches("\\d+")) {
+                a = b = Integer.parseInt(trozo);
+            } else {
+                throw new IllegalArgumentException("No entiendo '" + trozo + "'. Use números como 1-3, 5, 8-10.");
+            }
+            for (int i = Math.max(1, a); i <= Math.min(total, b); i++) {
+                if (!r.contains(i - 1)) {
+                    r.add(i - 1);
+                }
+            }
+        }
+        return r;
     }
 
     public static void indexar(File entrada, File salida, String clave, String nombreOriginal, OpcionesIndexar o,
@@ -742,12 +800,15 @@ public final class Motor {
         String nombre = sinExtension(new File(nombreOriginal == null ? entrada.getName() : nombreOriginal).getName());
         try (PDDocument doc = abrir(entrada, clave)) {
             Letras letras = new Letras(doc);
-            int total = doc.getNumberOfPages();
-            for (int i = 0; i < total; i++) {
-                if (avance != null && i % 5 == 0) {
-                    avance.accept(i, total);
+            List<Integer> elegidas = hojasIndexadas(doc.getNumberOfPages(), o,
+                    listaPaginasFlexible(o.paginas, doc.getNumberOfPages()), porHoja);
+            int total = elegidas.size();
+            for (int n = 0; n < total; n++) {
+                if (avance != null && n % 5 == 0) {
+                    avance.accept(n, total);
                 }
-                indexarHoja(doc, doc.getPage(i), i + 1, total, nombre, o, porHoja == null ? null : porHoja.get(i),
+                int i = elegidas.get(n);
+                indexarHoja(doc, doc.getPage(i), n + 1, total, nombre, o, porHoja == null ? null : porHoja.get(i),
                         letras);
             }
             if (avance != null) {
