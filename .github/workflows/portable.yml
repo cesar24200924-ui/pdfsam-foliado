@@ -56,7 +56,7 @@ jobs:
         shell: bash
         run: |
           jpackage --type exe --app-image "armar/PDFsam-Foliar-Indexar" --dest instalador \
-            --name "PDFsam-Foliar-Indexar" --app-version 6.0.11 \
+            --name "pdfsam" --app-version 6.0.11 \
             --description "PDFsam Basic con Foliar, Indexar PDF y Girar" \
             --vendor "PDFsam Foliar Indexar" \
             --icon pdfsam-basic/src/assembly/resources/pdfsam.ico \
