@@ -34,11 +34,14 @@ Los PDF originales <b>nunca</b> se modifican: el resultado siempre se guarda apa
 <ol>
   <li><a href="#abrir">Cómo abrir el programa (portable)</a></li>
   <li><a href="#foliar">Foliar — paso a paso</a></li>
-  <li><a href="#lote">Foliar una carpeta o un ZIP completo</a></li>
+  <li><a href="#lote">Foliar una carpeta o un comprimido (ZIP, RAR, 7z…) completo</a></li>
   <li><a href="#indexar">Indexar PDF — paso a paso</a></li>
   <li><a href="#personalizar">Personalizar hojas (solo algunas hojas)</a></li>
   <li><a href="#letras">Letras, colores y números en letras</a></li>
   <li><a href="#girar">Girar — viendo las hojas en miniatura</a></li>
+  <li><a href="#comprimidos">Comprimidos: ZIP, RAR, 7z y más</a></li>
+  <li><a href="#mover">Mover cada leyenda de Indexar por separado</a></li>
+  <li><a href="#editable">Texto editable en Adobe (Rellenar y firmar)</a></li>
   <li><a href="#faq">Preguntas frecuentes</a></li>
 </ol>
 </div>
@@ -99,6 +102,7 @@ Si el PDF tiene contraseña, el programa se la pide.</div>
   <li><b>Con recuadro:</b> dibuja un rectángulo alrededor del folio.</li>
   <li><b>Distancia del borde:</b> qué tan lejos del borde de la hoja queda (en puntos; 28 puntos ≈ 1 cm).</li>
   <li><b>Hojas sin folio al inicio:</b> por ejemplo 1 = la carátula no lleva folio y la numeración empieza en la hoja 2.</li>
+  <li><b>Texto editable en Adobe (Rellenar y firmar):</b> el folio se puede cambiar después en Adobe. Ver <a href="#editable">Texto editable en Adobe</a>.</li>
 </ul>
 
 <h3>Paso 8 — Hojas a foliar</h3>
@@ -107,18 +111,18 @@ Si el PDF tiene contraseña, el programa se la pide.</div>
 <h3>Paso 9 — Guardar</h3>
 <div class="paso">Toque <b>Foliar y guardar</b> (abajo a la izquierda, siempre visible). Elija dónde guardar; el nombre que sugiere es el original con <code>_foliado</code> al final. Al terminar puede tocar <b>Abrir el PDF</b> o <b>Abrir la carpeta</b>.</div>
 
-<h2 id="lote">3. Foliar una carpeta o un ZIP completo</h2>
+<h2 id="lote">3. Foliar una carpeta o un comprimido (ZIP, RAR, 7z…) completo</h2>
 <p>Sirve para foliar muchos PDF de una vez, por ejemplo un expediente con subcarpetas.</p>
 <div class="paso"><b>Paso 1.</b> Configure el folio como quiere (texto, posición, color, letra…). Esas opciones se usan para todos los archivos.</div>
-<div class="paso"><b>Paso 2.</b> Toque <b>Foliar una carpeta o ZIP</b> → <b>Elegir carpeta</b> o <b>Elegir ZIP</b>. También puede arrastrar la carpeta o el ZIP a la vista previa.</div>
+<div class="paso"><b>Paso 2.</b> Toque <b>Foliar una carpeta o comprimido</b> → <b>Elegir carpeta</b> o <b>Elegir comprimido (ZIP, RAR, 7z...)</b>. También puede arrastrar la carpeta o el comprimido a la vista previa. Si el comprimido tiene contraseña, se la pide (ver <a href="#comprimidos">Comprimidos</a>).</div>
 <div class="paso"><b>Paso 3.</b> El programa pregunta si la numeración <b>sigue de un archivo al siguiente</b>, como un solo expediente:
 <ul><li><b>Sí:</b> el segundo PDF continúa donde terminó el primero (en orden de carpetas y nombres).</li>
 <li><b>No:</b> cada PDF empieza otra vez en el número de “Empieza en”.</li></ul></div>
 <div class="paso"><b>Paso 4.</b> Aparece una <b>vista previa del árbol de carpetas</b> con cuántos PDF se van a procesar y cuántos archivos se copian igual (Word, Excel, fotos…). Toque <b>Procesar</b>.</div>
-<div class="paso"><b>Paso 5.</b> Si eligió un ZIP, pregunta si quiere el resultado <b>Como ZIP</b> o <b>Como carpeta</b>. Después elija dónde guardarlo.</div>
+<div class="paso"><b>Paso 5.</b> Si eligió un ZIP, pregunta si quiere el resultado <b>Como ZIP</b> o <b>Como carpeta</b>. Si eligió un RAR, 7z u otro comprimido, el resultado sale siempre en <b>ZIP</b>. Después elija dónde guardarlo.</div>
 <div class="paso"><b>Paso 6.</b> Se ve una barra con el porcentaje y “Archivo 35 de 120”. Puede tocar <b>Cancelar</b>: lo que ya se hizo queda guardado.</div>
 <div class="paso"><b>Paso 7.</b> Si algún PDF tenía contraseña, al final pregunta si quiere quitarle la seguridad (con su contraseña) y si también quiere foliarlo. Al final muestra un resumen.</div>
-<p><b>Qué se respeta:</b> la misma estructura de carpetas y subcarpetas (también las vacías), los ZIP que vengan dentro de la carpeta o dentro de otro ZIP (se abren, se folian sus PDF y se vuelven a armar como ZIP), y todo lo que no es PDF se copia igual. Si un archivo falla, se copia el original sin cambios y se avisa al final.</p>
+<p><b>Qué se respeta:</b> la misma estructura de carpetas y subcarpetas (también las vacías), los comprimidos (ZIP, RAR, 7z…) que vengan dentro de la carpeta o dentro de otro comprimido (se abren, se folian sus PDF y se vuelven a armar como ZIP), y todo lo que no es PDF se copia igual. Si un archivo falla, se copia el original sin cambios y se avisa al final.</p>
 
 <h2 id="indexar">4. Indexar PDF — paso a paso</h2>
 <p>Indexar pone leyendas en rojo (o el color que elija) en cada hoja de muchos PDF a la vez:</p>
@@ -132,7 +136,7 @@ Si el PDF tiene contraseña, el programa se la pide.</div>
 <figure><img src="img/indexar.png" alt="La pantalla de Indexar PDF: la lista de archivos, las leyendas y la vista previa con DPOT y el número del archivo con 1/5."/></figure>
 
 <h3>Paso 1 — Archivos PDF</h3>
-<div class="paso">Toque <b>Agregar PDF</b> (puede elegir varios) o <b>Agregar carpeta</b> (entran todos los PDF de la carpeta y de sus subcarpetas). También puede arrastrarlos a la lista o a la vista previa. <b>Limpiar</b> vacía la lista.
+<div class="paso">Toque <b>Agregar PDF</b> (puede elegir varios), <b>Agregar carpeta</b> (entran todos los PDF de la carpeta y de sus subcarpetas) o <b>Agregar ZIP / RAR / 7z</b> (entran los PDF que trae adentro; al guardar se arma un ZIP con el mismo nombre y <code>_indexado</code> al final, con todo lo que traía). También puede arrastrarlos a la lista o a la vista previa. <b>Limpiar</b> vacía la lista.
 Haga clic en un archivo de la lista para verlo en la vista previa.</div>
 
 <h3>Paso 2 — Leyendas izquierdas</h3>
@@ -162,6 +166,8 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
   <li><b>Con recuadro:</b> dibuja un rectángulo alrededor de cada leyenda.</li>
   <li><b>Distancia de los lados</b> y <b>Distancia de arriba y abajo:</b> qué tan separadas de las orillas quedan las leyendas (en puntos; 28 puntos ≈ 1 cm). Lo normal es 51 a los lados y 23 arriba y abajo.</li>
   <li><b>Hojas sin leyendas al inicio:</b> por ejemplo 1 = la carátula queda sin leyendas. Esas hojas no cuentan: la siguiente hoja dice <i>1/9</i> si el PDF tiene 10 hojas.</li>
+  <li><b>Texto editable en Adobe (Rellenar y firmar):</b> las leyendas se pueden cambiar después en Adobe. Ver <a href="#editable">Texto editable en Adobe</a>.</li>
+  <li><b>Mover cada leyenda por separado:</b> para correr una sola leyenda sin mover las demás. Ver <a href="#mover">Mover cada leyenda</a>.</li>
   <li><b>Hojas a indexar:</b> vacío = todas. Ej. <code>3-50</code>: solo esas hojas llevan leyendas, y la numeración cuenta solo esas. Vale para todos los PDF de la lista (si un PDF es más corto, se usan las hojas que tenga).</li>
 </ul>
 
@@ -248,10 +254,46 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
   <li><b>Guardar PDF</b>: elija dónde guardarlo; el nombre sugerido termina en <code>_girado</code>.</li>
 </ul>
 
-<h3>Girar una carpeta o un ZIP</h3>
-<div class="paso">Toque <b>Girar una carpeta o ZIP</b> (o arrastre la carpeta o el ZIP a la pantalla), elija <b>A la derecha</b>, <b>A la izquierda</b> o <b>Voltear (180°)</b> y toque <b>Girar</b>. Se giran <b>todas las hojas de todos los PDF</b>, igual que al foliar una carpeta: vista previa del árbol, misma estructura de subcarpetas, ZIP dentro de ZIP, lo que no es PDF se copia igual y al final se avisa de los PDF con contraseña.</div>
+<h3>Girar una carpeta o un comprimido (ZIP, RAR, 7z…)</h3>
+<div class="paso">Toque <b>Girar una carpeta o comprimido</b> (o arrastre la carpeta, el ZIP, RAR o 7z a la pantalla), elija <b>A la derecha</b>, <b>A la izquierda</b> o <b>Voltear (180°)</b> y toque <b>Girar</b>. Se giran <b>todas las hojas de todos los PDF</b>, igual que al foliar una carpeta: vista previa del árbol, misma estructura de subcarpetas, comprimidos dentro de comprimidos, lo que no es PDF se copia igual y al final se avisa de los PDF con contraseña.</div>
 
-<h2 id="faq">8. Preguntas frecuentes</h2>
+<h2 id="comprimidos">8. Comprimidos: ZIP, RAR, 7z y más</h2>
+<p>Foliar, Indexar y Girar abren casi cualquier archivo comprimido: <b>ZIP, RAR</b> (también los nuevos RAR5 y los que vienen en partes), <b>7z</b> (también en partes .001, .002…), <b>TAR, TAR.GZ / TGZ, GZ, BZ2, XZ, LZMA, Z, CAB, ISO, ARJ, LZH, CPIO, RPM, DEB, WIM, XAR</b>.</p>
+<div class="paso"><b>Paso 1.</b> En Foliar o Girar toque el botón de carpeta → <b>Elegir comprimido (ZIP, RAR, 7z...)</b>. En Indexar toque <b>Agregar ZIP / RAR / 7z</b>. También puede arrastrar el archivo.</div>
+<div class="paso"><b>Paso 2.</b> Si el comprimido tiene <b>contraseña</b>, sale un cuadrito para escribirla. Si la escribe mal, dice <i>“La contraseña no es correcta. Pruebe otra vez.”</i> y la vuelve a pedir. Si no la sabe, toque <b>Cancelar</b>: ese comprimido se copia tal cual, sin abrirlo, y se avisa al final.</div>
+<div class="paso"><b>Paso 3.</b> El programa abre todo (también los comprimidos que vengan adentro de otros) y sigue igual que con una carpeta: vista previa del árbol, procesar, guardar.</div>
+<div class="paso"><b>Paso 4.</b> El resultado sale en <b>ZIP</b>, con las mismas carpetas y archivos que traía. Los RAR, 7z y demás que venían adentro también quedan como ZIP.</div>
+<div class="ojo"><b>¿Por qué sale en ZIP y no en RAR?</b> El formato RAR es de la empresa de WinRAR y solo se puede crear con su programa, que es de pago. Abrirlos sí está permitido. El ZIP lo abre cualquier computadora sin instalar nada.</div>
+<p>Si un comprimido viene en partes (<code>Expediente.part1.rar</code>, <code>Expediente.part2.rar</code>… o <code>Expediente.7z.001</code>, <code>.002</code>…), elija <b>la primera parte</b> y deje todas las partes juntas en la misma carpeta.</p>
+
+<h2 id="mover">9. Mover cada leyenda de Indexar por separado</h2>
+<p>Las leyendas de Indexar son cinco: <b>Arriba a la izquierda</b>, <b>Abajo a la izquierda</b>, <b>Arriba a la derecha</b>, <b>Número en letras</b> y <b>Numeración de abajo</b>. Cada una se puede correr sola, sin que se muevan las demás. Hay dos formas:</p>
+<h3>Forma 1 — Arrastrándola con el ratón</h3>
+<div class="paso"><b>Paso 1.</b> En la vista previa, ponga el ratón encima de la leyenda que quiere mover (por ejemplo la de arriba a la derecha).</div>
+<div class="paso"><b>Paso 2.</b> Mantenga apretado el botón del ratón y arrástrela. Un recuadro azul punteado muestra dónde va a quedar.</div>
+<div class="paso"><b>Paso 3.</b> Suelte. El programa pregunta: <b>Solo en esta hoja</b> o <b>En todas las hojas</b>.
+<ul><li><b>Solo en esta hoja:</b> se mueve solo en la hoja que está viendo (la hoja queda marcada como personalizada ✎).</li>
+<li><b>En todas las hojas:</b> se mueve en todas las hojas de todos los PDF de la lista, y los números de <b>5. Más opciones</b> se actualizan solos.</li></ul></div>
+<h3>Forma 2 — Con números</h3>
+<div class="paso">En <b>5. Más opciones</b> → <b>Mover cada leyenda por separado</b>, cada leyenda tiene dos casillas:
+<ul><li><b>→ Derecha:</b> cuántos puntos se corre a la derecha. Con signo menos (<code>-20</code>) se corre a la izquierda.</li>
+<li><b>↓ Abajo:</b> cuántos puntos se corre hacia abajo. Con signo menos se corre hacia arriba.</li></ul>
+28 puntos ≈ 1 cm. La vista previa cambia al momento. <b>Poner todas en su lugar</b> deja todo en 0.</div>
+<p>Si está en <b>Personalizar hojas</b> y arrastra fuera de una leyenda, se mueven todas juntas como antes.</p>
+
+<h2 id="editable">10. Texto editable en Adobe (Rellenar y firmar)</h2>
+<p>Normalmente el folio y las leyendas quedan <b>fijos</b> en la hoja: nadie los puede cambiar. Si marca <b>Texto editable en Adobe (Rellenar y firmar)</b>, quedan como <b>casillas que ya traen el texto escrito</b>: se ven y se imprimen igual, pero en Adobe se pueden corregir.</p>
+<div class="paso"><b>Paso 1.</b> En Foliar (<b>7. Más opciones</b>) o en Indexar (<b>5. Más opciones</b>) marque <b>Texto editable en Adobe (Rellenar y firmar)</b>.</div>
+<div class="paso"><b>Paso 2.</b> Guarde como siempre (también funciona con carpetas y comprimidos).</div>
+<div class="paso"><b>Paso 3.</b> Abra el PDF en <b>Adobe Acrobat</b> o <b>Adobe Reader</b> → <b>Rellenar y firmar</b>. Haga clic en el folio o la leyenda y escriba el texto nuevo.</div>
+<ul>
+  <li>Con <b>Helvetica, Times y Courier</b> funciona perfecto.</li>
+  <li>Con una <b>letra de la computadora</b> (Arial, Calibri…), el programa mete la letra completa dentro del PDF para que Adobe escriba con ella (el PDF pesa un poco más). Si esa letra no se puede usar, se pasa a <b>Helvetica</b> y sigue editable.</li>
+  <li>El <b>recuadro</b> (si lo marcó) queda fijo: si escribe un texto más largo, el recuadro no se agranda.</li>
+  <li>Girar no pone texto, por eso esta opción solo está en Foliar e Indexar.</li>
+</ul>
+
+<h2 id="faq">11. Preguntas frecuentes</h2>
 
 <h3>Generales</h3>
 <details><summary>¿Se modifica mi PDF original?</summary>
@@ -299,6 +341,30 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
 <details><summary>¿Qué pasa con los Word, Excel y fotos que están en la carpeta?</summary>
 <p>Se copian igual, en la misma subcarpeta.</p></details>
 
+<h3>Comprimidos (ZIP, RAR, 7z…)</h3>
+<details><summary>¿Qué comprimidos puedo usar?</summary>
+<p>ZIP, RAR (también RAR5 y en partes), 7z (también en partes), TAR, TAR.GZ, TGZ, GZ, BZ2, XZ, LZMA, Z, CAB, ISO, ARJ, LZH, CPIO, RPM, DEB, WIM y XAR. En Foliar, Indexar y Girar.</p></details>
+<details><summary>Subí un RAR y el resultado salió en ZIP. ¿Está mal?</summary>
+<p>No, es a propósito. Crear RAR solo se puede con WinRAR, que es de pago. El ZIP trae exactamente las mismas carpetas y archivos, y se abre en cualquier computadora.</p></details>
+<details><summary>El RAR tiene contraseña. ¿Qué hago?</summary>
+<p>El programa se la pide al abrirlo. Si se equivoca, la vuelve a pedir. Si no la sabe, toque Cancelar y ese archivo se copia tal cual.</p></details>
+<details><summary>Tengo un RAR en varias partes (part1, part2…).</summary>
+<p>Ponga todas las partes en la misma carpeta y elija solo la <b>part1</b> (o la <b>.001</b> en los 7z). El programa busca las demás solo.</p></details>
+<details><summary>Hay un RAR dentro de un ZIP (o al revés).</summary>
+<p>También se abre. Cada comprimido de adentro queda en el resultado como un ZIP con el mismo nombre.</p></details>
+<details><summary>Un comprimido no se pudo abrir.</summary>
+<p>Puede estar dañado o incompleto (por ejemplo, falta una de sus partes). Se copia tal cual y se avisa al final. Pruebe abrirlo en su computadora para ver si está bien.</p></details>
+
+<h3>Texto editable en Adobe</h3>
+<details><summary>¿Cómo cambio un folio en Adobe?</summary>
+<p>Guarde con <b>Texto editable en Adobe (Rellenar y firmar)</b> marcado. En Adobe → <b>Rellenar y firmar</b> → clic en el folio → escriba.</p></details>
+<details><summary>Marqué la opción pero en Adobe no me deja cambiarlo.</summary>
+<p>Revise que lo guardó <b>después</b> de marcar la opción (los PDF hechos antes quedan fijos). Si el PDF se “aplanó” o se imprimió como PDF, las casillas se vuelven texto fijo.</p></details>
+<details><summary>¿Otra persona puede cambiar el folio si le mando el PDF editable?</summary>
+<p>Sí, cualquiera con Adobe puede. Si quiere que nadie lo cambie, deje la opción <b>sin marcar</b> (así queda fijo, como siempre).</p></details>
+<details><summary>Puse una letra de la computadora y en Adobe se ve distinta al editar.</summary>
+<p>Algunas letras no se pueden usar en las casillas; entonces se usa Helvetica. Si quiere que se vea idéntico al editar, use Helvetica, Times o Courier.</p></details>
+
 <h3>Indexar</h3>
 <details><summary>¿Qué es el “pedazo” del nombre?</summary>
 <p>El nombre del archivo se corta donde está el separador. El pedazo 0 es lo que está antes del primer separador, el 1 lo que sigue, y así. Vea los ejemplos de la tabla del paso 3.</p></details>
@@ -316,12 +382,18 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
 <p>Suba <b>Distancia de los lados</b> o <b>Distancia de arriba y abajo</b> en <b>5. Más opciones</b>. En la vista previa se ve el cambio al momento.</p></details>
 <details><summary>Cambié la letra y no cambió en las hojas personalizadas.</summary>
 <p>Ahora sí cambia: la letra general se aplica a todas las hojas, también a las personalizadas.</p></details>
+<details><summary>Quiero mover solo la leyenda de arriba a la derecha, sin mover las otras.</summary>
+<p>Arrástrela con el ratón en la vista previa y elija <b>Solo en esta hoja</b> o <b>En todas las hojas</b>. O en <b>5. Más opciones</b> → <b>Mover cada leyenda por separado</b>, escriba cuántos puntos se corre. Ver <a href="#mover">Mover cada leyenda</a>.</p></details>
+<details><summary>Moví una leyenda y quiero regresarla a su lugar.</summary>
+<p>Si fue en todas las hojas: <b>Poner todas en su lugar</b> en 5. Más opciones (o ponga 0 en sus casillas). Si fue solo en una hoja: en esa hoja use <b>Personalizar hojas</b> → <b>A su lugar</b>, o quite la personalización de esa hoja.</p></details>
+<details><summary>Agarré la leyenda pero se movieron todas.</summary>
+<p>Tiene que apretar justo encima del texto de la leyenda. Si aprieta en otra parte de la hoja mientras está en Personalizar hojas, se mueven todas juntas.</p></details>
 <details><summary>¿Puedo poner “Página 1 de 10” en vez de “1/10” abajo?</summary>
 <p>Sí: marque <b>Repetir la numeración abajo</b> y elija el formato, o “Personalizado…” y escriba lo que quiera con <code>{pagina}</code> y <code>{total}</code>.</p></details>
 
 <h3>Girar</h3>
 <details><summary>¿Dónde quedó el Girar de antes de PDFsam?</summary>
-<p>Se cambió por este, con miniaturas. Lo que hacía el de antes (girar muchos PDF de una vez) se hace con <b>Girar una carpeta o ZIP</b>.</p></details>
+<p>Se cambió por este, con miniaturas. Lo que hacía el de antes (girar muchos PDF de una vez) se hace con <b>Girar una carpeta o comprimido</b>.</p></details>
 <details><summary>¿Girar le baja la calidad al PDF?</summary>
 <p>No. Solo se cambia el giro de la hoja; las imágenes y el texto quedan exactamente igual.</p></details>
 <details><summary>Giré una hoja de más. ¿Cómo la regreso?</summary>

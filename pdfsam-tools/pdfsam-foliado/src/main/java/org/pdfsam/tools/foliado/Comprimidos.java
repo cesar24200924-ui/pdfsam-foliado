@@ -234,7 +234,10 @@ final class Comprimidos {
                     throw new IOException("\"" + nombre + "\" está dañado o no es un comprimido que se pueda abrir.");
                 }
             }
-            String sinNombre = base(nombre);
+            // sin nombre adentro (un .gz hecho con tar): "x.tar.gz" -> "x.tar"; "x.tgz" -> "x.tar"
+            String ext = extension(nombre);
+            String sinNombre = Set.of("tgz", "taz", "tbz", "tbz2", "txz", "tlz").contains(ext) ?
+                    base(nombre) + ".tar" : nombre.substring(0, Math.max(1, nombre.length() - ext.length() - 1));
             for (ISimpleInArchiveItem item : arch.getSimpleInterface().getArchiveItems()) {
                 String ruta = item.getPath();
                 if (ruta == null || ruta.isBlank()) {
