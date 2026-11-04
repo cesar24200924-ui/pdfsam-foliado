@@ -1,0 +1,58 @@
+/* Manual de Foliar, Indexar y Girar: siempre claro y en colores pastel (también con el tema oscuro) */
+.manual-foliado {
+    -fx-background-color: #fdfcf8;
+}
+.manual-foliado .scroll-pane,
+.manual-foliado .scroll-pane > .viewport {
+    -fx-background-color: #fdfcf8;
+    -fx-background: #fdfcf8;
+}
+.manual-foliado .label,
+.manual-foliado .check-box {
+    -fx-text-fill: #2f3b4a;
+}
+.manual-foliado .hyperlink {
+    -fx-text-fill: #3f74b8;
+}
+.manual-foliado .button {
+    -fx-background-color: #e9f1fb;
+    -fx-text-fill: #2f3b4a;
+    -fx-border-color: #c9dbf2;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 4 10 4 10;
+}
+.manual-foliado .button:hover {
+    -fx-background-color: #d6e6fa;
+}
+.manual-foliado .button .ikonli-font-icon {
+    -fx-icon-color: #4a7fc1;
+    -fx-fill: #4a7fc1;
+}
+.manual-foliado .titled-pane {
+    -fx-text-fill: #2f3b4a;
+}
+.manual-foliado .titled-pane > .title {
+    -fx-background-color: #eaf2fd;
+    -fx-background-radius: 6;
+    -fx-border-color: #c9dbf2;
+    -fx-border-radius: 6;
+    -fx-padding: 6 10 6 10;
+}
+.manual-foliado .titled-pane > .title:hover {
+    -fx-background-color: #dbe9fb;
+}
+.manual-foliado .titled-pane > .title > .text,
+.manual-foliado .titled-pane > .title .label {
+    -fx-fill: #2f3b4a;
+    -fx-text-fill: #2f3b4a;
+    -fx-font-weight: bold;
+}
+.manual-foliado .titled-pane > .title > .arrow-button > .arrow {
+    -fx-background-color: #4a7fc1;
+}
+.manual-foliado .titled-pane > .content {
+    -fx-background-color: #f8fbff;
+    -fx-border-color: #c9dbf2;
+    -fx-border-width: 0 1 1 1;
+}
