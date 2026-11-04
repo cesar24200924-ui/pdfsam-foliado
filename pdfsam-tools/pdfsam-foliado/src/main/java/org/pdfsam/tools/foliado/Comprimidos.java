@@ -247,6 +247,12 @@ final class Comprimidos {
                 while (ruta.startsWith("/")) {
                     ruta = ruta.substring(1);
                 }
+                if (DE_UNO.contains(ext)) {
+                    ruta = ruta.substring(ruta.lastIndexOf('/') + 1); // traen un solo archivo: solo su nombre
+                    if (ruta.isBlank()) {
+                        ruta = sinNombre;
+                    }
+                }
                 if (ruta.matches("^[A-Za-z]:.*") || List.of(ruta.split("/")).contains("..")) {
                     continue; // nombres peligrosos
                 }
