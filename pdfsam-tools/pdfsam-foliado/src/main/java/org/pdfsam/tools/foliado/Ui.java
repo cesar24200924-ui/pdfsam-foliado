@@ -258,7 +258,7 @@ final class Ui {
             s.initOwner(w);
         }
         s.setTitle(titulo);
-        Label t = new Label("✓ " + titulo);
+        Label t = new Label(titulo);
         t.setStyle("-fx-font-size: 1.3em; -fx-font-weight: bold;");
         Label d = new Label((detalle == null ? "" : detalle + "\n\n") + "Guardado en:\n" + resultado.getAbsolutePath());
         d.setWrapText(true);
@@ -285,6 +285,15 @@ final class Ui {
         }
         s.setScene(sc);
         s.showAndWait();
+    }
+
+    /** Botón con un ícono de los mismos que usa PDFsam. */
+    static Button boton(String texto, org.kordamp.ikonli.Ikon icono, Runnable accion) {
+        Button b = boton(texto, accion);
+        org.kordamp.ikonli.javafx.FontIcon i = new org.kordamp.ikonli.javafx.FontIcon(icono);
+        i.getStyleClass().add("foliado-icono");
+        b.setGraphic(i);
+        return b;
     }
 
     static Button boton(String texto, Runnable accion) {

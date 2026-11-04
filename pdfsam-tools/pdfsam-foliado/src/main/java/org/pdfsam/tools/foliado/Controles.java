@@ -164,7 +164,7 @@ final class Controles {
                 nombre.set(inicialNombreORuta);
             }
             negrita.setSelected(negritaInicial);
-            buscar.setPromptText("🔍  Escriba para buscar (ej. arial negrita)");
+            buscar.setPromptText("Escriba para buscar (ej. arial negrita)");
             lista.setPrefHeight(150);
             lista.setCellFactory(v -> new ListCell<>() {
                 @Override
@@ -173,7 +173,12 @@ final class Controles {
                     setText(empty || item == null ? null : item + (Motor.INTEGRADAS.contains(item) ? "  ★" : ""));
                 }
             });
-            getChildren().addAll(buscar, lista, estado, negrita);
+            org.kordamp.ikonli.javafx.FontIcon lupa = new org.kordamp.ikonli.javafx.FontIcon(
+                    org.kordamp.ikonli.unicons.UniconsLine.SEARCH);
+            HBox filaBuscar = new HBox(6, lupa, buscar);
+            filaBuscar.setAlignment(Pos.CENTER_LEFT);
+            HBox.setHgrow(buscar, javafx.scene.layout.Priority.ALWAYS);
+            getChildren().addAll(filaBuscar, lista, estado, negrita);
             buscar.textProperty().addListener((o, a, b) -> llenar());
             lista.getSelectionModel().selectedItemProperty().addListener((o, a, b) -> {
                 if (!llenando && b != null) {

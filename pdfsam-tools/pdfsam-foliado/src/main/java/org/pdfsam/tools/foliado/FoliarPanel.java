@@ -8,6 +8,8 @@
  */
 package org.pdfsam.tools.foliado;
 
+import org.kordamp.ikonli.unicons.UniconsLine;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
@@ -87,9 +89,9 @@ class FoliarPanel extends BorderPane {
         recuadro.setSelected(Config.si("foliar.recuadro", false));
 
         // ---------- 1. archivo
-        Button elegir = Ui.boton("📄  Elegir PDF", this::elegir);
+        Button elegir = Ui.boton("Elegir PDF", UniconsLine.FILE_ALT, this::elegir);
         elegir.setMaxWidth(Double.MAX_VALUE);
-        Button carpeta = Ui.boton("📁  Foliar una carpeta o ZIP", () -> {
+        Button carpeta = Ui.boton("Foliar una carpeta o ZIP", UniconsLine.FOLDER, () -> {
         });
         carpeta.setMaxWidth(Double.MAX_VALUE);
         ContextMenu menu = new ContextMenu();
@@ -201,7 +203,7 @@ class FoliarPanel extends BorderPane {
         scroll.setFitToWidth(true);
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         VBox.setVgrow(scroll, Priority.ALWAYS);
-        btnFoliar = Ui.boton("№  Foliar y guardar", this::foliar);
+        btnFoliar = Ui.boton("Foliar y guardar", UniconsLine.FILE_EDIT_ALT, this::foliar);
         btnFoliar.getStyleClass().addAll("footer-button", "run-button");
         btnFoliar.setMaxWidth(Double.MAX_VALUE);
         btnFoliar.setDisable(true);
@@ -215,7 +217,7 @@ class FoliarPanel extends BorderPane {
 
         // ---------- vista previa
         vista = new VistaPrevia("Arrastre aquí el PDF a foliar", "Verá el folio en la hoja antes de guardar.",
-                List.of(Ui.boton("📄  Elegir PDF", this::elegir)), this::recibir);
+                List.of(Ui.boton("Elegir PDF", UniconsLine.FILE_ALT, this::elegir)), this::recibir);
         vista.lblAyuda.setText("Vista previa (todavía no se guarda nada). Puede arrastrar el folio con el ratón.");
         editor = new EditorHojas(this::generales, vista::indice, vista::total, letra::nombres, this::refrescar, true);
         editor.setVisible(false);

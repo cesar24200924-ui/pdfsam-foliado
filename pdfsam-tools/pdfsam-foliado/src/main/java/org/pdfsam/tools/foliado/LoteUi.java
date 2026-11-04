@@ -127,7 +127,7 @@ final class LoteUi {
         tabla.getColumns().addAll(List.of(c1, c2, c3));
         int[] r0 = arbol.getOrDefault(".", new int[2]);
         TreeItem<Fila> raiz = new TreeItem<>(
-                new Fila("📁 " + L.nombreOrigen() + (L.esZip ? ".zip" : ""), r0[0], r0[1]));
+                new Fila(L.nombreOrigen() + (L.esZip ? ".zip" : ""), r0[0], r0[1]));
         raiz.setExpanded(true);
         Map<String, TreeItem<Fila>> nodos = new HashMap<>();
         nodos.put(".", raiz);
@@ -178,7 +178,7 @@ final class LoteUi {
         String padre = new File(carpeta).getParent();
         TreeItem<Fila> nodoPadre = padre == null ? nodos.get(".") : agregar(nodos, padre, null);
         String nombre = new File(carpeta).getName();
-        String icono = nombre.toLowerCase().endsWith(".zip") ? "🗜 " : "📁 ";
+        String icono = "";
         TreeItem<Fila> n = new TreeItem<>(new Fila(icono + nombre, v == null ? 0 : v[0], v == null ? 0 : v[1]));
         n.setExpanded(true);
         nodoPadre.getChildren().add(n);

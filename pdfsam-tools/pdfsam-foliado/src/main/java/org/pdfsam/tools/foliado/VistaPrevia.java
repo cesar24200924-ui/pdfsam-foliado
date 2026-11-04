@@ -8,6 +8,8 @@
  */
 package org.pdfsam.tools.foliado;
 
+import org.kordamp.ikonli.unicons.UniconsLine;
+
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -80,8 +82,8 @@ class VistaPrevia extends BorderPane {
 
     VistaPrevia(String textoZona, String subZona, List<Node> botonesZona, Consumer<List<File>> recibir) {
         getStyleClass().add("foliado-vista-previa");
-        Button ant = Ui.boton("◀  Anterior", () -> ir(-1));
-        Button sig = Ui.boton("Siguiente  ▶", () -> ir(1));
+        Button ant = Ui.boton("Anterior", UniconsLine.ANGLE_LEFT, () -> ir(-1));
+        Button sig = Ui.boton("Siguiente", UniconsLine.ANGLE_RIGHT, () -> ir(1));
         lblHoja.setStyle("-fx-font-weight: bold;");
         HBox nav = new HBox(8, ant, sig, lblHoja, lblTamano);
         nav.setAlignment(Pos.CENTER_LEFT);
@@ -112,7 +114,13 @@ class VistaPrevia extends BorderPane {
         marcas.setManaged(false);
         area.getChildren().addAll(imagen, marcas, zona);
         area.setPadding(new Insets(16));
-        area.setMinSize(200, 200);
+        // el área toma el espacio que sobra (la imagen nunca la agranda ni se sale de ella)
+        area.setMinSize(150, 150);
+        area.setPrefSize(150, 150);
+        Rectangle recorte = new Rectangle();
+        recorte.widthProperty().bind(area.widthProperty());
+        recorte.heightProperty().bind(area.heightProperty());
+        area.setClip(recorte);
         area.setStyle("-fx-background-color: rgba(127,127,127,0.12);");
         setCenter(area);
         setMinSize(250, 250);
@@ -244,6 +252,9 @@ class VistaPrevia extends BorderPane {
         Motor.Previa p = previa;
         if (p == null) {
             return;
+        }
+        if (area.getWidth() < 60 || area.getHeight() < 60) {
+            return; // todavía no tiene tamaño: se dibuja cuando lo tenga
         }
         float[] tam = p.tamano(indice);
         double W = Math.max(150, area.getWidth() - 40), H = Math.max(150, area.getHeight() - 40);

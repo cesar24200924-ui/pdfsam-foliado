@@ -92,13 +92,17 @@ class PantallasTest {
             panel.recibir(List.of(pdf));
             return null;
         });
-        Thread.sleep(4000);
+        Thread.sleep(1500);
+        foto(s, "pantalla_foliar.png");
+        Thread.sleep(2500);
         foto(s, "pantalla_foliar.png");
         enFx(() -> {
             panel.opcionesParaPrueba();
             return null;
         });
-        Thread.sleep(3000);
+        Thread.sleep(1500);
+        foto(s, "pantalla_foliar_letras.png"); // acomoda la pantalla (sin ventana solo se acomoda al tomar la foto)
+        Thread.sleep(2500);
         foto(s, "pantalla_foliar_letras.png");
         assertNull(null);
     }
@@ -112,11 +116,14 @@ class PantallasTest {
         MotorTest.pdfDePrueba(sub, "08011990999999 ACTA.pdf");
         IndexarPanel panel = enFx(IndexarPanel::new);
         Scene s = enFx(() -> escena(panel));
+        foto(s, "pantalla_indexar.png");
         enFx(() -> {
             panel.recibir(List.of(sub));
             return null;
         });
-        Thread.sleep(4000);
+        Thread.sleep(1500);
+        foto(s, "pantalla_indexar.png");
+        Thread.sleep(2500);
         foto(s, "pantalla_indexar.png");
     }
 }

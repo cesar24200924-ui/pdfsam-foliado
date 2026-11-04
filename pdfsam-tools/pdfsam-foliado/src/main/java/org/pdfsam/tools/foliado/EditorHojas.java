@@ -8,6 +8,8 @@
  */
 package org.pdfsam.tools.foliado;
 
+import org.kordamp.ikonli.unicons.UniconsLine;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -72,9 +74,9 @@ class EditorHojas extends VBox {
         this.letras = letras;
         this.alCambiar = alCambiar;
 
-        Button esta = Ui.boton("✎  Personalizar esta hoja", this::editarActual);
-        Button varias = Ui.boton("☰  Personalizar varias…", this::editarVarias);
-        btnQuitarTodo = Ui.boton("✕  Quitar todas las personalizaciones", this::quitarTodo);
+        Button esta = Ui.boton("Personalizar esta hoja", UniconsLine.PEN, this::editarActual);
+        Button varias = Ui.boton("Personalizar varias…", UniconsLine.LIST_UL, this::editarVarias);
+        btnQuitarTodo = Ui.boton("Quitar todas las personalizaciones", UniconsLine.TIMES, this::quitarTodo);
         FlowPane barra = new FlowPane(8, 6, esta, varias, lblLista, btnQuitarTodo);
         barra.setAlignment(Pos.CENTER_LEFT);
         barra.setPadding(new Insets(6, 8, 6, 8));
@@ -83,16 +85,16 @@ class EditorHojas extends VBox {
 
         // panel de cambios (solo visible mientras se edita)
         lblEditando.setStyle("-fx-font-weight: bold;");
-        Button listo = Ui.boton("✓  Listo", () -> terminar(true));
-        Button todas = Ui.boton("⇉  Aplicar a todas las hojas de este PDF", this::aplicarATodas);
-        Button quitar = Ui.boton("↺  Quitar personalización", this::quitarGrupo);
+        Button listo = Ui.boton("Listo", UniconsLine.CHECK, () -> terminar(true));
+        Button todas = Ui.boton("Aplicar a todas las hojas de este PDF", UniconsLine.COPY_ALT, this::aplicarATodas);
+        Button quitar = Ui.boton("Quitar personalización", UniconsLine.REDO, this::quitarGrupo);
         FlowPane p1 = new FlowPane(8, 6, lblEditando, listo, todas, quitar);
         p1.setAlignment(Pos.CENTER_LEFT);
 
         omitir.setOnAction(e -> cambio());
         Label mover = new Label("Mover:");
-        HBox fm = new HBox(3, mover, Ui.boton("▲", () -> mover(0f, -PASO)), Ui.boton("▼", () -> mover(0f, PASO)),
-                Ui.boton("◀", () -> mover(-PASO, 0f)), Ui.boton("▶", () -> mover(PASO, 0f)),
+        HBox fm = new HBox(3, mover, Ui.boton("", UniconsLine.ANGLE_UP, () -> mover(0f, -PASO)), Ui.boton("", UniconsLine.ANGLE_DOWN, () -> mover(0f, PASO)),
+                Ui.boton("", UniconsLine.ANGLE_LEFT, () -> mover(-PASO, 0f)), Ui.boton("", UniconsLine.ANGLE_RIGHT, () -> mover(PASO, 0f)),
                 Ui.boton("A su lugar", () -> mover(null, null)));
         fm.setAlignment(Pos.CENTER_LEFT);
         color.setOnAction(e -> cambio());

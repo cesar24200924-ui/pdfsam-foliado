@@ -8,6 +8,8 @@
  */
 package org.pdfsam.tools.foliado;
 
+import org.kordamp.ikonli.unicons.UniconsLine;
+
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -145,19 +147,19 @@ class IndexarPanel extends BorderPane {
         color = new Controles.SelectorColor(d.color, COLORES, r);
 
         // ---------- 1. archivos
-        Button agregarPdf = Ui.boton("📄  Agregar PDF", () -> {
+        Button agregarPdf = Ui.boton("Agregar PDF", UniconsLine.FILE_ALT, () -> {
             List<File> f = Ui.elegirPdfs(this, true);
             if (f != null) {
                 recibir(f);
             }
         });
-        Button agregarCarpeta = Ui.boton("📁  Agregar carpeta", () -> {
+        Button agregarCarpeta = Ui.boton("Agregar carpeta", UniconsLine.FOLDER, () -> {
             File f = Ui.elegirCarpeta(this, "Elegir carpeta (se incluyen todas las subcarpetas)", null);
             if (f != null) {
                 recibir(List.of(f));
             }
         });
-        Button limpiar = Ui.boton("🗑  Limpiar", this::limpiar);
+        Button limpiar = Ui.boton("Limpiar", UniconsLine.TRASH_ALT, this::limpiar);
         FlowPane fb = new FlowPane(4, 4, agregarPdf, agregarCarpeta, limpiar);
         lista.setPrefHeight(120);
         lista.getSelectionModel().selectedIndexProperty().addListener((o, a, b) -> {
@@ -220,7 +222,7 @@ class IndexarPanel extends BorderPane {
         scroll.setFitToWidth(true);
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         VBox.setVgrow(scroll, Priority.ALWAYS);
-        btnIndexar = Ui.boton("🏷  Indexar y guardar", this::procesar);
+        btnIndexar = Ui.boton("Indexar y guardar", UniconsLine.TAG_ALT, this::procesar);
         btnIndexar.getStyleClass().addAll("footer-button", "run-button");
         btnIndexar.setMaxWidth(Double.MAX_VALUE);
         btnIndexar.setDisable(true);
@@ -233,8 +235,8 @@ class IndexarPanel extends BorderPane {
         setLeft(izq);
 
         // ---------- vista previa
-        Button bPdf = Ui.boton("📄  Agregar PDF", agregarPdf::fire);
-        Button bCarpeta = Ui.boton("📁  Agregar carpeta", agregarCarpeta::fire);
+        Button bPdf = Ui.boton("Agregar PDF", UniconsLine.FILE_ALT, agregarPdf::fire);
+        Button bCarpeta = Ui.boton("Agregar carpeta", UniconsLine.FOLDER, agregarCarpeta::fire);
         vista = new VistaPrevia("Arrastre aquí los PDF o una carpeta", "Verá las leyendas en la hoja antes de guardar.",
                 List.of(bPdf, bCarpeta), this::recibir);
         vista.lblAyuda.setText("Vista previa (todavía no se guarda nada).");
