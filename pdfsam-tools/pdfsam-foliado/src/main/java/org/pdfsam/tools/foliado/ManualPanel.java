@@ -71,6 +71,10 @@ class ManualPanel extends BorderPane {
         contenido.setPadding(new Insets(20, 30, 40, 30));
         contenido.setMaxWidth(980);
         contenido.setFillWidth(true);
+        // colores pastel, siempre claros (aunque PDFsam esté en tema oscuro)
+        contenido.setStyle("-fx-background-color: #fdfcf8;");
+        scroll.setStyle("-fx-background: #fdfcf8; -fx-background-color: #fdfcf8;");
+        setStyle("-fx-background-color: #fdfcf8;");
         scroll.setFitToWidth(true);
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         setCenter(scroll);
@@ -87,7 +91,7 @@ class ManualPanel extends BorderPane {
         HBox barra = new HBox(6, inicio, foliar, indexar, girar, faq, espacio, navegador);
         barra.setAlignment(Pos.CENTER_LEFT);
         barra.setPadding(new Insets(8));
-        barra.setStyle("-fx-border-color: transparent transparent rgba(127,127,127,0.35) transparent;");
+        barra.setStyle("-fx-background-color: #f1f5fb; -fx-border-color: transparent transparent #d6dde8 transparent;");
         setTop(barra);
         try {
             cargar();
@@ -202,17 +206,17 @@ class ManualPanel extends BorderPane {
             default -> base * 1.2;
             };
             TextFlow t = flujo(e, tam, true);
-            String color = "h1".equals(e.getTagName()) ? "#b00000" : "h2".equals(e.getTagName()) ? "#0d33a6" : "";
+            String color = "h1".equals(e.getTagName()) ? "#c25a7c" : "h2".equals(e.getTagName()) ? "#4a7fc1" : "#5b6b80";
             for (Node n : t.getChildren()) {
-                if (n instanceof Text x && !color.isEmpty()) {
+                if (n instanceof Text x) {
                     x.setStyle("-fx-fill: " + color + ";");
                 }
             }
             VBox.setMargin(t, new Insets("h3".equals(e.getTagName()) ? 10 : 22, 0, 2, 0));
             if (!"h3".equals(e.getTagName())) {
                 VBox caja = new VBox(4, t, new Region());
-                caja.setStyle("-fx-border-color: transparent transparent " + (color.isEmpty() ? "#ccd" : color)
-                        + " transparent; -fx-border-width: 0 0 2 0; -fx-padding: 0 0 4 0;");
+                caja.setStyle("-fx-border-color: transparent transparent " + ("h1".equals(e.getTagName()) ? "#f2c4d3"
+                        : "#c9dbf2") + " transparent; -fx-border-width: 0 0 3 0; -fx-padding: 0 0 4 0;");
                 VBox.setMargin(caja, new Insets(22, 0, 4, 0));
                 return caja;
             }
@@ -229,7 +233,7 @@ class ManualPanel extends BorderPane {
                 if (li.item(i) instanceof Element item && "li".equals(item.getTagName())) {
                     Label vineta = new Label("ol".equals(e.getTagName()) ? (k++) + "." : "•");
                     vineta.setMinWidth(22);
-                    vineta.setStyle("-fx-font-size: " + base + "px;");
+                    vineta.setStyle("-fx-font-size: " + base + "px; -fx-text-fill: #4a7fc1;");
                     VBox dentro = new VBox(4);
                     dentro.getChildren().addAll(bloques(item));
                     HBox.setHgrow(dentro, Priority.ALWAYS);
@@ -248,14 +252,13 @@ class ManualPanel extends BorderPane {
             v.getChildren().addAll(bloques(e));
             String clase = e.getAttribute("class");
             if ("paso".equals(clase)) {
-                v.setStyle("-fx-background-color: #f4f7fd; -fx-border-color: transparent transparent transparent "
-                        + "#0d33a6; -fx-border-width: 0 0 0 4; -fx-padding: 8 14 8 14;");
+                v.setStyle("-fx-background-color: #eaf2fd; -fx-border-color: transparent transparent transparent "
+                        + "#9cc0f0; -fx-border-width: 0 0 0 5; -fx-padding: 8 14 8 14; -fx-background-radius: 0 6 6 0;");
             } else if ("ojo".equals(clase)) {
-                v.setStyle("-fx-background-color: #fff8e6; -fx-border-color: transparent transparent transparent "
-                        + "#e0a800; -fx-border-width: 0 0 0 4; -fx-padding: 8 14 8 14;");
+                v.setStyle("-fx-background-color: #fff6dc; -fx-border-color: transparent transparent transparent "
+                        + "#f2d27a; -fx-border-width: 0 0 0 5; -fx-padding: 8 14 8 14; -fx-background-radius: 0 6 6 0;");
             } else if ("indice".equals(clase)) {
-                v.setStyle("-fx-background-color: rgba(127,127,127,0.08); -fx-padding: 10 14 10 14; "
-                        + "-fx-background-radius: 6;");
+                v.setStyle("-fx-background-color: #f3eefa; -fx-padding: 10 14 10 14; -fx-background-radius: 8;");
             }
             return v;
         }
@@ -280,6 +283,8 @@ class ManualPanel extends BorderPane {
             TitledPane tp = new TitledPane(titulo, v);
             tp.setExpanded(false);
             tp.setAnimated(false);
+            tp.setStyle("-fx-base: #e9f1fb; -fx-text-fill: #2f3b4a; -fx-background-color: #fdfcf8;");
+            v.setStyle("-fx-background-color: #f8fbff;");
             tp.setMaxWidth(Double.MAX_VALUE);
             return tp;
         }
@@ -308,7 +313,7 @@ class ManualPanel extends BorderPane {
             iv.setPreserveRatio(true);
             iv.setSmooth(true);
             iv.setFitWidth(Math.min(img.getWidth(), 900));
-            iv.setStyle("-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 8, 0, 0, 2);");
+            iv.setStyle("-fx-effect: dropshadow(gaussian, rgba(74,127,193,0.25), 10, 0, 0, 2);");
             VBox v = new VBox(4, iv);
             v.setAlignment(Pos.CENTER);
             v.setPadding(new Insets(6, 0, 6, 0));
@@ -316,7 +321,7 @@ class ManualPanel extends BorderPane {
                 Label pie = new Label(alt);
                 pie.setWrapText(true);
                 pie.setOpacity(0.7);
-                pie.setStyle("-fx-font-style: italic;");
+                pie.setStyle("-fx-font-style: italic; -fx-text-fill: #5b6b80;");
                 v.getChildren().add(pie);
             }
             return v;
@@ -327,7 +332,7 @@ class ManualPanel extends BorderPane {
 
     private Node tabla(Element e) {
         GridPane g = new GridPane();
-        g.setStyle("-fx-border-color: #ccd; -fx-border-width: 1 0 0 1;");
+        g.setStyle("-fx-border-color: #d6dde8; -fx-border-width: 1 0 0 1; -fx-background-color: white;");
         org.w3c.dom.NodeList filas = e.getElementsByTagName("tr");
         int columnas = 0;
         for (int f = 0; f < filas.getLength(); f++) {
@@ -348,8 +353,8 @@ class ManualPanel extends BorderPane {
                         }
                     }
                     celda.setPadding(new Insets(6, 8, 6, 8));
-                    celda.setStyle("-fx-border-color: #ccd; -fx-border-width: 0 1 1 0;"
-                            + (titulo ? " -fx-background-color: #eef1f8;" : ""));
+                    celda.setStyle("-fx-border-color: #d6dde8; -fx-border-width: 0 1 1 0;"
+                            + (titulo ? " -fx-background-color: #e9f1fb;" : ""));
                     celda.setMaxWidth(Double.MAX_VALUE);
                     celda.setMaxHeight(Double.MAX_VALUE);
                     g.add(celda, c++, f);
@@ -396,11 +401,7 @@ class ManualPanel extends BorderPane {
                 x.setFont(codigo ? Font.font("Consolas", base * 0.95) :
                         Font.font("Segoe UI", negrita ? FontWeight.BOLD : FontWeight.NORMAL,
                                 cursiva ? FontPosture.ITALIC : FontPosture.REGULAR, base));
-                if (codigo) {
-                    x.setStyle("-fx-fill: #8a1f11;");
-                } else {
-                    x.getStyleClass().add("manual-texto");
-                }
+                x.setStyle(codigo ? "-fx-fill: #a0527a;" : "-fx-fill: #2f3b4a;");
                 t.getChildren().add(x);
             }
             return;
@@ -412,7 +413,7 @@ class ManualPanel extends BorderPane {
         if ("a".equals(tag)) {
             String href = e.getAttribute("href");
             Hyperlink h = new Hyperlink(e.getTextContent().trim());
-            h.setStyle("-fx-font-size: " + base + "px; -fx-padding: 0; -fx-text-fill: #0d33a6; -fx-underline: true;");
+            h.setStyle("-fx-font-size: " + base + "px; -fx-padding: 0; -fx-text-fill: #4a7fc1; -fx-underline: true;");
             if (href.startsWith("#")) {
                 h.setOnAction(x -> ir(href.substring(1)));
             }
