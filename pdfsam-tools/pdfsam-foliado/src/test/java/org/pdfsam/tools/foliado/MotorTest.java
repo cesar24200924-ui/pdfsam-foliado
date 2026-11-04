@@ -336,8 +336,14 @@ class MotorTest {
             assertEquals(90, d.getPage(2).getRotation()); // hoja 2: ya tenía 90
             assertEquals(180, d.getPage(3).getRotation()); // hoja 5: 0 + 180
             assertEquals(90, d.getPage(4).getRotation()); // hoja 4: 180 + 270
-            String t = new PDFTextStripper().getText(d);
-            assertTrue(t.indexOf("HOJA 3") < t.indexOf("HOJA 1") && t.indexOf("HOJA 1") < t.indexOf("HOJA 2"), t);
+            int[] esperado = { 3, 1, 2, 5, 4 };
+            for (int k = 0; k < 5; k++) {
+                PDFTextStripper st = new PDFTextStripper();
+                st.setStartPage(k + 1);
+                st.setEndPage(k + 1);
+                String t = st.getText(d).replaceAll("\\s", "");
+                assertTrue(t.contains("HOJA" + esperado[k]), "hoja " + (k + 1) + ": " + t);
+            }
         }
         imagenes(salida, "girar_ordenado");
         // solo girar (mismo orden)
