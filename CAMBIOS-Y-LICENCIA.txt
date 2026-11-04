@@ -28,3 +28,14 @@ CAMBIOS HECHOS (noviembre de 2026)
   de donación de PDFsam. Idioma español por defecto.
 - Ventana "Acerca de" con los créditos a PDFsam Basic y la licencia.
 - Armado del portable y del instalador sin firma digital.
+- Abrir comprimidos ZIP, RAR, 7z, TAR, GZ y otros en Foliar, Indexar y
+  Girar; mover cada leyenda de Indexar por separado; texto editable en
+  Adobe ("Rellenar y firmar").
+
+COMPONENTE DE TERCEROS PARA COMPRIMIDOS
+---------------------------------------
+Para abrir RAR, 7z y demás se usa 7-Zip-JBinding (motor de 7-Zip),
+licencia GNU LGPL 2.1 con la restricción de unRAR: el código de unRAR
+solo se usa para ABRIR archivos RAR, nunca para crearlos (por eso los
+resultados salen en ZIP). https://sevenzipjbind.sourceforge.net
+7-Zip es de Igor Pavlov (https://www.7-zip.org).
