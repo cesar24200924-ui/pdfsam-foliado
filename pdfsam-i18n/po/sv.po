@@ -1,0 +1,1766 @@
+# Swedish translation for pdfsam
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the pdfsam package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: pdfsam\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2023-01-27 11:09+0100\n"
+"PO-Revision-Date: 2026-11-04 12:32+0100\n"
+"Last-Translator: Wermlandsdata <bernhard@wermlandsdata.se>\n"
+"Language-Team: Swedish <sv@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2023-01-31 10:16+0000\n"
+"X-Generator: Autopo v1.0.13-SNAPSHOT\n"
+"Language: sv\n"
+
+msgid "No PDF document has been selected"
+msgstr "Inget PDF dokument valt"
+
+msgid "Extract"
+msgstr "Extrahera"
+
+msgid "Extract pages from PDF documents."
+msgstr "Extrahera sidor från PDF dokument."
+
+msgid "File names settings"
+msgstr "Filnamnsinställningar"
+
+msgid "Extract settings"
+msgstr "Extrahera inställningar"
+
+msgid "Output settings"
+msgstr "Utdatainställningar"
+
+msgid "A separate file for each set of pages"
+msgstr "En separat fil för varje siduppsättning"
+
+msgid "Each continuous series of pages will generate a separate PDF file"
+msgstr ""
+"Varje kontinuerlig serie av sidor kommer att generera en separat PDF-fil"
+
+#~ msgid "Pages to extract (ex: 2 or 5-23 or 2,5-7,12-)"
+#~ msgstr "Sidor att extrahera (t.ex. 2 eller 5-23 eller 2,5-7,12-)"
+
+msgid "Invalid page ranges"
+msgstr "Otillåtet sidintervall"
+
+msgid "Extract pages:"
+msgstr "Extrahera sidor:"
+
+#~ msgid ""
+#~ "Comma separated page numbers or ranges to extract (ex: 2 or 5-23 or 2,5-7,12-"
+#~ ")"
+#~ msgstr ""
+
+msgid "Split by bookmarks"
+msgstr "Dela vid bokmärken"
+
+msgid ""
+"Split a PDF document at bookmarked pages by specifying a bookmark level."
+msgstr ""
+"Dela ett PDF dokument vid sidor med bokmärken genom att specificera en nivå "
+"för bokmärkena."
+
+msgid "Regular expression the bookmark has to match"
+msgstr "Regular expression som bokmärket måste matcha"
+
+msgid "Split at this bookmark level:"
+msgstr "Dela vid denna bokmärkesnivå"
+
+msgid "Matching regular expression:"
+msgstr "Matcha regular expression:"
+
+msgid "A regular expression the bookmark text has to match"
+msgstr "Ett regular expression bokmärket måste matcha"
+
+msgid ""
+"Example: use .*Chapter.* to match bookmarks containing the word \"Chapter\""
+msgstr ""
+"Exempel: använde .*Kapitel.* för att matcha bokmärken som innehåller ordet "
+"\"Kapitel\""
+
+msgid "Select or drag and drop the PDF you want to split"
+msgstr "Välj eller dra och släpp PDF filen du vill dela"
+
+msgid "Split settings"
+msgstr "Delningsinställningar"
+
+msgid "Invalid bookmarks level"
+msgstr "Ogiltig bokmärkesnivå"
+
+msgid "Split after"
+msgstr "Dela efter"
+
+msgid "No page selected"
+msgstr "Ingen sida vald"
+
+msgid "Split"
+msgstr "Dela"
+
+msgid "Split a PDF document at the given page numbers."
+msgstr "Dela ett PDF dokument vid angivna sidnummer."
+
+msgid "Every page"
+msgstr "Varje sida"
+
+msgid "Even pages"
+msgstr "Jämna sidor"
+
+msgid "Odd pages"
+msgstr "Udda sidor"
+
+msgid "Split the document after the given page numbers"
+msgstr "Dela dokumentet efter angivna sidnummer"
+
+msgid "Splits the PDF every \"n\" pages creating documents of \"n\" pages each"
+msgstr ""
+"Delar PDF dokumentet efter varje \"n\" sidor och skapar dokument som är "
+"\"n\" sidor vardera"
+
+msgid "Split after the following page numbers"
+msgstr "Dela efter följande antal sidor"
+
+msgid "Page numbers to split at (n1,n2,n3..)"
+msgstr "Sidor att dela vid (n1, n2, n3...)"
+
+msgid "Invalid page numbers"
+msgstr "Ogiltiga sidnummer"
+
+msgid "Only valid positive page numbers are allowed"
+msgstr "Endast giltiga positiva sidnummer är tillåtna"
+
+msgid "Split by every \"n\" pages"
+msgstr "Dela vid varje \"n\" sidor"
+
+msgid "Number of pages"
+msgstr "Antal sidor"
+
+msgid "Invalid number of pages"
+msgstr "Ogiltigt antal sidor"
+
+msgid "Megabytes"
+msgstr "Megabyte"
+
+msgid "MB"
+msgstr "MB"
+
+msgid "Kilobytes"
+msgstr "Kilobytes"
+
+msgid "KB"
+msgstr "KB"
+
+msgid "Split by size"
+msgstr "Dela storleksmässigt"
+
+msgid "Split a PDF document in files of the given size (roughly)."
+msgstr "Dela ett PDF dokument i filer med en given storlek (ungefär)."
+
+msgid "Set the size to split at"
+msgstr "Ange storlek att dela vid"
+
+msgid "Size must be a number"
+msgstr "Storlek måste vara ett nummer"
+
+#~ msgid "Split at this size:"
+#~ msgstr "Dela med denna storlek:"
+
+msgid "Invalid split size"
+msgstr "Ogiltig delningsstorlek"
+
+msgid "Destination file"
+msgstr "Destinationsfil"
+
+msgid "Alternate Mix"
+msgstr "Alternering"
+
+msgid ""
+"Merge two or more PDF documents taking pages alternately in natural or "
+"reverse order."
+msgstr ""
+"Slå samman två eller flera PDF dokument genom att ta sidor växelvis i "
+"naturlig eller omvänd ordning."
+
+msgid "Double click to set pages you want to mix (ex: 2 or 5-23 or 2,5-7,12-)"
+msgstr ""
+"Dubbelklicka för att ställa in sidor du vill mixa (t.ex. 2 eller 5.23 eller "
+"2, 5-7, 12-)"
+
+msgid "Select a positive integer number as pace"
+msgstr "Välj ett positivt heltal som tempo"
+
+msgid "All pages"
+msgstr "Alla sidor"
+
+msgid "90 degrees clockwise"
+msgstr "90 grader medurs"
+
+msgid "180 degrees clockwise"
+msgstr "180 grader medurs"
+
+msgid "90 degrees counterclockwise"
+msgstr "90 grader moturs"
+
+#~ msgid "Rotate "
+#~ msgstr "Rotera "
+
+msgid "Rotate settings"
+msgstr "Rotationsinställningar"
+
+msgid "Rotate"
+msgstr "Rotera"
+
+msgid "Rotate the pages of multiple PDF documents."
+msgstr "Rotera sidorna för flera PDF dokument."
+
+#~ msgid ""
+#~ "Double click to set pages you want to rotate (ex: 2 or 5-23 or 2,5-7,12-)"
+#~ msgstr ""
+#~ "Dubbelklicka för att ange de sidor du vill rotera (t.ex. 2 eller 5.23 eller "
+#~ "2, 5-7, 12-)"
+
+msgid "Merge settings"
+msgstr "Sammanslagningsinställningar"
+
+msgid ""
+"Double click to set pages you want to merge (ex: 2 or 5-23 or 2,5-7,12-)"
+msgstr ""
+"Dubbelklicka för att välja sidor du vill sammanfoga (t.ex. 2 eller 5-23 "
+"eller 2,5-7,12-)"
+
+msgid "Add a blank page if page number is odd"
+msgstr "Lägg till en tom sida om sidantalet är udda"
+
+msgid ""
+"Adds a blank page after each merged document if the document has an odd "
+"number of pages"
+msgstr ""
+"Lägg till en tom sida efter varje sammanslaget dokument om dokumentet har "
+"ett udda sidantal"
+
+msgid "Add a footer"
+msgstr "Lägg till en footer"
+
+msgid "Adds a page footer with the name of the file the page belonged to."
+msgstr "Lägger till en footer med namnet på filen sidan hör till."
+
+msgid "None"
+msgstr "Inga"
+
+msgid "Same width as first page"
+msgstr "Samma bredd som första sidan"
+
+msgid "Same width as first page (based on page orientation)"
+msgstr "Samma bredd som första sidan (baserat på sidorientering)"
+
+#~ msgid "Pages normalization:"
+#~ msgstr "Sidnormalisering:"
+
+msgid ""
+"Set whether pages should be resized to all have the same width as the first "
+"one"
+msgstr ""
+"Ange om sidor ska storleksändras så att de får samma bredd som den första "
+"sidan"
+
+msgid "Merge fields"
+msgstr "Slå samman fält"
+
+msgid "Merge renaming existing fields"
+msgstr "Sammanfoga namn på existerande fält"
+
+msgid "Flatten"
+msgstr "Utjämna"
+
+msgid "Discard forms"
+msgstr "Ta bort formulär"
+
+#~ msgid "Interactive forms (AcroForms):"
+#~ msgstr "Interaktiva formulär (AcroForms):"
+
+msgid "What to do in case one or more input documents contain Acro Forms"
+msgstr "Att göra om ett eller flera indatadokument innehåller Acro Forms"
+
+msgid "Retain bookmarks"
+msgstr "Bevara bokmärken"
+
+msgid "Discard bookmarks"
+msgstr "Makulera bokmärken"
+
+msgid "Create one entry for each merged document"
+msgstr "Skapa en ingång för varje sammanslaget dokument"
+
+msgid "Retain bookmarks as one entry for each merged document"
+msgstr "Behåll bokmärken som en ingång för varje sammanslaget dokument"
+
+#~ msgid "Bookmarks handling:"
+#~ msgstr "Bokmärkeshantering:"
+
+msgid "What to do in case one or more input documents contain bookmarks"
+msgstr "Vad göra om ett eller flera indatadokument innehåller bokmärken"
+
+msgid "Don't generate"
+msgstr "Skapa inte"
+
+msgid "Generate from file names"
+msgstr "Skapa från filnamn"
+
+msgid "Generate from documents titles"
+msgstr "Skapa från dokumenttitlar"
+
+#~ msgid "Table of contents:"
+#~ msgstr "Innehållsförteckning:"
+
+msgid ""
+"Set if a table of contents should be added to the generated PDF document"
+msgstr ""
+"Markera om en innehållsförteckning ska läggas till för det skapade PDF "
+"dokumentet"
+
+msgid "Merge"
+msgstr "Sammanfoga"
+
+#~ msgid "Merge together multiple PDF documents or subsections of them."
+#~ msgstr "Slå samman flera PDF dokument eller delar av dem"
+
+msgid "Select or drag and drop the PDF whose pages will be repeated"
+msgstr "Välj eller dra och släpp PDF:en vars sidor ska upprepas"
+
+msgid "Repeat these pages:"
+msgstr "Upprepa dessa sidor:"
+
+msgid "Pages to repeat (ex: 2 or 5-23 or 2,5-7,12-)"
+msgstr "Sidor att upprepa (ex: 2 eller 5-23 eller 2,5-7,12-)"
+
+msgid ""
+"Comma separated page numbers or ranges to be repeated (ex: 2 or 5-23 or 2,5-"
+"7,12-)"
+msgstr ""
+"Kommaseparerade sidnummer eller intervall som ska upprepas (ex: 2 eller 5-23 "
+"eller 2,5-7,12-)"
+
+msgid "Leave it empty to use all the pages of the PDF file"
+msgstr "Lämna tomt för att använda alla sidor i PDF-filen"
+
+msgid "Repeat every \"n\" pages:"
+msgstr "Upprepa var \"n\":te sida:"
+
+msgid "Invalid page number"
+msgstr "Ogiltigt sidnummer"
+
+msgid "Repeat the selected pages every \"n\" pages of the original document"
+msgstr "Upprepa de valda sidorna var \"n\":te sida i originaldokumentet"
+
+msgid "The selected PDF file is invalid"
+msgstr "Den valda PDF filen är ogiltig"
+
+msgid "The number of pages must be a positive number"
+msgstr "Antalet sidor måste vara ett positivt tal"
+
+msgid "Select or drag and drop the PDF you want to insert pages to"
+msgstr "Välj eller dra och släpp PDF-filen du vill infoga sidor till"
+
+msgid "Insert and Repeat settings"
+msgstr "Infoga och upprepa inställningar"
+
+msgid "Insert pages multiple times"
+msgstr "Infoga sidor flera gånger"
+
+msgid ""
+"Insert the pages of a PDF document A into another document B, repeating it "
+"after a certain number of pages, resulting in B1 A B2 A B3 A etc."
+msgstr ""
+"Infoga sidorna från ett PDF-dokument A i ett annat dokument B, upprepa det "
+"efter ett visst antal sidor, vilket resulterar i B1 A B2 A B3 A osv."
+
+#, java-format
+msgid "Started in {0}"
+msgstr "Startad {0}"
+
+msgid "Closing PDFsam..."
+msgstr "Stänger PDFsam..."
+
+msgid "Drag and drop PDF files or directories containing PDF files"
+msgstr "Dra och släpp PDF filer eller kataloger som innehåller PDF filer"
+
+msgid "No PDF found"
+msgstr "Ingen PDF hittad"
+
+msgid "Tools"
+msgstr "Verktyg"
+
+msgid "News"
+msgstr "Nyheter"
+
+msgid "What's new"
+msgstr "Nyheter"
+
+# G:\Documents\eclipse_workspace\PDF
+# F:\workspace_pdfsam_enhanced\pdfsam-maine\it\pdfsam\panels\ButtonsBar.java:125
+# F:\workspace_pdfsam_enhanced\pdfsam-maine\it\pdfsam\panels\MenuPanel.java:70
+msgid "Exit"
+msgstr "Avsluta"
+
+msgid "Exit the application"
+msgstr "Avsluta programmet"
+
+msgid "Workspace"
+msgstr "Arbetsyta"
+
+msgid "Manage your workspaces"
+msgstr "Hantera dina arbetsytor"
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "No"
+msgstr "Nej"
+
+msgid "Confirm clearing"
+msgstr "Bekräfta rensning"
+
+msgid "Do you confirm?"
+msgstr "Vill du bekräfta?"
+
+msgid "Clear the tool settings"
+msgstr "Rensa verktyginställningarna"
+
+msgid "Clear the selection table"
+msgstr "Rensa markeringstabellen"
+
+msgid "Open with"
+msgstr "Öppna med"
+
+msgid "Select the task to perform on the following files"
+msgstr "Välj uppgift att utföra på följande filer"
+
+msgid "Directory not empty"
+msgstr "Katalog inte tom"
+
+msgid "The selected directory is not empty"
+msgstr "Den valda katalogen är inte tom"
+
+msgid "What would you like to do in case of files with the same name?"
+msgstr "Vad vill du göra om det finns filer med samma namn?"
+
+msgid "Overwrite"
+msgstr "Ersätt"
+
+msgid "Rename"
+msgstr "Byt namn"
+
+msgid "Skip"
+msgstr "Hoppa över"
+
+msgid "Cancel"
+msgstr "Avbryt"
+
+msgid "Don't overwrite existing file"
+msgstr "Skriv inte över existerande fil"
+
+msgid "Overwrite confirmation"
+msgstr "Bekräftelse för att skriva över"
+
+msgid "A file with the given name already exists"
+msgstr "En fil med samma namn existerar redan"
+
+msgid "What would you like to do?"
+msgstr "Vad vill du göra?"
+
+msgid "Non existing directory"
+msgstr "Katalog finns inte"
+
+msgid "The selected output directory does not exist"
+msgstr "Den valda utdatakatalogen finns inte"
+
+msgid "Do you want to create it?"
+msgstr "Vill du skapa den?"
+
+msgid "Subdirectories"
+msgstr "Underkataloger"
+
+msgid "Subdirectories have been found"
+msgstr "Underkataloger hittades"
+
+msgid "Do you want to add PDF files found in subdirectories?"
+msgstr "Vill du lägga till PDF-filer hittade i underkataloger?"
+
+msgid "Task failed"
+msgstr "Uppgiften misslyckades"
+
+msgid "PDFsam can try to overcome the failure"
+msgstr "PDFsam kan försöka åtgärda misslyckandet"
+
+msgid ""
+"It may result in PDF files with partial or missing data, proceed anyway?"
+msgstr ""
+"Det kan resultera i PDFsamfiler med ofullständig eller saknad data, vill du "
+"fortsätta ändå?"
+
+msgid "Removes all the log messages"
+msgstr "Tar bort alla loggmeddelanden"
+
+msgid "_Clear"
+msgstr "_Rensa"
+
+msgid "_Save"
+msgstr "_Spara"
+
+msgid "C_lose"
+msgstr "Stäng"
+
+msgid "Copy"
+msgstr "Kopiera"
+
+# G:\Documents\eclipse_workspace\PDFSAMmerge\it\pdfsam\plugin\merge\GUI\MergeMainGUI.java:280
+# F:\workspace_pdfsam_enhanced\pdfsam-cover\it\pdfsam\plugin\coverfooter\GUI\CoverFooterMainGUI.java:284
+# F:\workspace_pdfsam_enhanced\pdfsam-merge\it\pdfsam\plugin\merge\GUI\MergeMainGUI.java:294
+# F:\workspace_pdfsam_enhanced\pdfsam-maine\it\pdfsam\panels\LogPanel.java:105
+msgid "Clear"
+msgstr "Rensa"
+
+msgid "Select all"
+msgstr "Markera alla"
+
+msgid "Save log"
+msgstr "Spara logg"
+
+msgid "Select where to save the log file"
+msgstr "Välj var du vill spara log-filen"
+
+msgid "Logs"
+msgstr "Loggar"
+
+msgid "Application messages"
+msgstr "Applikationsmeddelanden"
+
+msgid "_Load"
+msgstr "L_äs in"
+
+msgid "Recen_ts"
+msgstr "Nylig_en"
+
+msgid "_Clear recents"
+msgstr "R_ensa nyligen använda"
+
+msgid "Select the workspace file to save"
+msgstr "Välj arbetsytefil att spara"
+
+msgid "Select the workspace to load"
+msgstr "Välj arbetsyta att ladda"
+
+msgid "Subscribe to the official news feed"
+msgstr "Prenumerera på det officiella nyhetsflödet"
+
+msgid "Environment"
+msgstr "Miljö"
+
+#, java-printf-format
+msgid "Vendor: %s"
+msgstr "Tillverkare: %s"
+
+#, java-printf-format
+msgid "Java runtime path: %s"
+msgstr "Sökväg till Java runtime: %s"
+
+#, java-printf-format
+msgid "JavaFX runtime version: %s"
+msgstr "JavaFX-körningsversion: %s"
+
+#, java-printf-format
+msgid "PDF engine (Sejda SDK) version: %s"
+msgstr "PDF-motor (Sejda SDK) version: %s"
+
+#, java-format
+msgid "Max memory {0}"
+msgstr "Maximalt minne {0}"
+
+msgid "Copy to clipboard"
+msgstr "Kopiera till urklipp"
+
+msgid "Support"
+msgstr "Support"
+
+msgid "Bug and feature requests"
+msgstr "Bug- och funktionsbegäran"
+
+msgid "Documentation"
+msgstr "Dokumentation"
+
+msgid "Contribute"
+msgstr "Bidra"
+
+msgid "Fork PDFsam on GitHub"
+msgstr "Dela PDFsam på GitHub"
+
+msgid "Translate"
+msgstr "Översätt"
+
+msgid "Donate"
+msgstr "Donera"
+
+msgid "Social"
+msgstr "Socialt"
+
+#~ msgid "Follow us on Twitter"
+#~ msgstr "Följ oss på Twitter"
+
+msgid "Like us on Facebook"
+msgstr "Gilla oss på Facebook"
+
+msgid "About"
+msgstr "Om"
+
+msgid "Home"
+msgstr "Hem"
+
+msgid "Premium features"
+msgstr "Premiumfunktioner"
+
+#~ msgid "Log register rows:"
+#~ msgstr "Logga register rader:"
+
+msgid "Maximum number of rows displayed by the Log register"
+msgstr "Maximalt antal rader som visas i Log registret"
+
+# G:\Documents\eclipse_workspace\PDF
+# F:\workspace_pdfsam_enhanced\pdfsam-maine\it\pdfsam\panels\JSettingsPanel.java:125
+#~ msgid "Language:"
+#~ msgstr "Språk:"
+
+msgid "Set your preferred language (restart needed)"
+msgstr "Välj språk du föredrar (omstart krävs)"
+
+#~ msgid "Startup tool:"
+#~ msgstr "Startverktyg:"
+
+msgid "Set the tool to open at application startup (restart needed)"
+msgstr "Ställ in verktyget att öppnas vid programstart (omstart krävs)"
+
+#~ msgid "Theme:"
+#~ msgstr "Tema:"
+
+msgid "Set the application theme"
+msgstr "Ange programmets tema"
+
+#~ msgid "Font size:"
+#~ msgstr "Teckenstorlek:"
+
+msgid "Set the application font size"
+msgstr "Ange applikationens teckenstorlek"
+
+msgid "Manually selected"
+msgstr "Manuellt vald"
+
+#~ msgid ""
+#~ "Automatically set the destination directory to the selected PDF document "
+#~ "directory"
+#~ msgstr ""
+#~ "Sätt destinationskatalog automatiskt till det valda PDF dokumentets katalog"
+
+msgid "Settings"
+msgstr "Inställningar"
+
+msgid "Appearance"
+msgstr "Utseende"
+
+msgid "Behavior"
+msgstr "Beteende"
+
+msgid "Output"
+msgstr "Utdata"
+
+msgid "Check for updates now"
+msgstr "Kontrollera uppdateringar nu"
+
+msgid "Select a directory where documents will be saved and loaded by default"
+msgstr "Välj standardmapp där dokument ska sparas och laddas"
+
+msgid "Select a directory"
+msgstr "Välj en katalog"
+
+msgid ""
+"Select a previously saved workspace that will be automatically loaded at "
+"startup"
+msgstr "Välj en tidigare sparad arbetsyta som automatiskt laddas vid uppstart"
+
+msgid "Select a workspace"
+msgstr "Välj en arbetsyta"
+
+msgid "Default working directory:"
+msgstr "Förvald arbetskatalog"
+
+msgid "Load default workspace at startup:"
+msgstr "Ladda standardarbetsytan vid start"
+
+msgid "System default"
+msgstr "Systemstandard"
+
+msgid "Check for updates at startup"
+msgstr "Sök efter uppdateringar när programmet startar"
+
+msgid ""
+"Set whether new version availability should be checked on startup (restart "
+"needed)"
+msgstr ""
+"Ställ in om tillgängliga uppdateringar ska sökas efter vid uppstart (omstart "
+"krävs)"
+
+msgid "Check for news at startup"
+msgstr "Sök efter nyheter vid uppstart"
+
+msgid ""
+"Set whether the application should check for news availability on startup "
+"(restart needed)"
+msgstr ""
+"Ställ in om tillgängliga nyheter ska sökas efter vid uppstart (omstart "
+"krävs)"
+
+#~ msgid "Enabled PDF compression"
+#~ msgstr "Aktivera PDF kompression"
+
+#~ msgid "Set whether \"Compress output file\" should be enabled by default"
+#~ msgstr "Ställ in om \"Komprimera utdatafil\" ska vara aktiverad som standard"
+
+msgid "Overwrite files"
+msgstr "Skriv över filer"
+
+msgid "Set whether \"Overwrite if already exists\" should be enabled by default"
+msgstr ""
+"Ange om \"Skriv över om den redan finns\" ska vara aktiverat som standard"
+
+msgid "Play alert sounds"
+msgstr "Spela varningsljud"
+
+msgid "Turn on or off alert sounds"
+msgstr "Sätt på eller av varningsljud"
+
+msgid "Store passwords when saving a workspace file"
+msgstr "Spara lösenord när arbetsytan sparas"
+
+msgid ""
+"If an encrypted PDF document has been opened with a password, save the "
+"password in the workspace file"
+msgstr ""
+"Om ett krypterat PDF dokument har öppnats, spara lösenordet i arbetsytans "
+"fil"
+
+msgid "Show donation window"
+msgstr "Visa donationsfönstret"
+
+msgid ""
+"Turn on or off the notification appearing once in a while and asking the "
+"user to support PDFsam with a donation"
+msgstr ""
+"Slå på eller av meddelanderutan som visas emellanåt och ber användaren att "
+"donera till utvecklingen av PDFsam"
+
+msgid "Show premium features"
+msgstr "Visa premiumfunktioner"
+
+msgid ""
+"Set whether the application should fetch and show premium features "
+"description in the modules dashboard"
+msgstr ""
+"Ställ in om applikationen ska hämta och visa premiumfunktioners beskrivning "
+"i modulernas instrumentpanel"
+
+msgid "Ask for a confirmation when clearing the selection table"
+msgstr "Fråga efter bekräftelse när urvalsregistret rensas"
+
+msgid ""
+"Set whether the application should ask for a confirmation when clearing the "
+"selection table"
+msgstr ""
+"Ange om programmet ska fråga efter bekräftelse när urvalsregistret rensas"
+
+msgid "Use the selected PDF document directory as output directory"
+msgstr "Använd det valda PDF dokumentets katalog som utdatakatalog"
+
+msgid "Save default workspace on exit"
+msgstr "Spara standardarbetsytan vid avslut"
+
+msgid "If a default workspace is set, save it on application exit"
+msgstr "Om en standardarbetsyta är vald, spara den vid avslut"
+
+msgid "Maximum number of rows mast be a positive number"
+msgstr "Maximalt antal rader måste vara ett positivt nummer"
+
+msgid "Summary"
+msgstr "Sammanfattning"
+
+msgid "Keywords"
+msgstr "Nyckelord"
+
+msgid "Document details"
+msgstr "Dokumentdetaljer"
+
+msgid "Show errors"
+msgstr "Visa fel"
+
+msgid "Input parameters are invalid"
+msgstr "Inmatningsparametrarna är ogiltiga"
+
+msgid "Invalid parameters"
+msgstr "Ogiltiga parametrar"
+
+msgid "Access denied"
+msgstr "Åtkomst nekad"
+
+#, java-format
+msgid ""
+"Unable to access \"{0}\", please make sure you have write permissions or "
+"open the application messages for details."
+msgstr ""
+"Inkapabel att komma åt \"{0}\". Kontrollera att du har skrivrättigheter "
+"eller öppna applikationsmeddelanderna för detaljer."
+
+#, java-format
+msgid "You performed {0} tasks with PDFsam, did it help?"
+msgstr "Du genomförde {0} uppgifter med PDFsam. Hjälpte det?"
+
+msgid "Give something back"
+msgstr "Ge något tillbaka"
+
+msgid "PDFsam worked hard!"
+msgstr "PDFsam arbetade hårt!"
+
+msgid "Spread the word!"
+msgstr "Sprid ordet!"
+
+#, java-format
+msgid "PDFsam {0} is available for download"
+msgstr "PDFsam {0} är tillgänglig för nedladdning"
+
+msgid "Download"
+msgstr "Hämta"
+
+msgid "New version available"
+msgstr "Ny version tillgänglig"
+
+msgid "You are running the latest version of PDFsam Basic"
+msgstr "Du kör den senaste versionen av PDFsam Basic"
+
+msgid "No update"
+msgstr "Ingen uppdatering tillgänglig"
+
+msgid "Open"
+msgstr "Öppna"
+
+#, java-format
+msgid "File \"{0}\" does not exist or is invalid"
+msgstr "Filen \"{0}\" finns inte eller är ogiltig"
+
+msgid "Valid user password provided."
+msgstr "Giltigt användarlösen givet."
+
+msgid "This document is encrypted, click to provide a password."
+msgstr "Detta dokument är krypterat. Klicka för att ange ett lösenord."
+
+msgid "An error has occurred, click for more details."
+msgstr "Ett fel har inträffat. Klicka för mer detaljer."
+
+msgid "Split tools"
+msgstr "Delningsverktyg"
+
+msgid "Merge tools"
+msgstr "Sammanslagningsverktyg"
+
+msgid "Convert tools"
+msgstr "Konverteringsverktyg"
+
+msgid "Edit tools"
+msgstr "Redigeringsverktyg"
+
+msgid "Other tools"
+msgstr "Andra verktyg"
+
+msgid "Checking for updates"
+msgstr "Söker efter uppdateringar"
+
+msgid "Unable to find the latest available version."
+msgstr "Kunde inte hitta senast tillgängliga version."
+
+#, java-format
+msgid "Unable to find any valid PDF file in the list: {0}"
+msgstr "Kunde inte hitta någon giltig PDF fil i listan: {0}"
+
+#, java-format
+msgid "Unable to load PDF list file from {0}"
+msgstr "Kunde inte ladda PDF listefilen från {0}"
+
+msgid "Loading pdf documents"
+msgstr "Laddar PDF dokument"
+
+msgid "Documents loaded"
+msgstr "Dokument laddade"
+
+msgid "Unable to retrieve premium features description"
+msgstr "Kunde inte hämta beskrivningar för premiumfunktioner"
+
+msgid "Fetching premium modules"
+msgstr "Hämtar premiummoduler"
+
+msgid "Unable to retrieve premium modules"
+msgstr "Kunde inte hämta premiummoduler"
+
+msgid "Unable to retrieve latest news"
+msgstr "Kunde inte hämta senaste nyheterna"
+
+msgid "Fetching latest news"
+msgstr "Hämtar senaste nyheterna"
+
+msgid "Unable to retrieve the latest news"
+msgstr "Kunde inte hämta senaste nyheterna"
+
+#, java-format
+msgid "Saving workspace data to {0}"
+msgstr "Sparar arbetsytedata till {0}"
+
+msgid "Workspace saved"
+msgstr "Arbetsyta sparad"
+
+msgid "Requesting modules state"
+msgstr "Begär modulers tillstånd"
+
+#, java-format
+msgid "Unable to save workspace to {0}"
+msgstr "Kunde inte spara arbetsyta till {0}"
+
+#, java-format
+msgid "Loading workspace from {0}"
+msgstr "Laddar arbetsyta från {0}"
+
+#~ msgid "Workspace loaded"
+#~ msgstr "Arbetsyta laddad"
+
+#, java-format
+msgid "Unable to load workspace from {0}"
+msgstr "Kunde inte ladda arbetsyta från {0}"
+
+msgid "Light with blue"
+msgstr "Ljus med blå"
+
+msgid "Dark with purple"
+msgstr "Mörk med lila"
+
+msgid "Dark with teal"
+msgstr "Mörk med teal"
+
+msgid "Light with maroon"
+msgstr "Ljus med vinrött"
+
+msgid "Close"
+msgstr "Stäng"
+
+msgid "The selected PDF document is invalid"
+msgstr "Det valda PDF dokumentet är ogiltigt"
+
+msgid "Select the PDF file"
+msgstr "Välj PDF filen"
+
+msgid "_Select PDF"
+msgstr "_Välj PDF"
+
+#~ msgid "Clear all settings"
+#~ msgstr "Rensa alla inställningar"
+
+#, java-format
+msgid "Pages: {0}, PDF Version: {1}"
+msgstr "Sidor: {0}, PDF Version: {1}"
+
+msgid "Loading..."
+msgstr "Laddar..."
+
+msgid "Document properties"
+msgstr "Dokumentegenskaper"
+
+# G:\Documents\eclipse_workspace\PDFSAMmerge\it\pdfsam\plugin\merge\GUI\MergeMainGUI.java:252
+# G:\Documents\eclipse_workspace\PDFSAMmerge\it\pdfsam\plugin\merge\GUI\MergeMainGUI.java:297
+# F:\workspace_pdfsam_enhanced\pdfsam-cover\it\pdfsam\plugin\coverfooter\GUI\CoverFooterMainGUI.java:273
+# F:\workspace_pdfsam_enhanced\pdfsam-cover\it\pdfsam\plugin\coverfooter\GUI\CoverFooterMainGUI.java:317
+# F:\workspace_pdfsam_enhanced\pdfsam-merge\it\pdfsam\plugin\merge\GUI\MergeMainGUI.java:266
+# F:\workspace_pdfsam_enhanced\pdfsam-merge\it\pdfsam\plugin\merge\GUI\MergeMainGUI.java:311
+msgid "Remove"
+msgstr "Ta bort"
+
+msgid "Set destination"
+msgstr "Ange destination"
+
+msgid "Open Folder"
+msgstr "Öppna katalog"
+
+msgid "Enter the user password"
+msgstr "Fyll i användarlösen"
+
+msgid "Unlock"
+msgstr "Lås upp"
+
+#~ msgid "Drag and drop PDF files here"
+#~ msgstr "Dra och släpp PDF filer här"
+
+msgid "Set as range for all"
+msgstr "Sätt som område för allt"
+
+msgid "Move to Top"
+msgstr "Placera överst"
+
+msgid "Move Up"
+msgstr "Flytta upp"
+
+msgid "Move Down"
+msgstr "Flytta ner"
+
+msgid "Move to Bottom"
+msgstr "Placera längst ned"
+
+msgid "Duplicate"
+msgstr "Kopiera"
+
+msgid "Selected pages"
+msgstr "Valda sidor"
+
+msgid "Total number of selected pages"
+msgstr "Totalt antal valda sidor"
+
+msgid "Size"
+msgstr "Storlek"
+
+msgid "Modified"
+msgstr "Ändrad"
+
+#, java-format
+msgid "Total pages: {0}"
+msgstr "Totalt antal sidor: {0}"
+
+# G:\Documents\eclipse_workspace\PDF
+# F:\workspace_pdfsam_enhanced\pdfsam-maine\it\pdfsam\panels\JInfoPanel.java:118
+msgid "Name"
+msgstr "Namn"
+
+msgid "Add documents to the table"
+msgstr "Lägg till dokument till tabellen"
+
+msgid "_Add"
+msgstr "_Lägg till"
+
+msgid "PDF list from _text/csv file"
+msgstr "PDF lista från _text/csv fil"
+
+msgid "Select pdf documents to load"
+msgstr "Välj PDF dokument att ladda"
+
+msgid "Select a text or CSV file to load"
+msgstr "Välj en text eller CSV fil att ladda"
+
+msgid "Removes selected documents"
+msgstr "Ta bort valda dokument"
+
+msgid "_Remove"
+msgstr "_Ta bort"
+
+msgid "Removes every document"
+msgstr "Tar bort alla dokument"
+
+msgid "C_lear all settings"
+msgstr "R_ensa alla inställningar"
+
+msgid "Moves up selected documents"
+msgstr "Flyttar upp valda dokument"
+
+msgid "Move _Up"
+msgstr "Flytta _Uppåt"
+
+msgid "Moves down selected documents"
+msgstr "Flyttar ner valda dokument"
+
+msgid "Move _Down"
+msgstr "Flytta _nedåt"
+
+msgid "Pace"
+msgstr "Tempo"
+
+msgid ""
+"Double click to set the number of pages after which the task will switch to "
+"the next file"
+msgstr ""
+"Dubbelklicka för att ställa in efter vilket antal sidor uppgiften går till "
+"nästa fil"
+
+msgid "Reverse"
+msgstr "Vänd"
+
+# G:\Documents\eclipse_workspace\PDFSAMmerge\it\pdfsam\plugin\merge\GUI\MergeMainGUI.java:166
+# F:\workspace_pdfsam_enhanced\pdfsam-cover\it\pdfsam\plugin\coverfooter\GUI\CoverFooterMainGUI.java:182
+# F:\workspace_pdfsam_enhanced\pdfsam-merge\it\pdfsam\plugin\merge\GUI\MergeMainGUI.java:180
+msgid "Pages"
+msgstr "Sidor"
+
+msgid "Number of total pages of the document"
+msgstr "Antal sidor totalt i dokumentet"
+
+#~ msgid "Double click to set selected pages (ex: 2 or 5-23 or 2,5-7,12-)"
+#~ msgstr ""
+#~ "Dubbelklicka för att ställa in antalet sidor (t.ex. 2 eller 5-23 eller 2,5-"
+#~ "7,12-)"
+
+msgid "Page ranges"
+msgstr "Sidområde"
+
+msgid "Select a file"
+msgstr "Välj en fil"
+
+msgid "The selected file must exist. "
+msgstr "Den valda filen måste finnas "
+
+#, java-format
+msgid "Allowed extensions are {0}"
+msgstr "Tillåtna tillägg är {0}"
+
+#~ msgid "Compress output file/files"
+#~ msgstr "Komprimera målfil(er)"
+
+msgid ""
+"Tick the box if you don't want to retain any bookmark from the original PDF "
+"document"
+msgstr ""
+"Klicka i rutan om du inte vill behålla några bokmärken från original PDF "
+"dokumentet"
+
+msgid "Output PDF version:"
+msgstr "Utdata PDF version:"
+
+msgid "Show advanced settings"
+msgstr "Visa advancerade inställningar"
+
+msgid "Hide advanced settings"
+msgstr "Göm advancerade inställningar"
+
+# G:\Documents\eclipse_workspace\PDFSAMmerge\it\pdfsam\plugin\merge\GUI\MergeMainGUI.java:399
+# F:\workspace_pdfsam_enhanced\pdfsam-cover\it\pdfsam\plugin\coverfooter\GUI\CoverFooterMainGUI.java:452
+# F:\workspace_pdfsam_enhanced\pdfsam-encrypt\it\pdfsam\plugin\encrypt\GUI\EncryptMainGUI.java:315
+# F:\workspace_pdfsam_enhanced\pdfsam-merge\it\pdfsam\plugin\merge\GUI\MergeMainGUI.java:434
+# F:\workspace_pdfsam_enhanced\pdfsam-mix\it\pdfsam\plugin\mix\GUI\MixMainGUI.java:249
+# F:\workspace_pdfsam_enhanced\pdfsam-split\it\pdfsam\plugin\split\GUI\SplitMainGUI.java:279
+msgid "Overwrite if already exists"
+msgstr "Skriv över om filen existerar"
+
+msgid ""
+"Tick the box if you want to overwrite the output files if they already exist."
+""
+msgstr "Klicka i rutan om du vill skriva över utdatafiler om de redan finns."
+
+#, java-format
+msgid "Version {0}"
+msgstr "Version {0}"
+
+msgid "Same as the input document"
+msgstr "Samma som indatadokumentet"
+
+msgid "An existing output directory is required"
+msgstr "En existerande utdatakatalog krävs"
+
+msgid "The output directory is required"
+msgstr "Utdatakatalogen krävs"
+
+msgid "Select an existing directory"
+msgstr "Välj en existerande katalog"
+
+msgid "Select"
+msgstr "Välj"
+
+# G:\Documents\eclipse_workspace\PDFSAMsplit\it\pdfsam\plugin\split\GUI\SplitMainGUI.java:150
+# G:\Documents\eclipse_workspace\PDFSAMsplit\it\pdfsam\plugin\split\GUI\SplitMainGUI.java:278
+# F:\workspace_pdfsam_enhanced\pdfsam-cover\it\pdfsam\plugin\coverfooter\GUI\CoverFooterMainGUI.java:394
+# F:\workspace_pdfsam_enhanced\pdfsam-cover\it\pdfsam\plugin\coverfooter\GUI\CoverFooterMainGUI.java:421
+# F:\workspace_pdfsam_enhanced\pdfsam-cover\it\pdfsam\plugin\coverfooter\GUI\CoverFooterMainGUI.java:448
+# F:\workspace_pdfsam_enhanced\pdfsam-encrypt\it\pdfsam\plugin\encrypt\GUI\EncryptMainGUI.java:175
+# F:\workspace_pdfsam_enhanced\pdfsam-encrypt\it\pdfsam\plugin\encrypt\GUI\EncryptMainGUI.java:340
+# F:\workspace_pdfsam_enhanced\pdfsam-merge\it\pdfsam\plugin\merge\GUI\MergeMainGUI.java:430
+# F:\workspace_pdfsam_enhanced\pdfsam-mix\it\pdfsam\plugin\mix\GUI\MixMainGUI.java:150
+# F:\workspace_pdfsam_enhanced\pdfsam-mix\it\pdfsam\plugin\mix\GUI\MixMainGUI.java:177
+# F:\workspace_pdfsam_enhanced\pdfsam-mix\it\pdfsam\plugin\mix\GUI\MixMainGUI.java:244
+# F:\workspace_pdfsam_enhanced\pdfsam-split\it\pdfsam\plugin\split\GUI\SplitMainGUI.java:164
+# F:\workspace_pdfsam_enhanced\pdfsam-split\it\pdfsam\plugin\split\GUI\SplitMainGUI.java:304
+# F:\workspace_pdfsam_enhanced\pdfsam-maine\it\pdfsam\panels\JSettingsPanel.java:233
+msgid "Browse"
+msgstr "Bläddra"
+
+#, java-format
+#~ msgid "PDF version required: {0}"
+#~ msgstr "PDF version som krävs: {0}"
+
+msgid "Prefix for the generated files names"
+msgstr "Prefix för de genererade filnamnen"
+
+msgid "Add prefix"
+msgstr "Lägg till prefix"
+
+msgid "DEFAULT_PREFIX"
+msgstr "Standardprefix"
+
+msgid "Generated PDF documents name prefix:"
+msgstr "Genererade PDF dokuments namnprefix:"
+
+msgid "Prefix for the output files name."
+msgstr "Prefix för utdatafilers namn."
+
+msgid "Some special keywords are replaced with runtime values."
+msgstr "Några speciella nyckelord är utbytta mot runtime värden."
+
+msgid "Right click to add these keywords."
+msgstr "Högerklicka för att lägga till dessa nyckelord."
+
+# G:\Documents\eclipse_workspace\PDFSAMsplit\it\pdfsam\plugin\split\GUI\SplitMainGUI.java:368
+# F:\workspace_pdfsam_enhanced\pdfsam-cover\it\pdfsam\plugin\coverfooter\GUI\CoverFooterMainGUI.java:542
+# F:\workspace_pdfsam_enhanced\pdfsam-encrypt\it\pdfsam\plugin\encrypt\GUI\EncryptMainGUI.java:462
+# F:\workspace_pdfsam_enhanced\pdfsam-merge\it\pdfsam\plugin\merge\GUI\MergeMainGUI.java:526
+# F:\workspace_pdfsam_enhanced\pdfsam-mix\it\pdfsam\plugin\mix\GUI\MixMainGUI.java:320
+# F:\workspace_pdfsam_enhanced\pdfsam-split\it\pdfsam\plugin\split\GUI\SplitMainGUI.java:410
+msgid "Run"
+msgstr "Kör"
+
+msgid "Run the task"
+msgstr "Kör uppgiften"
+
+msgid "Requested"
+msgstr "Begärd"
+
+msgid "Completed"
+msgstr "Slutförd"
+
+msgid "Failed"
+msgstr "Misslyckat"
+
+msgid "Running"
+msgstr "Pågående"
+
+#, java-format
+msgid "Running {0}%"
+msgstr "Pågående {0}%"
+
+#~ msgid "Error saving log file."
+#~ msgstr "Fel vid sparandet av logfilen"
+
+#, java-format
+#~ msgid "File {0} saved."
+#~ msgstr "Fil {0} sparad"
+
+#, java-format
+msgid "Invalid range: {0}."
+msgstr "Ogiltigt område: {0}."
+
+#, java-format
+msgid ""
+"Ambiguous page range definition: {0}. Use following formats: [n] or [n1-n2] "
+"or [-n] or [n-]"
+msgstr ""
+"Oklart sidintervall: {0}. Använd följande format: [n] eller [n1-n2] eller [-"
+"n] eller [n-]"
+
+#, java-format
+msgid "Invalid number: {0}."
+msgstr "Ogiltigt nummer: {0}."
+
+#~ msgid "Never"
+#~ msgstr "Aldrig"
+
+#~ msgid "Unable to get latest available version"
+#~ msgstr "Kunde inte hämta den senaste versionen"
+
+#~ msgid "Destination folder"
+#~ msgstr "Målmapp"
+
+#~ msgid "Would you like to overwrite it?"
+#~ msgstr "Vill du skriva över den?"
+
+#~ msgid ""
+#~ "Show a dialog box asking the user for confirmation when the \"overwrite\" is "
+#~ "selected"
+#~ msgstr ""
+#~ "Visa en dialog med begäran om bekräftelse när kryssrutan för \"skriv över\" "
+#~ "är vald"
+
+#~ msgid "Ask for confirmation when overwrite checkbox is selected"
+#~ msgstr "Fråga om bekräftelse när kryssrutan om överskrivning är vald"
+
+#~ msgid "Split odd pages"
+#~ msgstr "Dela upp vid ojämna sidor"
+
+#~ msgid "Split even pages"
+#~ msgstr "Dela upp vid jämna sidor"
+
+#~ msgid "Output document pdf version:"
+#~ msgstr "Målfilens PDF-version:"
+
+msgid "Pages to extract (ex: 2 or 5-23 or 2,5-7,12- or 3,last)"
+msgstr "Sidor att extrahera (ex: 2 eller 5-23 eller 2,5-7,12- eller 3,sista)"
+
+msgid ""
+"Comma separated page numbers or ranges to extract (ex: 2 or 5-23 or 2,5-7,12-"
+" or 3,last)"
+msgstr ""
+"Kommaseparerade sidnummer eller intervall att extrahera (ex: 2 eller 5-23 "
+"eller 2,5-7,12- eller 3,sista)"
+
+msgid "Merge multiple PDF documents or subsections of them."
+msgstr "Slå ihop flera PDF-dokument eller delar av dem."
+
+msgid "A .pdf extension is required for the repeating file"
+msgstr "En .pdf-ändelse krävs för den upprepade filen"
+
+msgid "A .pdf destination file extension is required"
+msgstr "En .pdf-destinationsfiländelse krävs"
+
+msgid "Default PDF version:"
+msgstr "Standard PDF-version:"
+
+msgid "Default PDF version for generated PDF files"
+msgstr "Standardversion för PDF för genererade PDF-filer"
+
+msgid "Default prefix:"
+msgstr "Standardprefix:"
+
+msgid ""
+"Default prefix for output file names, used in tools that generate multiple "
+"files"
+msgstr ""
+"Standardprefix för utdatafilnamn, används i verktyg som genererar flera "
+"filer"
+
+msgid "Set whether \"Discard bookmarks\" should be enabled by default"
+msgstr "Ange om \"Ta bort bokmärken\" ska vara aktiverat som standard"
+
+#, java-format
+msgid "Workspace loaded: {0}"
+msgstr "Arbetsyta inläst: {0}"
+
+#, java-format
+msgid "The following file already existed and was skipped: {0}"
+msgstr "Följande fil fanns redan och hoppades över: {0}"
+
+msgid "Duplicate at Top"
+msgstr "Duplicera överst"
+
+msgid "Duplicate Up"
+msgstr "Duplicera uppåt"
+
+msgid "Duplicate Down"
+msgstr "Duplicera nedåt"
+
+msgid "Duplicate at Bottom"
+msgstr "Duplicera längst ned"
+
+#, java-format
+msgid "Error saving content to file {0}"
+msgstr "Fel vid sparande av innehåll till fil {0}"
+
+#, java-format
+msgid "File {0} saved"
+msgstr "Filen {0} sparad"
+
+msgid "Error saving content to clipboard"
+msgstr "Fel vid sparning av innehåll till urklipp"
+
+msgid "Follow us on Bluesky"
+msgstr "Följ oss på Bluesky"
+
+#~ msgid "Font:"
+#~ msgstr "Teckensnitt:"
+
+msgid "Sets the application font"
+msgstr "Ställer in programteckensnitt"
+
+msgid "Default"
+msgstr "Standard"
+
+msgid "Light"
+msgstr "Ljus"
+
+msgid "Dark"
+msgstr "Mörk"
+
+msgid "Unlock selected"
+msgstr "Lås upp markerade"
+
+msgid "Workspace has changed"
+msgstr "Arbetsyta har ändrats"
+
+msgid "Do you want to save it?"
+msgstr "Vill du spara den?"
+
+msgid "Set as pace for all"
+msgstr "Ställ in som tempo för alla"
+
+msgid "Split at this bookmark level"
+msgstr "Dela vid denna bokmärkesnivå"
+
+msgid "Select the bookmark depth level at which to split the document"
+msgstr "Välj den bokmärkesdjupnivå där dokumentet ska delas"
+
+msgid "Bookmark level"
+msgstr "Bokmärkesnivå"
+
+msgid "Bookmark level selector"
+msgstr "Bokmärkesnivåväljare"
+
+msgid "Select a bookmark level"
+msgstr "Välj en bokmärkesnivå"
+
+msgid "Select to split the PDF after a predefined set of pages"
+msgstr "Välj att dela PDF-filen efter en fördefinierad uppsättning sidor"
+
+msgid "Predefined set of pages to split after"
+msgstr "Förinställd siduppsättning att dela efter"
+
+msgid ""
+"Choose which predefined set of pages to split after (odd pages, even pages "
+"or every page)"
+msgstr ""
+"Välj vilken fördefinierad uppsättning sidor att dela efter (udda sidor, "
+"jämna sidor eller varje sida)"
+
+msgid "Select to split the document after specific page numbers"
+msgstr "Välj att dela dokumentet efter specifika sidnummer"
+
+msgid "Page numbers to split at"
+msgstr "Sidnummer att dela vid"
+
+msgid "Enter comma separated positive page numbers (Ex. 1,5,12...)"
+msgstr "Ange kommaseparerade positiva sidnummer (T.ex. 1,5,12...)"
+
+msgid "Select to split the document every 'n' pages"
+msgstr "Välj att dela upp dokumentet var 'n' sidor"
+
+msgid "Number of pages for split"
+msgstr "Antal sidor för delning"
+
+msgid "Enter a positive number of pages"
+msgstr "Ange ett positivt antal sidor"
+
+msgid "Split at this size"
+msgstr "Dela vid denna storlek"
+
+msgid "Enter a positive integer for the maximum file size"
+msgstr "Ange ett positivt heltal för den maximala filstorleken"
+
+msgid "Size unit for the split file size"
+msgstr "Storleksenhet för delad filstorlek"
+
+msgid "Page selection for rotation"
+msgstr "Sidval för rotation"
+
+msgid "Choose which pages to rotate: all, even, or odd"
+msgstr "Välj vilka sidor som ska roteras: alla, jämna eller udda"
+
+msgid "Rotation angle"
+msgstr "Rotationsvinkel"
+
+msgid "Choose the rotation angle to apply"
+msgstr "Välj rotationsvinkeln att tillämpa"
+
+msgid "Set pages you want to rotate (ex: 2 or 5-23 or 2,5-7,12-)"
+msgstr "Ange sidor du vill rotera (t.ex.: 2 eller 5-23 eller 2,5-7,12-)"
+
+msgid "Pages normalization"
+msgstr "Sidnormalisering"
+
+msgid "Interactive forms (AcroForms)"
+msgstr "Interaktiva formulär (AcroForms)"
+
+msgid "Bookmarks handling"
+msgstr "Bokmärkeshantering"
+
+msgid "Table of contents"
+msgstr "Innehållsförteckning"
+
+msgid "Repeating PDF file"
+msgstr "Upprepad PDF-fil"
+
+msgid "There are news available"
+msgstr "Det finns nyheter tillgängliga"
+
+msgid "selected"
+msgstr "vald"
+
+#, java-format
+msgid "{0} (with notification)"
+msgstr "{0} (med avisering)"
+
+msgid "Collapse the sidebar"
+msgstr "Fäll ihop sidopanelen"
+
+msgid "Expand the sidebar"
+msgstr "Expandera sidofältet"
+
+msgid "PDF files to open"
+msgstr "PDF-filer att öppna"
+
+msgid "file list"
+msgstr "fillista"
+
+msgid "Available tasks"
+msgstr "Tillgängliga uppgifter"
+
+msgid "Log messages"
+msgstr "Loggmeddelanden"
+
+msgid "Save the log messages to a text file"
+msgstr "Spara loggmeddelandena till en textfil"
+
+msgid "Close the log panel"
+msgstr "Stäng loggpanelen"
+
+msgid "News items"
+msgstr "Nyheter"
+
+msgid "Close news panel"
+msgstr "Stäng nyhetspanel"
+
+#~ msgid "About panel"
+#~ msgstr ""
+
+#, java-format
+msgid "Help for {0}"
+msgstr "Hjälp för {0}"
+
+msgid "Log register rows"
+msgstr "Loggregister-rader"
+
+msgid "Language"
+msgstr "Språk"
+
+msgid "Startup tool"
+msgstr "Startverktyg"
+
+msgid "Theme"
+msgstr "Tema"
+
+msgid "Font"
+msgstr "Teckensnitt"
+
+msgid "Font size"
+msgstr "Teckensnittsstorlek"
+
+msgid "Default PDF version"
+msgstr "Standard PDF-version"
+
+msgid "Manually select the output destination directory"
+msgstr "Välj manuellt utdatamappen"
+
+msgid "Default prefix"
+msgstr "Standardprefix"
+
+msgid "Default prefix for output file names"
+msgstr "Standard prefix för utdatafilnamn"
+
+msgid "Right click to add special prefix keywords"
+msgstr "Högerklicka för att lägga till speciella prefixnyckelord"
+
+msgid "Properties table"
+msgstr "Egenskapstabell"
+
+msgid "Properties"
+msgstr "Egenskaper"
+
+msgid "Empty"
+msgstr "Tom"
+
+msgid "Notification"
+msgstr "Avisering"
+
+msgid "Close notification"
+msgstr "Stäng avisering"
+
+#, java-format
+msgid "Open the url {0}"
+msgstr "Öppna webbadressen {0}"
+
+#~ msgid "PDF document selection toolbar"
+#~ msgstr ""
+
+msgid "Clear the selected PDF document"
+msgstr "Rensa det valda PDF-dokumentet"
+
+msgid "PDF encryption status"
+msgstr "PDF krypteringsstatus"
+
+msgid "PDF document password"
+msgstr "PDF-dokumentlösenord"
+
+msgid "Drag and drop PDF files here or use the Add button above"
+msgstr "Dra och släpp PDF-filer här eller använd knappen Lägg till ovanför"
+
+msgid "PDF documents selection table"
+msgstr "PDF-dokumenturvalstabell"
+
+msgid "PDF selection table"
+msgstr "PDF urvalstabell"
+
+#, java-format
+msgid "PDF documents selection table, {0} documents"
+msgstr "Tabell för val av PDF-dokument, {0} dokument"
+
+#, java-format
+msgid "{0} selected pages"
+msgstr "{0} valda sidor"
+
+#, java-format
+msgid "Size: {0}"
+msgstr "Storlek: {0}"
+
+#, java-format
+msgid "Modified: {0}"
+msgstr "Ändrad: {0}"
+
+msgid "Number of total pages"
+msgstr "Antal sidor totalt"
+
+#, java-format
+msgid "File name: {0}"
+msgstr "Filnamn: {0}"
+
+#, java-format
+msgid "Row {0}"
+msgstr "Rad {0}"
+
+#~ msgid "Document selection toolbar"
+#~ msgstr ""
+
+#, java-format
+msgid "{0} pages"
+msgstr "{0} sidor"
+
+msgid "Set selected pages (ex: 2 or 5-23 or 2,5-7,12-)"
+msgstr "Ange valda sidor (t.ex.: 2 eller 5-23 eller 2,5-7,12-)"
+
+msgid "Select a PDF destination file"
+msgstr "Välj en PDF-målfil"
+
+msgid "Browse for destination PDF file"
+msgstr "Välj mål-PDF-fil"
+
+#, java-format
+msgid "Browse for {0}"
+msgstr "Bläddra efter {0}"
+
+#~ msgid "Compress the output PDF file"
+#~ msgstr "Komprimera den utgående PDF-filen"
+
+msgid "Select a PDF file"
+msgstr "Välj en PDF-fil"
+
+msgid "Browse for source PDF file"
+msgstr "Bläddra efter käll-PDF-fil"
+
+msgid "Output PDF version"
+msgstr "PDF-version för utdata"
+
+msgid "Output PDF version selector"
+msgstr "Väljare för utgående PDF-version"
+
+msgid "Output directory"
+msgstr "Utmatningsmapp"
+
+msgid "Browse for output directory"
+msgstr "Välj utdatamapp"
+
+msgid "Browse for directory"
+msgstr "Välj mapp"
+
+#, java-format
+msgid "Invalid value: {0}"
+msgstr "Ogiltigt värde: {0}"
+
+#, java-format
+#~ msgid "When selected, requires PDF version {0} or higher for the output file"
+#~ msgstr "När markerad, kräver PDF-version {0} eller högre för utdatafilen"
+
+msgid "Right click to add special prefix keywords like timestamp or filename"
+msgstr ""
+"Högerklicka för att lägga till särskilda prefixnyckelord som tidsstämpel "
+"eller filnamn"
+
+msgid "Open the task output file"
+msgstr "Öppna uppgiftsutdatafilen"
+
+msgid "Open the task output directory"
+msgstr "Öppna uppgiftsutdatamappen"
+
+msgid "Task footer"
+msgstr "Uppgiftsfot"
+
+msgid "Task progress"
+msgstr "Uppgiftsframsteg"
+
+#, java-format
+msgid "Task progress: {0}"
+msgstr "Uppgiftsförlopp: {0}"
+
+#, java-format
+msgid "Task status: {0}"
+msgstr "Uppgiftsstatus: {0}"
+
+#, java-format
+msgid "Task status: {0}%"
+msgstr "Uppgiftsstatus: {0}%"
+
+msgid "Output files compression"
+msgstr "Komprimering av utdatafiler"
+
+msgid "Sets the default value for the compression policy of the output files"
+msgstr "Ställer in standardvärdet för komprimeringspolicyn för utdatafilerna"
+
+msgid "Compress"
+msgstr "Komprimera"
+
+msgid ""
+"all streams in the output PDF will be compressed by applying FlateDecode "
+"encoding"
+msgstr ""
+"alla strömmar i utdata-PDF:en kommer att komprimeras genom att tillämpa "
+"FlateDecode-kodning"
+
+msgid "Neutral"
+msgstr "Neutral"
+
+msgid "streams are left unchanged from the original file"
+msgstr "strömmar lämnas oförändrade från originalfilen"
+
+msgid "Uncompress"
+msgstr "Packa upp"
+
+msgid ""
+"FlateDecode and LZWDecode filters will be removed from all streams. Useful "
+"for debugging or manual inspection"
+msgstr ""
+"FlateDecode- och LZWDecode-filter kommer att tas bort från alla strömmar. "
+"Användbart för felsökning eller manuell inspektion"
+
+msgid "Unchanged"
+msgstr "Oförändrad"
+
+msgid "PDF version for generated PDF files"
+msgstr "PDF-version för genererade PDF-filer"
+
+msgid "Sets the compression policy for the output files"
+msgstr "Anger komprimeringspolicy för utdatafilerna"
+
+msgid ""
+"If the output field is empty, it's automatically set using the selected PDF "
+"document's directory"
+msgstr ""
+"Om utdatafältet är tomt ställs det automatiskt in med hjälp av det valda PDF-"
+"dokumentets mapp"
+
+msgid "1 file selected"
+msgstr "1 fil vald"
+
+#, java-format
+msgid "{0} files selected"
+msgstr "{0} filer markerade"

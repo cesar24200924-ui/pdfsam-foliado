@@ -1,0 +1,1599 @@
+# Malay translation for pdfsam
+# Copyright (c) 2021 Rosetta Contributors and Canonical Ltd 2021
+# This file is distributed under the same license as the pdfsam package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: pdfsam\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2023-01-27 11:09+0100\n"
+"PO-Revision-Date: 2026-11-04 12:27+0100\n"
+"Last-Translator: abuyop <Unknown>\n"
+"Language-Team: Malay <ms@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2023-01-31 10:16+0000\n"
+"X-Generator: Autopo v1.0.13-SNAPSHOT\n"
+"Language: ms\n"
+
+msgid "No PDF document has been selected"
+msgstr "Tiada dokumen PDF telah dipilih"
+
+msgid "Extract"
+msgstr "Ekstrak"
+
+msgid "Extract pages from PDF documents."
+msgstr "Ekstrak halaman daripada dokumen PDF."
+
+msgid "File names settings"
+msgstr "Tetapan nama fail"
+
+msgid "Extract settings"
+msgstr "Tetapan ekstrak"
+
+msgid "Output settings"
+msgstr "Tetapan output"
+
+msgid "A separate file for each set of pages"
+msgstr "Fail berasingan untuk setiap set halaman"
+
+msgid "Each continuous series of pages will generate a separate PDF file"
+msgstr "Setiap siri halaman berterusan akan menjana fail PDF berasingan"
+
+msgid "Invalid page ranges"
+msgstr "Julat halaman tidak sah"
+
+msgid "Extract pages:"
+msgstr "Ekstrak halaman:"
+
+msgid "Split by bookmarks"
+msgstr "Pisah mengikut tanda buku"
+
+msgid ""
+"Split a PDF document at bookmarked pages by specifying a bookmark level."
+msgstr ""
+"Pisah satu dokumen PDF mengikut halaman bertanda buku dengan menyatakan satu "
+"aras tanda buku."
+
+msgid "Regular expression the bookmark has to match"
+msgstr "Ungkapan nalar tanda buku perlu dipadankan"
+
+msgid "Split at this bookmark level:"
+msgstr "Pisah mengikut aras tanda buku ini:"
+
+msgid "Matching regular expression:"
+msgstr "Ungkapan nalar sepadan:"
+
+msgid "A regular expression the bookmark text has to match"
+msgstr "Ungkapan nalar yang teks penanda buku mesti sepadan"
+
+msgid ""
+"Example: use .*Chapter.* to match bookmarks containing the word \"Chapter\""
+msgstr ""
+"Contoh: guna  .*Bab.* untuk padankan tanda buku yang mengandungi perkataan "
+"\"Bab\""
+
+msgid "Select or drag and drop the PDF you want to split"
+msgstr "Pilih atau seret dan lepas PDF yang mahu dipisahkan"
+
+msgid "Split settings"
+msgstr "Tetapan pisah"
+
+msgid "Invalid bookmarks level"
+msgstr "Aras tanda buku tidak sah"
+
+msgid "Split after"
+msgstr "Pisah selepas"
+
+msgid "No page selected"
+msgstr "Tiada halaman terpilih"
+
+msgid "Split"
+msgstr "Pisah"
+
+msgid "Split a PDF document at the given page numbers."
+msgstr "Pisah satu dokumen PDF pada nombor halaman yang diberikan."
+
+msgid "Every page"
+msgstr "Setiap halaman"
+
+msgid "Even pages"
+msgstr "Halaman genap"
+
+msgid "Odd pages"
+msgstr "Halaman ganjil"
+
+msgid "Split the document after the given page numbers"
+msgstr "Pisah dokumen selepas nombor halaman yang diberikan"
+
+msgid "Splits the PDF every \"n\" pages creating documents of \"n\" pages each"
+msgstr "Pisah PDF setiap \"n\" halaman menghasilkan dokumen berhalaman \"n\""
+
+msgid "Split after the following page numbers"
+msgstr "Pisah selepas nombor halaman berikut"
+
+msgid "Page numbers to split at (n1,n2,n3..)"
+msgstr "Nombor halaman yang dipisahkan pada (n1,n2,n3..)"
+
+msgid "Invalid page numbers"
+msgstr "Nombor halaman tidak sah"
+
+msgid "Only valid positive page numbers are allowed"
+msgstr "Hanya nombor halaman positif yang sah dibenarkan"
+
+msgid "Split by every \"n\" pages"
+msgstr "Pisah setiap \"n\" halaman"
+
+msgid "Number of pages"
+msgstr "Bilangan halaman"
+
+msgid "Invalid number of pages"
+msgstr "Bilangan halaman tidak sah"
+
+msgid "Megabytes"
+msgstr "Megabait"
+
+msgid "MB"
+msgstr "MB"
+
+msgid "Kilobytes"
+msgstr "Kilobait"
+
+msgid "KB"
+msgstr "KB"
+
+msgid "Split by size"
+msgstr "Pisah mengikut saiz"
+
+msgid "Split a PDF document in files of the given size (roughly)."
+msgstr ""
+"Pisah satu dokumen PDF mengikut fail-fail dengan saiz yang diberikan (secara "
+"kasar)."
+
+msgid "Set the size to split at"
+msgstr "Tetapkan saiz untuk dipisahkan"
+
+msgid "Size must be a number"
+msgstr "Saiz mesti dalam bentuk nombor"
+
+msgid "Invalid split size"
+msgstr "Saiz pisah tidak sah"
+
+msgid "Destination file"
+msgstr "Fail destinasi"
+
+msgid "Alternate Mix"
+msgstr "Campur Alternatif"
+
+msgid ""
+"Merge two or more PDF documents taking pages alternately in natural or "
+"reverse order."
+msgstr ""
+"Gabung dua atau lebih dokumen PDF yang dimasukkan secara alternatif dalam "
+"tertib biasa atau songsang."
+
+msgid "Double click to set pages you want to mix (ex: 2 or 5-23 or 2,5-7,12-)"
+msgstr ""
+"Dwi-klik untuk menetapkan halaman yang mahu dicampurkan (iaitu 2 atau 5-23 "
+"atau 2,5-7, 12-)"
+
+msgid "Select a positive integer number as pace"
+msgstr "Pilih satu nombor integer positif sebagai kadar"
+
+msgid "All pages"
+msgstr "Semua halaman"
+
+msgid "90 degrees clockwise"
+msgstr "90 darjah ikut arah jam"
+
+msgid "180 degrees clockwise"
+msgstr "180 darjah ikut jam"
+
+msgid "90 degrees counterclockwise"
+msgstr "90 darjah lawan jam"
+
+msgid "Rotate settings"
+msgstr "Tetapan putar"
+
+msgid "Rotate"
+msgstr "Putar"
+
+msgid "Rotate the pages of multiple PDF documents."
+msgstr "Putar halaman dokumen PDF berbilang."
+
+msgid "Merge settings"
+msgstr "Tetapan gabung"
+
+msgid ""
+"Double click to set pages you want to merge (ex: 2 or 5-23 or 2,5-7,12-)"
+msgstr ""
+"Dwi-klik untuk menetapkan halaman yang mahu digabungkan (cth: 2 atau 5-24 "
+"atau 2,5-7,12-)"
+
+msgid "Add a blank page if page number is odd"
+msgstr "Tambah satu halaman kosong jika nombor halaman adalah ganjil"
+
+msgid ""
+"Adds a blank page after each merged document if the document has an odd "
+"number of pages"
+msgstr ""
+"Tambah satu halaman kosong selepas setiap dokumen yang digabungkan jika "
+"dokumen mempunyai bilangan halaman ganjil"
+
+msgid "Add a footer"
+msgstr "Tambah satu pengaki"
+
+msgid "Adds a page footer with the name of the file the page belonged to."
+msgstr ""
+"Tambah satu pengaki halaman dengan nama fail  yang memiliki halaman tersebut."
+""
+
+msgid "None"
+msgstr "Tiada"
+
+msgid "Same width as first page"
+msgstr "Lebar sama dengan halaman pertama"
+
+msgid "Same width as first page (based on page orientation)"
+msgstr "Lebar sama seperti halaman pertama (berdasarkan orientasi halaman)"
+
+msgid ""
+"Set whether pages should be resized to all have the same width as the first "
+"one"
+msgstr ""
+"Tetapkan sama ada halaman perlu diubah saiz supaya semua mempunyai lebar "
+"yang sama seperti yang pertama"
+
+msgid "Merge fields"
+msgstr "Gabung medan"
+
+msgid "Merge renaming existing fields"
+msgstr "Gabung dan nama semula medan-medan sedia ada"
+
+msgid "Flatten"
+msgstr "Ratakan"
+
+msgid "Discard forms"
+msgstr "Singkir borang"
+
+msgid "What to do in case one or more input documents contain Acro Forms"
+msgstr ""
+"Apa boleh dilakukan jika satu atau lebih input dokumen mengandungi Borang "
+"Acro"
+
+msgid "Retain bookmarks"
+msgstr "Kekalkan tanda buku"
+
+msgid "Discard bookmarks"
+msgstr "Singkir tanda buku"
+
+msgid "Create one entry for each merged document"
+msgstr "Cipta satu masukan untuk setiap dokumen yang digabungkan"
+
+msgid "Retain bookmarks as one entry for each merged document"
+msgstr ""
+"Kekalkan tanda buku sebagai satu masukan untuk setiap dokumen yang "
+"digabungkan"
+
+msgid "What to do in case one or more input documents contain bookmarks"
+msgstr ""
+"Apa perlu dilakukan jika satu atau lebih dokumen input mengandungi tanda "
+"buku"
+
+msgid "Don't generate"
+msgstr "Jangan jana"
+
+msgid "Generate from file names"
+msgstr "Jana daripada nama fail"
+
+msgid "Generate from documents titles"
+msgstr "Jana daripada tajuk dokumen"
+
+msgid ""
+"Set if a table of contents should be added to the generated PDF document"
+msgstr ""
+"Tetapkan jika satu senarai kandungan patut ditambah masuk ke dalam dokumen "
+"PDF yang dijana"
+
+msgid "Merge"
+msgstr "Gabung"
+
+msgid "Select or drag and drop the PDF whose pages will be repeated"
+msgstr "Pilih atau seret dan lepas fail PDF yang halamannya akan diulang"
+
+msgid "Repeat these pages:"
+msgstr "Ulang halaman-halaman ini:"
+
+msgid "Pages to repeat (ex: 2 or 5-23 or 2,5-7,12-)"
+msgstr "Halaman untuk diulang (cth: 2 atau 5-23 atau 2,5-7,12-)"
+
+msgid ""
+"Comma separated page numbers or ranges to be repeated (ex: 2 or 5-23 or 2,5-"
+"7,12-)"
+msgstr ""
+"Nombor halaman atau julat yang dipisahkan koma untuk diulang (cth: 2 atau 5-"
+"23 atau 2,5-7,12-)"
+
+msgid "Leave it empty to use all the pages of the PDF file"
+msgstr "Biarkan kosong untuk menggunakan semua halaman fail PDF"
+
+msgid "Repeat every \"n\" pages:"
+msgstr "Ulang setiap \"n\" muka surat:"
+
+msgid "Invalid page number"
+msgstr "Nombor halaman tidak sah"
+
+msgid "Repeat the selected pages every \"n\" pages of the original document"
+msgstr "Ulang halaman yang dipilih setiap \"n\" halaman dokumen asal"
+
+msgid "The selected PDF file is invalid"
+msgstr "Fail PDF terpilih tidak sah"
+
+msgid "The number of pages must be a positive number"
+msgstr "Bilangan muka surat mestilah nombor positif"
+
+msgid "Select or drag and drop the PDF you want to insert pages to"
+msgstr "Pilih atau seret dan lepas PDF yang anda ingin masukkan halaman"
+
+msgid "Insert and Repeat settings"
+msgstr "Sisip dan Ulang tetapan"
+
+msgid "Insert pages multiple times"
+msgstr "Masukkan halaman beberapa kali"
+
+msgid ""
+"Insert the pages of a PDF document A into another document B, repeating it "
+"after a certain number of pages, resulting in B1 A B2 A B3 A etc."
+msgstr ""
+"Masukkan halaman-halaman dokumen PDF A ke dalam dokumen B yang lain "
+"mengulanginya selepas beberapa halaman tertentu menghasilkan B1 A B2 A B3 A "
+"dan sebagainya."
+
+#, java-format
+msgid "Started in {0}"
+msgstr "Bermula dengan {0}"
+
+msgid "Closing PDFsam..."
+msgstr "Menutup PDFsam..."
+
+msgid "Drag and drop PDF files or directories containing PDF files"
+msgstr "Seret dan lepas fail PDF atau direktori yang mengandungi fail PDF"
+
+msgid "No PDF found"
+msgstr "Tiada PDF ditemui"
+
+msgid "Tools"
+msgstr "Alatan"
+
+msgid "News"
+msgstr "Berita"
+
+msgid "What's new"
+msgstr "Apa yang baharu"
+
+msgid "Exit"
+msgstr "Keluar"
+
+msgid "Exit the application"
+msgstr "Keluar aplikasi"
+
+msgid "Workspace"
+msgstr "Ruang kerja"
+
+msgid "Manage your workspaces"
+msgstr "Urus ruang kerja anda"
+
+msgid "Yes"
+msgstr "Ya"
+
+msgid "No"
+msgstr "Tidak"
+
+msgid "Confirm clearing"
+msgstr "Sahkan pengosongan"
+
+msgid "Do you confirm?"
+msgstr "Anda pasti?"
+
+msgid "Clear the tool settings"
+msgstr "Kosongkan tetapan alat"
+
+msgid "Clear the selection table"
+msgstr "Kosongkan jadual pemilihan"
+
+msgid "Open with"
+msgstr "Buka dengan"
+
+msgid "Select the task to perform on the following files"
+msgstr "Pilih tugas untuk mengendali fail berikut"
+
+msgid "Directory not empty"
+msgstr "Direktori tidak kosong"
+
+msgid "The selected directory is not empty"
+msgstr "Direktori terpilih tidak kosong"
+
+msgid "What would you like to do in case of files with the same name?"
+msgstr "Apa perlu buat jika ada fail dengan nama yang serupa?"
+
+msgid "Overwrite"
+msgstr "Tulis Ganti"
+
+msgid "Rename"
+msgstr "Nama Semula"
+
+msgid "Skip"
+msgstr "Langkau"
+
+msgid "Cancel"
+msgstr "Batal"
+
+msgid "Don't overwrite existing file"
+msgstr "Jangan tulis-ganti fail sedia ada"
+
+msgid "Overwrite confirmation"
+msgstr "Pengesahan tulis-ganti"
+
+msgid "A file with the given name already exists"
+msgstr "Satu fail dengan nama diberi sudah wujud"
+
+msgid "What would you like to do?"
+msgstr "Apakah tindakan anda?"
+
+msgid "Non existing directory"
+msgstr "Direktori tidak wujud"
+
+msgid "The selected output directory does not exist"
+msgstr "Direktori output terpilih tidak wujud"
+
+msgid "Do you want to create it?"
+msgstr "Anda mahu menciptanya?"
+
+msgid "Subdirectories"
+msgstr "Subdirektori"
+
+msgid "Subdirectories have been found"
+msgstr "Subdirektori telah ditemui"
+
+msgid "Do you want to add PDF files found in subdirectories?"
+msgstr "Anda mahu menambah fail PDF yang ditemui dalam subdirektori?"
+
+msgid "Task failed"
+msgstr "Tugas gagal"
+
+msgid "PDFsam can try to overcome the failure"
+msgstr "PDFsam cuba mengatasi kegagalan tersebut"
+
+msgid ""
+"It may result in PDF files with partial or missing data, proceed anyway?"
+msgstr ""
+"Ia mungkin menyebabkan fail PDF dengan sebahagian data atau kehilangan data, "
+"teruskan jua?"
+
+msgid "Removes all the log messages"
+msgstr "Memadamkan semua mesej log"
+
+msgid "_Clear"
+msgstr "K_osongkan"
+
+msgid "_Save"
+msgstr "_Simpan"
+
+msgid "C_lose"
+msgstr "Tutu_p"
+
+msgid "Copy"
+msgstr "Salin"
+
+msgid "Clear"
+msgstr "Kosongkan"
+
+msgid "Select all"
+msgstr "Pilih semua"
+
+msgid "Save log"
+msgstr "Simpan log"
+
+msgid "Select where to save the log file"
+msgstr "Pilih lokasi fail log disimpan"
+
+msgid "Logs"
+msgstr "Log"
+
+msgid "Application messages"
+msgstr "Mesej aplikasi"
+
+msgid "_Load"
+msgstr "_Muat"
+
+msgid "Recen_ts"
+msgstr "Baru-baru _Ini"
+
+msgid "_Clear recents"
+msgstr "_Kosongkan Terkini"
+
+msgid "Select the workspace file to save"
+msgstr "Pilih fail ruang kerja untuk disimpan"
+
+msgid "Select the workspace to load"
+msgstr "Pilih ruang kerja untuk dimuat"
+
+msgid "Subscribe to the official news feed"
+msgstr "Langgan suapan berita rasmi"
+
+msgid "Environment"
+msgstr "Persekitaran"
+
+#, java-printf-format
+msgid "Vendor: %s"
+msgstr "Pembekal: %s"
+
+#, java-printf-format
+msgid "Java runtime path: %s"
+msgstr "Laluan masa jalan Java: %s"
+
+#, java-printf-format
+msgid "JavaFX runtime version: %s"
+msgstr "Versi runtime JavaFX: %s"
+
+#, java-printf-format
+msgid "PDF engine (Sejda SDK) version: %s"
+msgstr "Enjin PDF (Sejda SDK) versi: %s"
+
+#, java-format
+msgid "Max memory {0}"
+msgstr "Ingatan maks {0}"
+
+msgid "Copy to clipboard"
+msgstr "Salin ke papan keratan"
+
+msgid "Support"
+msgstr "Sokongan"
+
+msgid "Bug and feature requests"
+msgstr "Permintaan ciri-ciri dan pepijat"
+
+msgid "Documentation"
+msgstr "Dokumentasi"
+
+msgid "Contribute"
+msgstr "Sumbangan"
+
+msgid "Fork PDFsam on GitHub"
+msgstr "Cabangkan PDFSam di GitHub"
+
+msgid "Translate"
+msgstr "Terjemah"
+
+msgid "Donate"
+msgstr "Derma"
+
+msgid "Social"
+msgstr "Sosial"
+
+msgid "Like us on Facebook"
+msgstr "Sukai kami di Facebook"
+
+msgid "About"
+msgstr "Perihal"
+
+msgid "Home"
+msgstr "Utama"
+
+msgid "Premium features"
+msgstr "Ciri-ciri premium"
+
+msgid "Maximum number of rows displayed by the Log register"
+msgstr "Bilangan baris maksimum yang dipaparkan dalam daftar Log"
+
+msgid "Set your preferred language (restart needed)"
+msgstr "Tetapkan bahasa pilihan anda (mula semula diperlukan)"
+
+msgid "Set the tool to open at application startup (restart needed)"
+msgstr ""
+"Tetapkan alat untuk dibuka semasa permulaan aplikasi (perlu dimulakan "
+"semula)"
+
+msgid "Set the application theme"
+msgstr "Tetapkan tema aplikasi"
+
+msgid "Set the application font size"
+msgstr "Tetapkan saiz fon aplikasi"
+
+msgid "Manually selected"
+msgstr "Dipilih secara manual"
+
+msgid "Settings"
+msgstr "Tetapan"
+
+msgid "Appearance"
+msgstr "Penampilan"
+
+msgid "Behavior"
+msgstr "Kelakuan"
+
+msgid "Output"
+msgstr "Output"
+
+msgid "Check for updates now"
+msgstr "Periksa kemas kini sekarang"
+
+msgid "Select a directory where documents will be saved and loaded by default"
+msgstr ""
+"Pilih satu direktori yang mana dokumen akan disimpan dan dimuatkan secara "
+"lali"
+
+msgid "Select a directory"
+msgstr "Pilih satu direktori"
+
+msgid ""
+"Select a previously saved workspace that will be automatically loaded at "
+"startup"
+msgstr ""
+"Pilih satu ruang kerja tersimpan sebelum ini yang akan dimuatkan secara "
+"automatik ketika permulaan"
+
+msgid "Select a workspace"
+msgstr "Pilih satu ruang kerja"
+
+msgid "Default working directory:"
+msgstr "Direktori kerja lalai:"
+
+msgid "Load default workspace at startup:"
+msgstr "Muat ruang kerja lalai semasa permulaan:"
+
+msgid "System default"
+msgstr "Lalai sistem"
+
+msgid "Check for updates at startup"
+msgstr "Periksa kemas kini semasa permulaan"
+
+msgid ""
+"Set whether new version availability should be checked on startup (restart "
+"needed)"
+msgstr ""
+"Tetapkan sama ada ketersediaan versi baharu patut diperiksa semasa permulaan "
+"(mula semula diperlukan)"
+
+msgid "Check for news at startup"
+msgstr "Periksa berita semasa permulaan"
+
+msgid ""
+"Set whether the application should check for news availability on startup "
+"(restart needed)"
+msgstr ""
+"Tetapkan sama ada aplikasi patut memeriksa ketersediaan berita semasa "
+"permulaan (mula semula diperlukan)"
+
+msgid "Overwrite files"
+msgstr "Tulis-ganti fail"
+
+msgid "Set whether \"Overwrite if already exists\" should be enabled by default"
+msgstr ""
+"Tetapkan sama ada \"Tulis ganti jika sudah wujud\" patut dibenarkan secara "
+"lalai"
+
+msgid "Play alert sounds"
+msgstr "Main bunyi amaran"
+
+msgid "Turn on or off alert sounds"
+msgstr "Hidup atau matikan bunyi amaran"
+
+msgid "Store passwords when saving a workspace file"
+msgstr "Simpan kata laluan ketika menyimpan satu fail ruang kerja"
+
+msgid ""
+"If an encrypted PDF document has been opened with a password, save the "
+"password in the workspace file"
+msgstr ""
+"Jika satu dokumen PDF tersulit telah dibuka dengan satu kata laluan, simpan "
+"kata laluan tersebut di dalam fail ruang kerja"
+
+msgid "Show donation window"
+msgstr "Tunjuk tetingkap derma"
+
+msgid ""
+"Turn on or off the notification appearing once in a while and asking the "
+"user to support PDFsam with a donation"
+msgstr ""
+"Hidup atau matikan pemberitahuan yang muncul sekali dan menanya pengguna "
+"untuk menyokong PDFsam dengan memberi derma"
+
+msgid "Show premium features"
+msgstr "Tunjuk ciri-ciri premium"
+
+msgid ""
+"Set whether the application should fetch and show premium features "
+"description in the modules dashboard"
+msgstr ""
+"Tetapkan sama ada aplikasi patut tunjuk keterangan ciri-ciri premium dalam "
+"papan pemuk modul"
+
+msgid "Ask for a confirmation when clearing the selection table"
+msgstr "Tanya pengesahan apabila mengosongkan jadual pemilihan"
+
+msgid ""
+"Set whether the application should ask for a confirmation when clearing the "
+"selection table"
+msgstr ""
+"Tetapkan sama ada aplikasi patut menanya pengesahan apabila mengosongkan "
+"jadual pemilihan"
+
+msgid "Use the selected PDF document directory as output directory"
+msgstr "Guna direktori dokumen PDF terpilih sebagai direktori output"
+
+msgid "Save default workspace on exit"
+msgstr "Simpan ruang kerja lalai bila keluar"
+
+msgid "If a default workspace is set, save it on application exit"
+msgstr ""
+"Jika satu ruang kerja lalai ditetapkan, simpan ia apabila keluar dari "
+"aplikasi"
+
+msgid "Maximum number of rows mast be a positive number"
+msgstr "Bilangan baris maksimum mestilah satu nombor positif"
+
+msgid "Summary"
+msgstr "Ringkasan"
+
+msgid "Keywords"
+msgstr "Kata Kunci"
+
+msgid "Document details"
+msgstr "Perincian dokumen"
+
+msgid "Show errors"
+msgstr "Tunjuk ralat"
+
+msgid "Input parameters are invalid"
+msgstr "Parameter masukan tidak sah"
+
+msgid "Invalid parameters"
+msgstr "Parameter tidak sah"
+
+msgid "Access denied"
+msgstr "Capaian dinafikan"
+
+#, java-format
+msgid ""
+"Unable to access \"{0}\", please make sure you have write permissions or "
+"open the application messages for details."
+msgstr ""
+"Tidak boleh mencapai \"{0}\", sila pastikan anda mendapat keizinan tulis "
+"atau buka mesej aplikasi untuk perincian."
+
+#, java-format
+msgid "You performed {0} tasks with PDFsam, did it help?"
+msgstr "Anda telah melakukan {0} tugas dengan PDFsam, adakah ia membantu?"
+
+msgid "Give something back"
+msgstr "Sumbang kembali"
+
+msgid "PDFsam worked hard!"
+msgstr "PDFsam telah berusaha keras!"
+
+msgid "Spread the word!"
+msgstr "Sebar luaskan aplikasi ini!"
+
+#, java-format
+msgid "PDFsam {0} is available for download"
+msgstr "PDFsam {0} sudah tersedia untuk dimuat turun"
+
+msgid "Download"
+msgstr "Muat Turun"
+
+msgid "New version available"
+msgstr "Versi baharu sudah tersedia"
+
+msgid "You are running the latest version of PDFsam Basic"
+msgstr "Anda sudah memiliki versi terkini PDFsam Asas"
+
+msgid "No update"
+msgstr "Tiada kemas kini"
+
+msgid "Open"
+msgstr "Buka"
+
+#, java-format
+msgid "File \"{0}\" does not exist or is invalid"
+msgstr "Fail \"{0}\" tidak wujud atau tidak sah"
+
+msgid "Valid user password provided."
+msgstr "Kata laluan pengguna yang sah disediakan."
+
+msgid "This document is encrypted, click to provide a password."
+msgstr "Dokumen ini disulitkan, klik untuk sediakan satu kata laluan."
+
+msgid "An error has occurred, click for more details."
+msgstr "Satu ralat telah berlaku, klik untuk perincian."
+
+msgid "Split tools"
+msgstr "Alat Pisah"
+
+msgid "Merge tools"
+msgstr "Alat Gabung"
+
+msgid "Convert tools"
+msgstr "Alat Penukaran"
+
+msgid "Edit tools"
+msgstr "Alat sunting"
+
+msgid "Other tools"
+msgstr "Alat lain"
+
+msgid "Checking for updates"
+msgstr "Memeriksa kemas kini"
+
+msgid "Unable to find the latest available version."
+msgstr "Tidak boleh mencari versi tersedia yang terkini."
+
+#, java-format
+msgid "Unable to find any valid PDF file in the list: {0}"
+msgstr "Tidak boleh mencari mana-mana fail PDF dalam senarai: {0}"
+
+#, java-format
+msgid "Unable to load PDF list file from {0}"
+msgstr "Tidak boleh memuatkan fail senarai PDF daripada {0}"
+
+msgid "Loading pdf documents"
+msgstr "Memuatkan dokumen-dokumen pdf"
+
+msgid "Documents loaded"
+msgstr "Dokumen dimuatkan"
+
+msgid "Unable to retrieve premium features description"
+msgstr "Tidak memperoleh keterangan ciri-ciri premium"
+
+msgid "Fetching premium modules"
+msgstr "Mendapatkan modul-modul premium"
+
+msgid "Unable to retrieve premium modules"
+msgstr "Tidak boleh mendapatkan modul-modul premium"
+
+msgid "Unable to retrieve latest news"
+msgstr "Tidak boleh mendapatkan berita-berita terkini"
+
+msgid "Fetching latest news"
+msgstr "Mendapatkan berita-berita terkini"
+
+msgid "Unable to retrieve the latest news"
+msgstr "Tidak boleh mendapatkan berita-berita terkini"
+
+#, java-format
+msgid "Saving workspace data to {0}"
+msgstr "Menyimpan data ruang kerja ke {0}"
+
+msgid "Workspace saved"
+msgstr "Ruang kerj disimpan"
+
+msgid "Requesting modules state"
+msgstr "Meminta keadaan modul-modul"
+
+#, java-format
+msgid "Unable to save workspace to {0}"
+msgstr "Tidak boleh menyimpan ruang kerja ke {0}"
+
+#, java-format
+msgid "Loading workspace from {0}"
+msgstr "Memuatkan ruang kerja daripada {0}"
+
+#, java-format
+msgid "Unable to load workspace from {0}"
+msgstr "Tidak boleh memuatkan ruang kerja dari {0}"
+
+msgid "Light with blue"
+msgstr "Cerah dengan biru"
+
+msgid "Dark with purple"
+msgstr "Gelap dengan Ungu"
+
+msgid "Dark with teal"
+msgstr "Gelap dengan hijau kebiruan"
+
+msgid "Light with maroon"
+msgstr "Cerah dengan maroon"
+
+msgid "Close"
+msgstr "Tutup"
+
+msgid "The selected PDF document is invalid"
+msgstr "Dokumen PDF yang terpilih adalah tidak sah"
+
+msgid "Select the PDF file"
+msgstr "Pilih fail PDF"
+
+msgid "_Select PDF"
+msgstr "_Pilih PDF"
+
+#, java-format
+msgid "Pages: {0}, PDF Version: {1}"
+msgstr "Halaman: {0}, PDF Versi: {1}"
+
+msgid "Loading..."
+msgstr "Memuatkan..."
+
+msgid "Document properties"
+msgstr "Sifat-sifat dokumen"
+
+msgid "Remove"
+msgstr "Buang"
+
+msgid "Set destination"
+msgstr "Tetapkan destinasi"
+
+msgid "Open Folder"
+msgstr "Buka Folder"
+
+msgid "Enter the user password"
+msgstr "Masukkan kata laluan pengguna"
+
+msgid "Unlock"
+msgstr "Nyahkunci"
+
+msgid "Set as range for all"
+msgstr "Tetapkan sebagai julat untuk semua"
+
+msgid "Move to Top"
+msgstr "Alih ke Teratas"
+
+msgid "Move Up"
+msgstr "Alih ke Atas"
+
+msgid "Move Down"
+msgstr "Alih ke Bawah"
+
+msgid "Move to Bottom"
+msgstr "Alih ke Terbawah"
+
+msgid "Duplicate"
+msgstr "Pendua"
+
+msgid "Selected pages"
+msgstr "Halaman terpilih"
+
+msgid "Total number of selected pages"
+msgstr "Jumlah halaman yang dipilih"
+
+msgid "Size"
+msgstr "Saiz"
+
+msgid "Modified"
+msgstr "Diubah Suai"
+
+#, java-format
+msgid "Total pages: {0}"
+msgstr "Jumlah muka surat: {0}"
+
+msgid "Name"
+msgstr "Nama"
+
+msgid "Add documents to the table"
+msgstr "Tambah dokumen ke dalam jadual"
+
+msgid "_Add"
+msgstr "T_ambah"
+
+msgid "PDF list from _text/csv file"
+msgstr "Senarai PDF daripada fail _teks/csv"
+
+msgid "Select pdf documents to load"
+msgstr "Pilih dokumen pdf untuk dimuatkan"
+
+msgid "Select a text or CSV file to load"
+msgstr "Pilih satu fail teks atau CSV untuk dimuatkan"
+
+msgid "Removes selected documents"
+msgstr "Buang dokumen-dokumen terpilih"
+
+msgid "_Remove"
+msgstr "B_uang"
+
+msgid "Removes every document"
+msgstr "Buang setiap dokumen"
+
+msgid "C_lear all settings"
+msgstr "K_osongkan semua tetapan"
+
+msgid "Moves up selected documents"
+msgstr "Alih dokumen-dokumen terpilih ke atas"
+
+msgid "Move _Up"
+msgstr "Alih ke _Atas"
+
+msgid "Moves down selected documents"
+msgstr "Alih dokumen-dokumen terpilih ke bawah"
+
+msgid "Move _Down"
+msgstr "Alih ke _Bawah"
+
+msgid "Pace"
+msgstr "Kadar"
+
+msgid ""
+"Double click to set the number of pages after which the task will switch to "
+"the next file"
+msgstr ""
+"Dwi-klik untuk menetapkan bilangan halaman setelah tugas tersebut beralih ke "
+"fail berikutnya"
+
+msgid "Reverse"
+msgstr "Songsang"
+
+msgid "Pages"
+msgstr "Halaman"
+
+msgid "Number of total pages of the document"
+msgstr "Bilangan jumlah muka surat dokumen"
+
+msgid "Page ranges"
+msgstr "Julat halaman"
+
+msgid "Select a file"
+msgstr "Pilih satu fail"
+
+msgid "The selected file must exist. "
+msgstr "Fail terpilih mesti wujud. "
+
+#, java-format
+msgid "Allowed extensions are {0}"
+msgstr "Sambungan dibenarkan adalah {0}"
+
+msgid ""
+"Tick the box if you don't want to retain any bookmark from the original PDF "
+"document"
+msgstr ""
+"Tanda dalam kotak jika anda tidak mahu kekalkan mana-mana tanda buku "
+"daripada dokumen PDF asal"
+
+msgid "Output PDF version:"
+msgstr "Versi PDF output:"
+
+msgid "Show advanced settings"
+msgstr "Tunjuk tetapan lanjutan"
+
+msgid "Hide advanced settings"
+msgstr "Sembunyi tetapan lanjutan"
+
+msgid "Overwrite if already exists"
+msgstr "Tulis-ganti jika sudah wujud"
+
+msgid ""
+"Tick the box if you want to overwrite the output files if they already exist."
+""
+msgstr ""
+"Tanda dalam kotak jika anda mahu tulis-ganti fail output jika ia masih wujud."
+""
+
+#, java-format
+msgid "Version {0}"
+msgstr "Versi {0}"
+
+msgid "Same as the input document"
+msgstr "Sama seperti dokumen input"
+
+msgid "An existing output directory is required"
+msgstr "Satu direktori output sedia ada diperlukan"
+
+msgid "The output directory is required"
+msgstr "Direktori output diperlukan"
+
+msgid "Select an existing directory"
+msgstr "Pilih satu direktori sedia ada"
+
+msgid "Select"
+msgstr "Pilih"
+
+msgid "Browse"
+msgstr "Semak imbas"
+
+msgid "Prefix for the generated files names"
+msgstr "Awalan bagi nama fail terjana"
+
+msgid "Add prefix"
+msgstr "Tambah awalan"
+
+msgid "DEFAULT_PREFIX"
+msgstr "AWALAN_LALAI"
+
+msgid "Generated PDF documents name prefix:"
+msgstr "Awalan nama dokumen PDF yang dijana:"
+
+msgid "Prefix for the output files name."
+msgstr "Awalan bagi nama fail output."
+
+msgid "Some special keywords are replaced with runtime values."
+msgstr "Beberapa kata kunci khas telah diganti dengan nilai-nilai masa jalan."
+
+msgid "Right click to add these keywords."
+msgstr "Klik kanan untuk menambah kata kunci-kata kunci ini."
+
+msgid "Run"
+msgstr "Jalan"
+
+msgid "Run the task"
+msgstr "Jalankan tugas"
+
+msgid "Requested"
+msgstr "Dipinta"
+
+msgid "Completed"
+msgstr "Selesai"
+
+msgid "Failed"
+msgstr "Gagal"
+
+msgid "Running"
+msgstr "Berjalan"
+
+#, java-format
+msgid "Running {0}%"
+msgstr "Berjalan {0}%"
+
+#, java-format
+msgid "Invalid range: {0}."
+msgstr "Julat tidak sah: {0}."
+
+#, java-format
+msgid ""
+"Ambiguous page range definition: {0}. Use following formats: [n] or [n1-n2] "
+"or [-n] or [n-]"
+msgstr ""
+"Tarifan julat halaman kabur: {0}. Guna format-format berikut: [n] atau [n1-"
+"n2] atau [-n] atau [n-]"
+
+#, java-format
+msgid "Invalid number: {0}."
+msgstr "Nombor tidak sah: {0}."
+
+msgid "Pages to extract (ex: 2 or 5-23 or 2,5-7,12- or 3,last)"
+msgstr ""
+"Halaman untuk diekstrak (cth: 2 atau 5-23 atau 2,5-7,12- atau 3,akhir)"
+
+msgid ""
+"Comma separated page numbers or ranges to extract (ex: 2 or 5-23 or 2,5-7,12-"
+" or 3,last)"
+msgstr ""
+"Nombor halaman atau julat yang dipisahkan koma untuk diekstrak (cth: 2 atau "
+"5-23 atau 2,5-7,12- atau 3,akhir)"
+
+msgid "Merge multiple PDF documents or subsections of them."
+msgstr "Gabung beberapa dokumen PDF atau subseksyen daripadanya."
+
+msgid "A .pdf extension is required for the repeating file"
+msgstr "Ekstensi .pdf diperlukan untuk fail berulang"
+
+msgid "A .pdf destination file extension is required"
+msgstr "Sambungan fail destinasi .pdf diperlukan"
+
+msgid "Default PDF version:"
+msgstr "Versi PDF Lalai:"
+
+msgid "Default PDF version for generated PDF files"
+msgstr "Versi PDF lalai untuk fail PDF yang dijana"
+
+msgid "Default prefix:"
+msgstr "Awalan lalai:"
+
+msgid ""
+"Default prefix for output file names, used in tools that generate multiple "
+"files"
+msgstr ""
+"Awalan lalai untuk nama fail output, digunakan dalam alat yang menjana "
+"berbilang fail"
+
+msgid "Set whether \"Discard bookmarks\" should be enabled by default"
+msgstr "Tetapkan sama ada \"Buang penanda buku\" patut diaktifkan secara lalai"
+
+#, java-format
+msgid "Workspace loaded: {0}"
+msgstr "Ruang kerja dimuatkan: {0}"
+
+#, java-format
+msgid "The following file already existed and was skipped: {0}"
+msgstr "Fail berikut sudah wujud dan telah dilangkau: {0}"
+
+msgid "Duplicate at Top"
+msgstr "Duplikasi di Atas"
+
+msgid "Duplicate Up"
+msgstr "Gandakan Ke Atas"
+
+msgid "Duplicate Down"
+msgstr "Duplikasi ke Bawah"
+
+msgid "Duplicate at Bottom"
+msgstr "Gandakan di Bawah"
+
+#, java-format
+msgid "Error saving content to file {0}"
+msgstr "Ralat menyimpan kandungan ke fail {0}"
+
+#, java-format
+msgid "File {0} saved"
+msgstr "Fail {0} disimpan"
+
+msgid "Error saving content to clipboard"
+msgstr "Ralat menyimpan kandungan ke papan keratan"
+
+msgid "Follow us on Bluesky"
+msgstr "Ikuti kami di Bluesky"
+
+msgid "Sets the application font"
+msgstr "Menetapkan fon aplikasi"
+
+msgid "Default"
+msgstr "Lalai"
+
+msgid "Light"
+msgstr "Cerah"
+
+msgid "Dark"
+msgstr "Gelap"
+
+msgid "Unlock selected"
+msgstr "Buka kunci yang dipilih"
+
+msgid "Workspace has changed"
+msgstr "Ruang kerja telah berubah"
+
+msgid "Do you want to save it?"
+msgstr "Adakah Anda ingin menyimpannya?"
+
+msgid "Set as pace for all"
+msgstr "Tetapkan sebagai rentak untuk semua"
+
+msgid "Split at this bookmark level"
+msgstr "Pisahkan pada tahap penanda buku ini"
+
+msgid "Select the bookmark depth level at which to split the document"
+msgstr "Pilih tahap kedalaman penanda buku untuk membahagikan dokumen"
+
+msgid "Bookmark level"
+msgstr "Tahap penanda buku"
+
+msgid "Bookmark level selector"
+msgstr "Pemilih Aras Penanda Halaman"
+
+msgid "Select a bookmark level"
+msgstr "Pilih tahap penanda buku"
+
+msgid "Select to split the PDF after a predefined set of pages"
+msgstr "Pilih untuk memisahkan PDF selepas set halaman yang telah ditetapkan"
+
+msgid "Predefined set of pages to split after"
+msgstr "Set halaman pratakrif untuk dibahagi selepas"
+
+msgid ""
+"Choose which predefined set of pages to split after (odd pages, even pages "
+"or every page)"
+msgstr ""
+"Pilih set halaman pratakrif untuk dipecahkan selepas (halaman ganjil, "
+"halaman genap atau setiap halaman)"
+
+msgid "Select to split the document after specific page numbers"
+msgstr "Pilih untuk memisahkan dokumen selepas nombor halaman tertentu"
+
+msgid "Page numbers to split at"
+msgstr "Nombor halaman untuk pembahagian"
+
+msgid "Enter comma separated positive page numbers (Ex. 1,5,12...)"
+msgstr "Masukkan nombor halaman positif yang dipisahkan koma (Cth. 1,5,12...)"
+
+msgid "Select to split the document every 'n' pages"
+msgstr "Pilih untuk memisah dokumen setiap 'n' halaman"
+
+msgid "Number of pages for split"
+msgstr "Bilangan halaman untuk pembahagian"
+
+msgid "Enter a positive number of pages"
+msgstr "Masukkan nombor positif halaman"
+
+msgid "Split at this size"
+msgstr "Pisahkan pada saiz ini"
+
+msgid "Enter a positive integer for the maximum file size"
+msgstr "Masukkan integer positif untuk saiz fail maksimum"
+
+msgid "Size unit for the split file size"
+msgstr "Unit ukuran untuk saiz fail terpisah"
+
+msgid "Page selection for rotation"
+msgstr "Pemilihan halaman untuk putaran"
+
+msgid "Choose which pages to rotate: all, even, or odd"
+msgstr "Pilih halaman mana untuk diputar: semua, genap, atau ganjil"
+
+msgid "Rotation angle"
+msgstr "Sudut Putaran"
+
+msgid "Choose the rotation angle to apply"
+msgstr "Pilih sudut putaran untuk diaplikasikan"
+
+msgid "Set pages you want to rotate (ex: 2 or 5-23 or 2,5-7,12-)"
+msgstr ""
+"Tetapkan halaman yang anda ingin putar (cth: 2 atau 5-23 atau 2,5-7,12-)"
+
+msgid "Pages normalization"
+msgstr "Normalisasi Halaman"
+
+msgid "Interactive forms (AcroForms)"
+msgstr "Borang interaktif (AcroForms)"
+
+msgid "Bookmarks handling"
+msgstr "Pengendalian Penanda Halaman"
+
+msgid "Table of contents"
+msgstr "Isi Kandungan"
+
+msgid "Repeating PDF file"
+msgstr "Fail PDF berulang"
+
+msgid "There are news available"
+msgstr "Terdapat berita baharu tersedia"
+
+msgid "selected"
+msgstr "terpilih"
+
+#, java-format
+msgid "{0} (with notification)"
+msgstr "{0} (dengan notifikasi)"
+
+msgid "Collapse the sidebar"
+msgstr "Kecutkan bar sisi"
+
+msgid "Expand the sidebar"
+msgstr "Kembangkan bar sisi"
+
+msgid "PDF files to open"
+msgstr "Fail PDF untuk dibuka"
+
+msgid "file list"
+msgstr "senarai fail"
+
+msgid "Available tasks"
+msgstr "Tugas Tersedia"
+
+msgid "Log messages"
+msgstr "Mesej Log"
+
+msgid "Save the log messages to a text file"
+msgstr "Simpan mesej log ke fail teks"
+
+msgid "Close the log panel"
+msgstr "Tutup panel log"
+
+msgid "News items"
+msgstr "Item berita"
+
+msgid "Close news panel"
+msgstr "Tutup panel berita"
+
+#, java-format
+msgid "Help for {0}"
+msgstr "Bantuan untuk {0}"
+
+msgid "Log register rows"
+msgstr "baris daftar log"
+
+msgid "Language"
+msgstr "Bahasa"
+
+msgid "Startup tool"
+msgstr "Alat permulaan"
+
+msgid "Theme"
+msgstr "Tema"
+
+msgid "Font"
+msgstr "Fon"
+
+msgid "Font size"
+msgstr "Saiz fon"
+
+msgid "Default PDF version"
+msgstr "Versi PDF Lalai"
+
+msgid "Manually select the output destination directory"
+msgstr "Pilih secara manual direktori destinasi output"
+
+msgid "Default prefix"
+msgstr "Awalan lalai"
+
+msgid "Default prefix for output file names"
+msgstr "Awalan lalai untuk nama fail keluaran"
+
+msgid "Right click to add special prefix keywords"
+msgstr "Klik kanan untuk menambah kata kunci awalan khas"
+
+msgid "Properties table"
+msgstr "Jadual Sifat"
+
+msgid "Properties"
+msgstr "Ciri-ciri"
+
+msgid "Empty"
+msgstr "Kosong"
+
+msgid "Notification"
+msgstr "Pemberitahuan"
+
+msgid "Close notification"
+msgstr "Tutup pemberitahuan"
+
+#, java-format
+msgid "Open the url {0}"
+msgstr "Buka url {0}"
+
+msgid "Clear the selected PDF document"
+msgstr "Tutup dokumen PDF yang dipilih"
+
+msgid "PDF encryption status"
+msgstr "Status penyulitan PDF"
+
+msgid "PDF document password"
+msgstr "Kata laluan dokumen PDF"
+
+msgid "Drag and drop PDF files here or use the Add button above"
+msgstr "Seret dan lepas fail PDF di sini atau gunakan butang Tambah di atas"
+
+msgid "PDF documents selection table"
+msgstr "Jadual pemilihan dokumen PDF"
+
+msgid "PDF selection table"
+msgstr "Jadual pilihan PDF"
+
+#, java-format
+msgid "PDF documents selection table, {0} documents"
+msgstr "Jadual pemilihan dokumen PDF, {0} dokumen"
+
+#, java-format
+msgid "{0} selected pages"
+msgstr "{0} halaman dipilih"
+
+#, java-format
+msgid "Size: {0}"
+msgstr "Saiz: {0}"
+
+#, java-format
+msgid "Modified: {0}"
+msgstr "Diubah: {0}"
+
+msgid "Number of total pages"
+msgstr "Bilangan jumlah halaman"
+
+#, java-format
+msgid "File name: {0}"
+msgstr "Nama fail: {0}"
+
+#, java-format
+msgid "Row {0}"
+msgstr "Baris {0}"
+
+#, java-format
+msgid "{0} pages"
+msgstr "{0} halaman"
+
+msgid "Set selected pages (ex: 2 or 5-23 or 2,5-7,12-)"
+msgstr "Tetapkan halaman terpilih (cth: 2 atau 5-23 atau 2,5-7,12-)"
+
+msgid "Select a PDF destination file"
+msgstr "Pilih fail destinasi PDF"
+
+msgid "Browse for destination PDF file"
+msgstr "Cari fail PDF destinasi"
+
+#, java-format
+msgid "Browse for {0}"
+msgstr "Semak imbas untuk {0}"
+
+msgid "Select a PDF file"
+msgstr "Pilih fail PDF"
+
+msgid "Browse for source PDF file"
+msgstr "Semak imbas untuk fail PDF sumber"
+
+msgid "Output PDF version"
+msgstr "Versi PDF Keluaran"
+
+msgid "Output PDF version selector"
+msgstr "Pemilih versi PDF output"
+
+msgid "Output directory"
+msgstr "Direktori Keluaran"
+
+msgid "Browse for output directory"
+msgstr "Semak imbas untuk direktori keluaran"
+
+msgid "Browse for directory"
+msgstr "Semak imbas direktori"
+
+#, java-format
+msgid "Invalid value: {0}"
+msgstr "Nilai tidak sah: {0}"
+
+msgid "Right click to add special prefix keywords like timestamp or filename"
+msgstr ""
+"Klik kanan untuk menambah kata kunci awalan khas seperti cap masa atau nama "
+"fail"
+
+msgid "Open the task output file"
+msgstr "Buka fail output tugas"
+
+msgid "Open the task output directory"
+msgstr "Buka direktori output tugas"
+
+msgid "Task footer"
+msgstr "Pengaki Tugas"
+
+msgid "Task progress"
+msgstr "Kemajuan tugas"
+
+#, java-format
+msgid "Task progress: {0}"
+msgstr "Kemajuan tugas: {0}"
+
+#, java-format
+msgid "Task status: {0}"
+msgstr "Status tugas: {0}"
+
+#, java-format
+msgid "Task status: {0}%"
+msgstr "Status tugas: {0}%"
+
+msgid "Output files compression"
+msgstr "Mampatan fail output"
+
+msgid "Sets the default value for the compression policy of the output files"
+msgstr "Menetapkan nilai lalai untuk dasar pemampatan fail output"
+
+msgid "Compress"
+msgstr "Mampat"
+
+msgid ""
+"all streams in the output PDF will be compressed by applying FlateDecode "
+"encoding"
+msgstr ""
+"semua strim dalam PDF output akan dimampatkan dengan menggunakan pengekodan "
+"FlateDecode"
+
+msgid "Neutral"
+msgstr "Neutral"
+
+msgid "streams are left unchanged from the original file"
+msgstr "aliran dibiarkan tidak berubah daripada fail asal"
+
+msgid "Uncompress"
+msgstr "Nyahmampat"
+
+msgid ""
+"FlateDecode and LZWDecode filters will be removed from all streams. Useful "
+"for debugging or manual inspection"
+msgstr ""
+"Penapis FlateDecode dan LZWDecode akan dikeluarkan daripada semua strim. "
+"Berguna untuk penyahpepijatan atau pemeriksaan manual"
+
+msgid "Unchanged"
+msgstr "Tidak Berubah"
+
+msgid "PDF version for generated PDF files"
+msgstr "Versi PDF untuk fail PDF yang dijana"
+
+msgid "Sets the compression policy for the output files"
+msgstr "Menetapkan dasar pemampatan untuk fail output"
+
+msgid ""
+"If the output field is empty, it's automatically set using the selected PDF "
+"document's directory"
+msgstr ""
+"Jika medan output kosong, ia ditetapkan secara automatik menggunakan "
+"direktori dokumen PDF yang dipilih"
+
+msgid "1 file selected"
+msgstr "1 fail dipilih"
+
+#, java-format
+msgid "{0} files selected"
+msgstr "{0} fail dipilih"

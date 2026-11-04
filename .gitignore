@@ -1,0 +1,21 @@
+*.class
+
+.classpath
+.project
+.launch
+.settings/
+target/
+.externalToolBuilders/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+*.iml
+.DS_Store
+.idea/
+/.run/
+.claude/
+.env
+CLAUDE.md

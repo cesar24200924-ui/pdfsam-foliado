@@ -1,0 +1,1714 @@
+# Armenian translation for pdfsam
+# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
+# This file is distributed under the same license as the pdfsam package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: pdfsam\n"
+"Report-Msgid-Bugs-To: Avag Sayan <info@antrohoos.am>\n"
+"POT-Creation-Date: 2023-01-27 11:09+0100\n"
+"PO-Revision-Date: 2026-11-04 12:20+0100\n"
+"Last-Translator: Antrohoos Educational Foundation\n"
+"Language-Team: Antrohoos Educational Foundation <info@antrohoos.am>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2023-01-31 10:16+0000\n"
+"X-Generator: Autopo v1.0.13-SNAPSHOT\n"
+"Language: hy\n"
+
+msgid "No PDF document has been selected"
+msgstr "PDF փաստաթուղթ ընտրված չէ"
+
+msgid "Extract"
+msgstr "Արտահանել"
+
+msgid "Extract pages from PDF documents."
+msgstr "Արտահանել էջեր PDF փաստաթղթերից։"
+
+msgid "File names settings"
+msgstr "Ֆայլերի անունների կարգավորումներ"
+
+msgid "Extract settings"
+msgstr "Արտահանման կարգավորումներ"
+
+msgid "Output settings"
+msgstr "Ելքային կարգավորումներ"
+
+msgid "A separate file for each set of pages"
+msgstr "Առանձին ֆայլ էջերի յուրաքանչյուր հավաքածուի համար"
+
+msgid "Each continuous series of pages will generate a separate PDF file"
+msgstr ""
+"Էջերի յուրաքանչյուր շարունակական հաջորդականություն կստեղծի առանձին PDF ֆայլ"
+
+#~ msgid "Pages to extract (ex: 2 or 5-23 or 2,5-7,12-)"
+#~ msgstr "Արտահանվող էջեր (օր․՝ 2 կամ 5-23 կամ 2,5-7,12-)"
+
+msgid "Invalid page ranges"
+msgstr "Էջերի անվավեր միջակայքեր"
+
+msgid "Extract pages:"
+msgstr "Արտահանել էջերը՝"
+
+#~ msgid ""
+#~ "Comma separated page numbers or ranges to extract (ex: 2 or 5-23 or 2,5-7,12-"
+#~ ")"
+#~ msgstr ""
+#~ "Ստորակետերով բաժանված էջերի համարներ կամ միջակայքեր՝ արտահանելու համար (օր․՝ "
+#~ "2 կամ 5-23 կամ 2,5-7,12-)"
+
+msgid "Split by bookmarks"
+msgstr "Բաժանել ըստ էջանիշների"
+
+msgid ""
+"Split a PDF document at bookmarked pages by specifying a bookmark level."
+msgstr "Բաժանել PDF փաստաթուղթը էջանշված էջերում՝ նշելով էջանիշի մակարդակը։"
+
+msgid "Regular expression the bookmark has to match"
+msgstr "Կանոնավոր արտահայտություն, որին պետք է համապատասխանի էջանիշը"
+
+msgid "Split at this bookmark level:"
+msgstr "Բաժանել էջանիշի այս մակարդակում՝"
+
+msgid "Matching regular expression:"
+msgstr "Համապատասխանող կանոնավոր արտահայտություն՝"
+
+msgid "A regular expression the bookmark text has to match"
+msgstr "Կանոնավոր արտահայտություն, որին պետք է համապատասխանի էջանիշի տեքստը"
+
+msgid ""
+"Example: use .*Chapter.* to match bookmarks containing the word \"Chapter\""
+msgstr ""
+"Օրինակ՝ օգտագործեք .*Chapter.*՝ \"Chapter\" բառը պարունակող էջանիշները "
+"գտնելու համար"
+
+msgid "Select or drag and drop the PDF you want to split"
+msgstr "Ընտրեք կամ քաշեք ու գցեք այն PDF-ը, որը ցանկանում եք բաժանել"
+
+msgid "Split settings"
+msgstr "Բաժանման կարգավորումներ"
+
+msgid "Invalid bookmarks level"
+msgstr "Էջանիշների անվավեր մակարդակ"
+
+msgid "Split after"
+msgstr "Բաժանել հետո"
+
+msgid "No page selected"
+msgstr "Էջ ընտրված չէ"
+
+msgid "Split"
+msgstr "Բաժանել"
+
+msgid "Split a PDF document at the given page numbers."
+msgstr "Բաժանել PDF փաստաթուղթը տրված էջերի համարներում։"
+
+msgid "Every page"
+msgstr "Յուրաքանչյուր էջ"
+
+msgid "Even pages"
+msgstr "Զույգ էջեր"
+
+msgid "Odd pages"
+msgstr "Կենտ էջեր"
+
+msgid "Split the document after the given page numbers"
+msgstr "Բաժանել փաստաթուղթը տրված էջերի համարներից հետո"
+
+msgid "Splits the PDF every \"n\" pages creating documents of \"n\" pages each"
+msgstr ""
+"Բաժանում է PDF-ը յուրաքանչյուր \"n\" էջից՝ ստեղծելով \"n\" էջից բաղկացած "
+"փաստաթղթեր"
+
+msgid "Split after the following page numbers"
+msgstr "Բաժանել հետևյալ էջերի համարներից հետո"
+
+msgid "Page numbers to split at (n1,n2,n3..)"
+msgstr "Էջերի համարներ, որոնցում բաժանել (n1,n2,n3..)"
+
+msgid "Invalid page numbers"
+msgstr "Էջերի անվավեր համարներ"
+
+msgid "Only valid positive page numbers are allowed"
+msgstr "Թույլատրվում են միայն վավեր դրական էջերի համարներ"
+
+msgid "Split by every \"n\" pages"
+msgstr "Բաժանել յուրաքանչյուր \"n\" էջից"
+
+msgid "Number of pages"
+msgstr "Էջերի քանակ"
+
+msgid "Invalid number of pages"
+msgstr "Էջերի անվավեր քանակ"
+
+msgid "Megabytes"
+msgstr "Մեգաբայթ"
+
+msgid "MB"
+msgstr "ՄԲ"
+
+msgid "Kilobytes"
+msgstr "Կիլոբայթ"
+
+msgid "KB"
+msgstr "ԿԲ"
+
+msgid "Split by size"
+msgstr "Բաժանել ըստ չափի"
+
+msgid "Split a PDF document in files of the given size (roughly)."
+msgstr "Բաժանել PDF փաստաթուղթը տրված չափի (մոտավորապես) ֆայլերի։"
+
+msgid "Set the size to split at"
+msgstr "Սահմանել բաժանման չափը"
+
+msgid "Size must be a number"
+msgstr "Չափը պետք է լինի թիվ"
+
+#~ msgid "Split at this size:"
+#~ msgstr "Բաժանել այս չափով՝"
+
+msgid "Invalid split size"
+msgstr "Բաժանման անվավեր չափ"
+
+msgid "Destination file"
+msgstr "Նպատակակետ ֆայլ"
+
+msgid "Alternate Mix"
+msgstr "Հերթափոխ խառնում"
+
+msgid ""
+"Merge two or more PDF documents taking pages alternately in natural or "
+"reverse order."
+msgstr ""
+"Միավորել երկու կամ ավելի PDF փաստաթղթեր՝ էջերը վերցնելով հերթափոխով բնական "
+"կամ հակառակ կարգով։"
+
+msgid "Double click to set pages you want to mix (ex: 2 or 5-23 or 2,5-7,12-)"
+msgstr ""
+"Կրկնակի սեղմեք՝ խառնելու ենթակա էջերը սահմանելու համար (օր․՝ 2 կամ 5-23 կամ "
+"2,5-7,12-)"
+
+msgid "Select a positive integer number as pace"
+msgstr "Ընտրեք դրական ամբողջ թիվ որպես քայլ"
+
+msgid "All pages"
+msgstr "Բոլոր էջերը"
+
+msgid "90 degrees clockwise"
+msgstr "90 աստիճան ժամսլաքի ուղղությամբ"
+
+msgid "180 degrees clockwise"
+msgstr "180 աստիճան ժամսլաքի ուղղությամբ"
+
+msgid "90 degrees counterclockwise"
+msgstr "90 աստիճան ժամսլաքին հակառակ"
+
+#~ msgid "Rotate "
+#~ msgstr "Պտտել"
+
+msgid "Rotate settings"
+msgstr "Պտտման կարգավորումներ"
+
+msgid "Rotate"
+msgstr "Պտտել"
+
+msgid "Rotate the pages of multiple PDF documents."
+msgstr "Պտտել բազմաթիվ PDF փաստաթղթերի էջերը։"
+
+#~ msgid ""
+#~ "Double click to set pages you want to rotate (ex: 2 or 5-23 or 2,5-7,12-)"
+#~ msgstr ""
+#~ "Կրկնակի սեղմեք՝ պտտելու ենթակա էջերը սահմանելու համար (օր․՝ 2 կամ 5-23 կամ "
+#~ "2,5-7,12-)"
+
+msgid "Merge settings"
+msgstr "Միավորման կարգավորումներ"
+
+msgid ""
+"Double click to set pages you want to merge (ex: 2 or 5-23 or 2,5-7,12-)"
+msgstr ""
+"Կրկնակի սեղմեք՝ միավորելու ենթակա էջերը սահմանելու համար (օր․՝ 2 կամ 5-23 "
+"կամ 2,5-7,12-)"
+
+msgid "Add a blank page if page number is odd"
+msgstr "Ավելացնել դատարկ էջ, եթե էջի համարը կենտ է"
+
+msgid ""
+"Adds a blank page after each merged document if the document has an odd "
+"number of pages"
+msgstr ""
+"Յուրաքանչյուր միավորված փաստաթղթից հետո ավելացնում է դատարկ էջ, եթե "
+"փաստաթուղթն ունի կենտ թվով էջեր"
+
+msgid "Add a footer"
+msgstr "Ավելացնել ստորագիր"
+
+msgid "Adds a page footer with the name of the file the page belonged to."
+msgstr ""
+"Ավելացնում է էջի ստորագիր՝ նշելով այն ֆայլի անունը, որին պատկանում էր էջը։"
+
+msgid "None"
+msgstr "Չկա"
+
+msgid "Same width as first page"
+msgstr "Նույն լայնությունը, ինչ առաջին էջը"
+
+msgid "Same width as first page (based on page orientation)"
+msgstr "Նույն լայնությունը, ինչ առաջին էջը (հիմնված էջի կողմնորոշման վրա)"
+
+#~ msgid "Pages normalization:"
+#~ msgstr "Էջերի նորմալացում՝"
+
+msgid ""
+"Set whether pages should be resized to all have the same width as the first "
+"one"
+msgstr ""
+"Սահմանել՝ արդյոք էջերը պետք է չափափոխվեն, որպեսզի բոլորն ունենան առաջինի "
+"նույն լայնությունը"
+
+msgid "Merge fields"
+msgstr "Միավորել դաշտերը"
+
+msgid "Merge renaming existing fields"
+msgstr "Միավորել՝ վերանվանելով գոյություն ունեցող դաշտերը"
+
+msgid "Flatten"
+msgstr "Հարթեցնել"
+
+msgid "Discard forms"
+msgstr "Հեռացնել ձևերը"
+
+#~ msgid "Interactive forms (AcroForms):"
+#~ msgstr "Ինտերակտիվ ձևեր (AcroForms)՝"
+
+msgid "What to do in case one or more input documents contain Acro Forms"
+msgstr ""
+"Ինչ անել, եթե մեկ կամ ավելի մուտքային փաստաթղթեր պարունակում են Acro Forms"
+
+msgid "Retain bookmarks"
+msgstr "Պահպանել էջանիշները"
+
+msgid "Discard bookmarks"
+msgstr "Հեռացնել էջանիշները"
+
+msgid "Create one entry for each merged document"
+msgstr "Ստեղծել մեկ գրառում յուրաքանչյուր միավորված փաստաթղթի համար"
+
+msgid "Retain bookmarks as one entry for each merged document"
+msgstr ""
+"Պահպանել էջանիշները որպես մեկ գրառում յուրաքանչյուր միավորված փաստաթղթի "
+"համար"
+
+#~ msgid "Bookmarks handling:"
+#~ msgstr "Էջանիշների մշակում՝"
+
+msgid "What to do in case one or more input documents contain bookmarks"
+msgstr ""
+"Ինչ անել, եթե մեկ կամ ավելի մուտքային փաստաթղթեր պարունակում են էջանիշներ"
+
+msgid "Don't generate"
+msgstr "Չստեղծել"
+
+msgid "Generate from file names"
+msgstr "Ստեղծել ֆայլերի անուններից"
+
+msgid "Generate from documents titles"
+msgstr "Ստեղծել փաստաթղթերի վերնագրերից"
+
+#~ msgid "Table of contents:"
+#~ msgstr "Բովանդակության աղյուսակ՝"
+
+msgid ""
+"Set if a table of contents should be added to the generated PDF document"
+msgstr ""
+"Սահմանել՝ արդյոք բովանդակության աղյուսակ պետք է ավելացվի ստեղծվող PDF "
+"փաստաթղթին"
+
+msgid "Merge"
+msgstr "Միավորել"
+
+#~ msgid "Merge together multiple PDF documents or subsections of them."
+#~ msgstr "Միավորել միասին բազմաթիվ PDF փաստաթղթեր կամ դրանց ենթաբաժինները։"
+
+msgid "Select or drag and drop the PDF whose pages will be repeated"
+msgstr "Ընտրեք կամ քաշեք ու գցեք այն PDF-ը, որի էջերը կկրկնվեն"
+
+msgid "Repeat these pages:"
+msgstr "Կրկնել այս էջերը՝"
+
+msgid "Pages to repeat (ex: 2 or 5-23 or 2,5-7,12-)"
+msgstr "Կրկնվող էջեր (օր․՝ 2 կամ 5-23 կամ 2,5-7,12-)"
+
+msgid ""
+"Comma separated page numbers or ranges to be repeated (ex: 2 or 5-23 or 2,5-"
+"7,12-)"
+msgstr ""
+"Ստորակետերով բաժանված էջերի համարներ կամ միջակայքեր, որոնք պետք է կրկնվեն "
+"(օր․՝ 2 կամ 5-23 կամ 2,5-7,12-)"
+
+msgid "Leave it empty to use all the pages of the PDF file"
+msgstr "Թողեք դատարկ՝ PDF ֆայլի բոլոր էջերն օգտագործելու համար"
+
+msgid "Repeat every \"n\" pages:"
+msgstr "Կրկնել յուրաքանչյուր \"n\" էջից՝"
+
+msgid "Invalid page number"
+msgstr "Էջի անվավեր համար"
+
+msgid "Repeat the selected pages every \"n\" pages of the original document"
+msgstr "Կրկնել ընտրված էջերը բնօրինակ փաստաթղթի յուրաքանչյուր \"n\" էջից"
+
+msgid "The selected PDF file is invalid"
+msgstr "Ընտրված PDF ֆայլը անվավեր է"
+
+msgid "The number of pages must be a positive number"
+msgstr "Էջերի քանակը պետք է լինի դրական թիվ"
+
+msgid "Select or drag and drop the PDF you want to insert pages to"
+msgstr "Ընտրեք կամ քաշեք ու գցեք այն PDF-ը, որին ցանկանում եք էջեր տեղադրել"
+
+msgid "Insert and Repeat settings"
+msgstr "Տեղադրման և կրկնման կարգավորումներ"
+
+msgid "Insert pages multiple times"
+msgstr "Տեղադրել էջերը մի քանի անգամ"
+
+msgid ""
+"Insert the pages of a PDF document A into another document B, repeating it "
+"after a certain number of pages, resulting in B1 A B2 A B3 A etc."
+msgstr ""
+"Տեղադրել PDF փաստաթուղթ A-ի էջերը մեկ այլ՝ B փաստաթղթի մեջ՝ կրկնելով դրանք "
+"որոշակի քանակի էջերից հետո, ինչի արդյունքում ստացվում է B1 A B2 A B3 A և "
+"այլն։"
+
+#, java-format
+msgid "Started in {0}"
+msgstr "Սկսվել է {0}-ում"
+
+msgid "Closing PDFsam..."
+msgstr "Փակվում է PDFsam-ը..."
+
+msgid "Drag and drop PDF files or directories containing PDF files"
+msgstr "Քաշեք և գցեք PDF ֆայլեր կամ PDF ֆայլեր պարունակող պանակներ"
+
+msgid "No PDF found"
+msgstr "PDF չի գտնվել"
+
+msgid "Tools"
+msgstr "Գործիքներ"
+
+msgid "News"
+msgstr "Նորություններ"
+
+msgid "What's new"
+msgstr "Ինչ նոր է"
+
+msgid "Exit"
+msgstr "Ելք"
+
+msgid "Exit the application"
+msgstr "Դուրս գալ հավելվածից"
+
+msgid "Workspace"
+msgstr "Աշխատանքային տարածք"
+
+msgid "Manage your workspaces"
+msgstr "Կառավարեք ձեր աշխատանքային տարածքները"
+
+msgid "Yes"
+msgstr "Այո"
+
+msgid "No"
+msgstr "Ոչ"
+
+msgid "Confirm clearing"
+msgstr "Հաստատել մաքրումը"
+
+msgid "Do you confirm?"
+msgstr "Հաստատո՞ւմ եք"
+
+msgid "Clear the tool settings"
+msgstr "Մաքրել գործիքի կարգավորումները"
+
+msgid "Clear the selection table"
+msgstr "Մաքրել ընտրության աղյուսակը"
+
+msgid "Open with"
+msgstr "Բացել ծրագրով"
+
+msgid "Select the task to perform on the following files"
+msgstr "Ընտրեք գործողությունը հետևյալ ֆայլերի համար"
+
+msgid "Directory not empty"
+msgstr "Պանակը դատարկ չէ"
+
+msgid "The selected directory is not empty"
+msgstr "Ընտրված պանակը դատարկ չէ"
+
+msgid "What would you like to do in case of files with the same name?"
+msgstr "Ինչ կցանկանայիք անել նույն անունով ֆայլերի դեպքում։"
+
+msgid "Overwrite"
+msgstr "Վերագրանցել"
+
+msgid "Rename"
+msgstr "Վերանվանել"
+
+msgid "Skip"
+msgstr "Բաց թողնել"
+
+msgid "Cancel"
+msgstr "Չեղարկել"
+
+msgid "Don't overwrite existing file"
+msgstr "Չվերագրանցել գոյություն ունեցող ֆայլը"
+
+msgid "Overwrite confirmation"
+msgstr "Վերագրանցման հաստատում"
+
+msgid "A file with the given name already exists"
+msgstr "Նշված անունով ֆայլ արդեն գոյություն ունի"
+
+msgid "What would you like to do?"
+msgstr "Ի՞նչ կցանկանայիք անել"
+
+msgid "Non existing directory"
+msgstr "Գոյություն չունեցող պանակ"
+
+msgid "The selected output directory does not exist"
+msgstr "Ընտրված ելքային պանակը գոյություն չունի"
+
+msgid "Do you want to create it?"
+msgstr "Ցանկանո՞ւմ եք ստեղծել այն"
+
+msgid "Subdirectories"
+msgstr "Ենթապանակներ"
+
+msgid "Subdirectories have been found"
+msgstr "Ենթապանակներ են գտնվել"
+
+msgid "Do you want to add PDF files found in subdirectories?"
+msgstr "Ցանկանո՞ւմ եք ավելացնել ենթապանակներում գտնված PDF ֆայլերը"
+
+msgid "Task failed"
+msgstr "Առաջադրանքը ձախողվեց"
+
+msgid "PDFsam can try to overcome the failure"
+msgstr "PDFsam-ը կարող է փորձել հաղթահարել ձախողումը"
+
+msgid ""
+"It may result in PDF files with partial or missing data, proceed anyway?"
+msgstr ""
+"Դա կարող է հանգեցնել մասնակի կամ բացակայող տվյալներով PDF ֆայլերի. "
+"շարունակե՞լ ամեն դեպքում"
+
+msgid "Removes all the log messages"
+msgstr "Հեռացնում է բոլոր մատյանային հաղորդագրությունները"
+
+msgid "_Clear"
+msgstr "_Մաքրել"
+
+msgid "_Save"
+msgstr "_Պահել"
+
+msgid "C_lose"
+msgstr "Փ_ակել"
+
+msgid "Copy"
+msgstr "Պատճենել"
+
+msgid "Clear"
+msgstr "Մաքրել"
+
+msgid "Select all"
+msgstr "Ընտրել բոլորը"
+
+msgid "Save log"
+msgstr "Պահել մատյանը"
+
+msgid "Select where to save the log file"
+msgstr "Ընտրեք, թե որտեղ պահել մատյանի ֆայլը"
+
+msgid "Logs"
+msgstr "Մատյաններ"
+
+msgid "Application messages"
+msgstr "Հավելվածի հաղորդագրություններ"
+
+msgid "_Load"
+msgstr "_Բեռնել"
+
+msgid "Recen_ts"
+msgstr "Վերջին_ները"
+
+msgid "_Clear recents"
+msgstr "_Մաքրել վերջինները"
+
+msgid "Select the workspace file to save"
+msgstr "Ընտրեք պահվող աշխատանքային տարածքի ֆայլը"
+
+msgid "Select the workspace to load"
+msgstr "Ընտրեք բեռնվող աշխատանքային տարածքը"
+
+msgid "Subscribe to the official news feed"
+msgstr "Բաժանորդագրվել պաշտոնական նորությունների հոսքին"
+
+msgid "Environment"
+msgstr "Միջավայր"
+
+#, java-printf-format
+msgid "Vendor: %s"
+msgstr "Մշակող՝ %s"
+
+#, java-printf-format
+msgid "Java runtime path: %s"
+msgstr "Java runtime-ի ուղին՝ %s"
+
+#, java-printf-format
+msgid "JavaFX runtime version: %s"
+msgstr "JavaFX runtime-ի տարբերակը՝ %s"
+
+#, java-printf-format
+msgid "PDF engine (Sejda SDK) version: %s"
+msgstr "PDF շարժիչի (Sejda SDK) տարբերակը՝ %s"
+
+#, java-format
+msgid "Max memory {0}"
+msgstr "Առավելագույն հիշողություն {0}"
+
+msgid "Copy to clipboard"
+msgstr "Պատճենել սեղմատախտակին"
+
+msgid "Support"
+msgstr "Աջակցություն"
+
+msgid "Bug and feature requests"
+msgstr "Սխալների և գործառույթների հայտեր"
+
+msgid "Documentation"
+msgstr "Փաստաթղթեր"
+
+msgid "Contribute"
+msgstr "Նպաստել"
+
+msgid "Fork PDFsam on GitHub"
+msgstr "Պատառաքաղել PDFsam-ը GitHub-ում"
+
+msgid "Translate"
+msgstr "Թարգմանել"
+
+msgid "Donate"
+msgstr "Նվիրաբերել"
+
+msgid "Social"
+msgstr "Սոցիալական"
+
+#~ msgid "Follow us on Twitter"
+#~ msgstr "Հետևեք մեզ Twitter-ում"
+
+msgid "Like us on Facebook"
+msgstr "Հավանեք մեզ Facebook-ում"
+
+msgid "About"
+msgstr "Ծրագրի մասին"
+
+msgid "Home"
+msgstr "Գլխավոր"
+
+msgid "Premium features"
+msgstr "Պրեմիում գործառույթներ"
+
+#~ msgid "Log register rows:"
+#~ msgstr "Մատյանի գրանցամատյանի տողեր՝"
+
+msgid "Maximum number of rows displayed by the Log register"
+msgstr "Մատյանի ցուցադրած տողերի առավելագույն քանակը"
+
+#~ msgid "Language:"
+#~ msgstr "Լեզու՝"
+
+msgid "Set your preferred language (restart needed)"
+msgstr "Սահմանեք ձեր նախընտրելի լեզուն (անհրաժեշտ է վերագործարկում)"
+
+#~ msgid "Startup tool:"
+#~ msgstr "Գործարկման գործիք՝"
+
+msgid "Set the tool to open at application startup (restart needed)"
+msgstr ""
+"Սահմանեք հավելվածի գործարկման ժամանակ բացվող գործիքը (անհրաժեշտ է "
+"վերագործարկում)"
+
+#~ msgid "Theme:"
+#~ msgstr "Թեմա՝"
+
+msgid "Set the application theme"
+msgstr "Սահմանեք հավելվածի թեման"
+
+#~ msgid "Font size:"
+#~ msgstr "Տառաչափ՝"
+
+msgid "Set the application font size"
+msgstr "Սահմանեք հավելվածի տառաչափը"
+
+msgid "Manually selected"
+msgstr "Ձեռքով ընտրված"
+
+#~ msgid ""
+#~ "Automatically set the destination directory to the selected PDF document "
+#~ "directory"
+#~ msgstr "Ավտոմատ սահմանել նպատակակետ պանակը որպես ընտրված PDF փաստաթղթի պանակ"
+
+msgid "Settings"
+msgstr "Կարգավորումներ"
+
+msgid "Appearance"
+msgstr "Արտաքին տեսք"
+
+msgid "Behavior"
+msgstr "Վարքագիծ"
+
+msgid "Output"
+msgstr "Ելք"
+
+msgid "Check for updates now"
+msgstr "Ստուգել թարմացումները հիմա"
+
+msgid "Select a directory where documents will be saved and loaded by default"
+msgstr "Ընտրեք պանակ, որտեղ փաստաթղթերը կպահվեն և կբեռնվեն լռելյայն"
+
+msgid "Select a directory"
+msgstr "Ընտրել պանակ"
+
+msgid ""
+"Select a previously saved workspace that will be automatically loaded at "
+"startup"
+msgstr ""
+"Ընտրեք նախկինում պահված աշխատանքային տարածք, որը ավտոմատ կբեռնվի գործարկման "
+"ժամանակ"
+
+msgid "Select a workspace"
+msgstr "Ընտրել աշխատանքային տարածք"
+
+msgid "Default working directory:"
+msgstr "Լռելյայն աշխատանքային պանակ՝"
+
+msgid "Load default workspace at startup:"
+msgstr "Գործարկման ժամանակ բեռնել լռելյայն աշխատանքային տարածքը՝"
+
+msgid "System default"
+msgstr "Համակարգի լռելյայն"
+
+msgid "Check for updates at startup"
+msgstr "Ստուգել թարմացումները գործարկման ժամանակ"
+
+msgid ""
+"Set whether new version availability should be checked on startup (restart "
+"needed)"
+msgstr ""
+"Սահմանեք՝ արդյոք նոր տարբերակի հասանելիությունը պետք է ստուգվի գործարկման "
+"ժամանակ (անհրաժեշտ է վերագործարկում)"
+
+msgid "Check for news at startup"
+msgstr "Ստուգել նորությունները գործարկման ժամանակ"
+
+msgid ""
+"Set whether the application should check for news availability on startup "
+"(restart needed)"
+msgstr ""
+"Սահմանեք՝ արդյոք հավելվածը պետք է ստուգի նորությունների հասանելիությունը "
+"գործարկման ժամանակ (անհրաժեշտ է վերագործարկում)"
+
+#~ msgid "Enabled PDF compression"
+#~ msgstr "Միացված PDF սեղմում"
+
+#~ msgid "Set whether \"Compress output file\" should be enabled by default"
+#~ msgstr "Սահմանեք՝ արդյոք \"Սեղմել ելքային ֆայլը\" պետք է միացված լինի լռելյայն"
+
+msgid "Overwrite files"
+msgstr "Վերագրանցել ֆայլերը"
+
+msgid "Set whether \"Overwrite if already exists\" should be enabled by default"
+msgstr ""
+"Սահմանեք՝ արդյոք \"Վերագրանցել, եթե արդեն գոյություն ունի\" պետք է միացված "
+"լինի լռելյայն"
+
+msgid "Play alert sounds"
+msgstr "Նվագարկել ազդանշանային ձայներ"
+
+msgid "Turn on or off alert sounds"
+msgstr "Միացնել կամ անջատել ազդանշանային ձայները"
+
+msgid "Store passwords when saving a workspace file"
+msgstr "Պահել գաղտնաբառերը աշխատանքային տարածքի ֆայլը պահելիս"
+
+msgid ""
+"If an encrypted PDF document has been opened with a password, save the "
+"password in the workspace file"
+msgstr ""
+"Եթե գաղտնագրված PDF փաստաթուղթը բացվել է գաղտնաբառով, պահել գաղտնաբառը "
+"աշխատանքային տարածքի ֆայլում"
+
+msgid "Show donation window"
+msgstr "Ցուցադրել նվիրատվության պատուհանը"
+
+msgid ""
+"Turn on or off the notification appearing once in a while and asking the "
+"user to support PDFsam with a donation"
+msgstr ""
+"Միացնել կամ անջատել ծանուցումը, որը ժամանակ առ ժամանակ հայտնվում է և խնդրում "
+"օգտվողին աջակցել PDFsam-ին նվիրատվությամբ"
+
+msgid "Show premium features"
+msgstr "Ցուցադրել պրեմիում գործառույթները"
+
+msgid ""
+"Set whether the application should fetch and show premium features "
+"description in the modules dashboard"
+msgstr ""
+"Սահմանեք՝ արդյոք հավելվածը պետք է բերի և ցուցադրի պրեմիում գործառույթների "
+"նկարագրությունը մոդուլների վահանակում"
+
+msgid "Ask for a confirmation when clearing the selection table"
+msgstr "Հաստատում խնդրել ընտրության աղյուսակը մաքրելիս"
+
+msgid ""
+"Set whether the application should ask for a confirmation when clearing the "
+"selection table"
+msgstr ""
+"Սահմանեք՝ արդյոք հավելվածը պետք է հաստատում խնդրի ընտրության աղյուսակը "
+"մաքրելիս"
+
+msgid "Use the selected PDF document directory as output directory"
+msgstr "Օգտագործել ընտրված PDF փաստաթղթի պանակը որպես ելքային պանակ"
+
+msgid "Save default workspace on exit"
+msgstr "Պահել լռելյայն աշխատանքային տարածքը դուրս գալիս"
+
+msgid "If a default workspace is set, save it on application exit"
+msgstr ""
+"Եթե լռելյայն աշխատանքային տարածք սահմանված է, պահել այն հավելվածից դուրս "
+"գալիս"
+
+msgid "Maximum number of rows mast be a positive number"
+msgstr "Տողերի առավելագույն քանակը պետք է լինի դրական թիվ"
+
+msgid "Summary"
+msgstr "Ամփոփում"
+
+msgid "Keywords"
+msgstr "Հիմնաբառեր"
+
+msgid "Document details"
+msgstr "Փաստաթղթի մանրամասներ"
+
+msgid "Show errors"
+msgstr "Ցուցադրել սխալները"
+
+msgid "Input parameters are invalid"
+msgstr "Մուտքային պարամետրերը անվավեր են"
+
+msgid "Invalid parameters"
+msgstr "Անվավեր պարամետրեր"
+
+msgid "Access denied"
+msgstr "Մուտքը մերժված է"
+
+#, java-format
+msgid ""
+"Unable to access \"{0}\", please make sure you have write permissions or "
+"open the application messages for details."
+msgstr ""
+"Հնարավոր չէ մուտք գործել \"{0}\"։ Խնդրում ենք համոզվել, որ ունեք գրելու "
+"թույլտվություն, կամ բացել հավելվածի հաղորդագրությունները մանրամասների համար։"
+
+#, java-format
+msgid "You performed {0} tasks with PDFsam, did it help?"
+msgstr "Դուք կատարեցիք {0} առաջադրանք PDFsam-ով. դա օգնե՞ց"
+
+msgid "Give something back"
+msgstr "Փոխհատուցեք"
+
+msgid "PDFsam worked hard!"
+msgstr "PDFsam-ը շատ աշխատեց։"
+
+msgid "Spread the word!"
+msgstr "Տարածեք լուրը։"
+
+#, java-format
+msgid "PDFsam {0} is available for download"
+msgstr "PDFsam {0}-ը հասանելի է ներբեռնման համար"
+
+msgid "Download"
+msgstr "Ներբեռնել"
+
+msgid "New version available"
+msgstr "Նոր տարբերակը հասանելի է"
+
+msgid "You are running the latest version of PDFsam Basic"
+msgstr "Դուք օգտագործում եք PDFsam Basic-ի վերջին տարբերակը"
+
+msgid "No update"
+msgstr "Թարմացում չկա"
+
+msgid "Open"
+msgstr "Բացել"
+
+#, java-format
+msgid "File \"{0}\" does not exist or is invalid"
+msgstr "\"{0}\" ֆայլը գոյություն չունի կամ անվավեր է"
+
+msgid "Valid user password provided."
+msgstr "Տրամադրվել է վավեր օգտվողի գաղտնաբառ։"
+
+msgid "This document is encrypted, click to provide a password."
+msgstr "Այս փաստաթուղթը գաղտնագրված է. սեղմեք՝ գաղտնաբառ տրամադրելու համար։"
+
+msgid "An error has occurred, click for more details."
+msgstr "Սխալ է տեղի ունեցել. սեղմեք ավելի մանրամասների համար։"
+
+msgid "Split tools"
+msgstr "Բաժանման գործիքներ"
+
+msgid "Merge tools"
+msgstr "Միավորման գործիքներ"
+
+msgid "Convert tools"
+msgstr "Փոխակերպման գործիքներ"
+
+msgid "Edit tools"
+msgstr "Խմբագրման գործիքներ"
+
+msgid "Other tools"
+msgstr "Այլ գործիքներ"
+
+msgid "Checking for updates"
+msgstr "Թարմացումների ստուգում"
+
+msgid "Unable to find the latest available version."
+msgstr "Հնարավոր չէ գտնել վերջին հասանելի տարբերակը։"
+
+#, java-format
+msgid "Unable to find any valid PDF file in the list: {0}"
+msgstr "Ցանկում չհաջողվեց գտնել որևէ վավեր PDF ֆայլ՝ {0}"
+
+#, java-format
+msgid "Unable to load PDF list file from {0}"
+msgstr "Հնարավոր չէ բեռնել PDF ցանկի ֆայլը {0}-ից"
+
+msgid "Loading pdf documents"
+msgstr "PDF փաստաթղթերի բեռնում"
+
+msgid "Documents loaded"
+msgstr "Փաստաթղթերը բեռնված են"
+
+msgid "Unable to retrieve premium features description"
+msgstr "Հնարավոր չէ ստանալ պրեմիում գործառույթների նկարագրությունը"
+
+msgid "Fetching premium modules"
+msgstr "Պրեմիում մոդուլների բեռնում"
+
+msgid "Unable to retrieve premium modules"
+msgstr "Հնարավոր չէ ստանալ պրեմիում մոդուլները"
+
+msgid "Unable to retrieve latest news"
+msgstr "Հնարավոր չէ ստանալ վերջին նորությունները"
+
+msgid "Fetching latest news"
+msgstr "Վերջին նորությունների բեռնում"
+
+msgid "Unable to retrieve the latest news"
+msgstr "Հնարավոր չէ ստանալ վերջին նորությունները"
+
+#, java-format
+msgid "Saving workspace data to {0}"
+msgstr "Աշխատանքային տարածքի տվյալների պահում {0}-ում"
+
+msgid "Workspace saved"
+msgstr "Աշխատանքային տարածքը պահված է"
+
+msgid "Requesting modules state"
+msgstr "Մոդուլների վիճակի հարցում"
+
+#, java-format
+msgid "Unable to save workspace to {0}"
+msgstr "Հնարավոր չէ պահել աշխատանքային տարածքը {0}-ում"
+
+#, java-format
+msgid "Loading workspace from {0}"
+msgstr "Աշխատանքային տարածքի բեռնում {0}-ից"
+
+#~ msgid "Workspace loaded"
+#~ msgstr "Աշխատանքային տարածքը բեռնված է"
+
+#, java-format
+msgid "Unable to load workspace from {0}"
+msgstr "Հնարավոր չէ բեռնել աշխատանքային տարածքը {0}-ից"
+
+msgid "Light with blue"
+msgstr "Բաց կապույտով"
+
+msgid "Dark with purple"
+msgstr "Մուգ մանուշակագույնով"
+
+msgid "Dark with teal"
+msgstr "Մուգ ծովակապույտով"
+
+msgid "Light with maroon"
+msgstr "Բաց՝ մուգ կարմիրով"
+
+msgid "Close"
+msgstr "Փակել"
+
+msgid "The selected PDF document is invalid"
+msgstr "Ընտրված PDF փաստաթուղթը անվավեր է"
+
+msgid "Select the PDF file"
+msgstr "Ընտրեք PDF ֆայլը"
+
+msgid "_Select PDF"
+msgstr "_Ընտրել PDF"
+
+#~ msgid "Clear all settings"
+#~ msgstr "Մաքրել բոլոր կարգավորումները"
+
+#, java-format
+msgid "Pages: {0}, PDF Version: {1}"
+msgstr "Էջեր՝ {0}, PDF տարբերակ՝ {1}"
+
+msgid "Loading..."
+msgstr "Բեռնվում է..."
+
+msgid "Document properties"
+msgstr "Փաստաթղթի հատկություններ"
+
+msgid "Remove"
+msgstr "Հեռացնել"
+
+msgid "Set destination"
+msgstr "Սահմանել նպատակակետ"
+
+msgid "Open Folder"
+msgstr "Բացել պանակը"
+
+msgid "Enter the user password"
+msgstr "Մուտքագրեք օգտվողի գաղտնաբառը"
+
+msgid "Unlock"
+msgstr "Ապակողպել"
+
+#~ msgid "Drag and drop PDF files here"
+#~ msgstr "Քաշեք և գցեք PDF ֆայլերն այստեղ"
+
+msgid "Set as range for all"
+msgstr "Սահմանել որպես միջակայք բոլորի համար"
+
+msgid "Move to Top"
+msgstr "Տեղափոխել վերև"
+
+msgid "Move Up"
+msgstr "Տեղափոխել վեր"
+
+msgid "Move Down"
+msgstr "Տեղափոխել ներքև"
+
+msgid "Move to Bottom"
+msgstr "Տեղափոխել ներքևում"
+
+msgid "Duplicate"
+msgstr "Կրկնօրինակել"
+
+msgid "Selected pages"
+msgstr "Ընտրված էջեր"
+
+msgid "Total number of selected pages"
+msgstr "Ընտրված էջերի ընդհանուր քանակը"
+
+msgid "Size"
+msgstr "Չափ"
+
+msgid "Modified"
+msgstr "Փոփոխված"
+
+#, java-format
+msgid "Total pages: {0}"
+msgstr "Ընդհանուր էջեր՝ {0}"
+
+msgid "Name"
+msgstr "Անուն"
+
+msgid "Add documents to the table"
+msgstr "Ավելացնել փաստաթղթեր աղյուսակին"
+
+msgid "_Add"
+msgstr "_Ավելացնել"
+
+msgid "PDF list from _text/csv file"
+msgstr "PDF ցանկ _text/csv ֆայլից"
+
+msgid "Select pdf documents to load"
+msgstr "Ընտրեք բեռնվող PDF փաստաթղթերը"
+
+msgid "Select a text or CSV file to load"
+msgstr "Ընտրեք բեռնվող տեքստային կամ CSV ֆայլ"
+
+msgid "Removes selected documents"
+msgstr "Հեռացնում է ընտրված փաստաթղթերը"
+
+msgid "_Remove"
+msgstr "_Հեռացնել"
+
+msgid "Removes every document"
+msgstr "Հեռացնում է բոլոր փաստաթղթերը"
+
+msgid "C_lear all settings"
+msgstr "Մ_աքրել բոլոր կարգավորումները"
+
+msgid "Moves up selected documents"
+msgstr "Տեղափոխում է ընտրված փաստաթղթերը վերև"
+
+msgid "Move _Up"
+msgstr "Տեղափոխել _վեր"
+
+msgid "Moves down selected documents"
+msgstr "Տեղափոխում է ընտրված փաստաթղթերը ներքև"
+
+msgid "Move _Down"
+msgstr "Տեղափոխել _ներքև"
+
+msgid "Pace"
+msgstr "Քայլ"
+
+msgid ""
+"Double click to set the number of pages after which the task will switch to "
+"the next file"
+msgstr ""
+"Կրկնակի սեղմեք՝ սահմանելու էջերի քանակը, որից հետո առաջադրանքը կանցնի հաջորդ "
+"ֆայլին"
+
+msgid "Reverse"
+msgstr "Հակառակ"
+
+msgid "Pages"
+msgstr "Էջեր"
+
+msgid "Number of total pages of the document"
+msgstr "Փաստաթղթի ընդհանուր էջերի քանակը"
+
+#~ msgid "Double click to set selected pages (ex: 2 or 5-23 or 2,5-7,12-)"
+#~ msgstr ""
+#~ "Կրկնակի սեղմեք՝ ընտրված էջերը սահմանելու համար (օր․՝ 2 կամ 5-23 կամ 2,5-7,12-"
+#~ ")"
+
+msgid "Page ranges"
+msgstr "Էջերի միջակայքեր"
+
+msgid "Select a file"
+msgstr "Ընտրել ֆայլ"
+
+msgid "The selected file must exist. "
+msgstr "Ընտրված ֆայլը պետք է գոյություն ունենա։ "
+
+#, java-format
+msgid "Allowed extensions are {0}"
+msgstr "Թույլատրված ընդլայնումներն են՝ {0}"
+
+#~ msgid "Compress output file/files"
+#~ msgstr "Սեղմել ելքային ֆայլը/ֆայլերը"
+
+msgid ""
+"Tick the box if you don't want to retain any bookmark from the original PDF "
+"document"
+msgstr ""
+"Նշեք վանդակը, եթե չեք ցանկանում պահպանել որևէ էջանիշ բնօրինակ PDF փաստաթղթից"
+
+msgid "Output PDF version:"
+msgstr "Ելքային PDF տարբերակ՝"
+
+msgid "Show advanced settings"
+msgstr "Ցուցադրել լրացուցիչ կարգավորումները"
+
+msgid "Hide advanced settings"
+msgstr "Թաքցնել լրացուցիչ կարգավորումները"
+
+msgid "Overwrite if already exists"
+msgstr "Վերագրանցել, եթե արդեն գոյություն ունի"
+
+msgid ""
+"Tick the box if you want to overwrite the output files if they already exist."
+""
+msgstr ""
+"Նշեք վանդակը, եթե ցանկանում եք վերագրանցել ելքային ֆայլերը, եթե դրանք արդեն "
+"գոյություն ունեն։"
+
+#, java-format
+msgid "Version {0}"
+msgstr "Տարբերակ {0}"
+
+msgid "Same as the input document"
+msgstr "Նույնը, ինչ մուտքային փաստաթուղթը"
+
+msgid "An existing output directory is required"
+msgstr "Պահանջվում է գոյություն ունեցող ելքային պանակ"
+
+msgid "The output directory is required"
+msgstr "Ելքային պանակը պարտադիր է"
+
+msgid "Select an existing directory"
+msgstr "Ընտրեք գոյություն ունեցող պանակ"
+
+msgid "Select"
+msgstr "Ընտրել"
+
+msgid "Browse"
+msgstr "Դիտարկել"
+
+#, java-format
+#~ msgid "PDF version required: {0}"
+#~ msgstr "Պահանջվող PDF տարբերակ՝ {0}"
+
+msgid "Prefix for the generated files names"
+msgstr "Ստեղծվող ֆայլերի անունների նախածանց"
+
+msgid "Add prefix"
+msgstr "Ավելացնել նախածանց"
+
+msgid "DEFAULT_PREFIX"
+msgstr "DEFAULT_PREFIX"
+
+msgid "Generated PDF documents name prefix:"
+msgstr "Ստեղծվող PDF փաստաթղթերի անվան նախածանց՝"
+
+msgid "Prefix for the output files name."
+msgstr "Ելքային ֆայլերի անվան նախածանց։"
+
+msgid "Some special keywords are replaced with runtime values."
+msgstr "Որոշ հատուկ հիմնաբառեր փոխարինվում են գործարկման ժամանակի արժեքներով։"
+
+msgid "Right click to add these keywords."
+msgstr "Աջ սեղմեք՝ այս հիմնաբառերը ավելացնելու համար։"
+
+msgid "Run"
+msgstr "Գործարկել"
+
+msgid "Run the task"
+msgstr "Գործարկել առաջադրանքը"
+
+msgid "Requested"
+msgstr "Հայցված"
+
+msgid "Completed"
+msgstr "Ավարտված"
+
+msgid "Failed"
+msgstr "Ձախողված"
+
+msgid "Running"
+msgstr "Ընթացքի մեջ"
+
+#, java-format
+msgid "Running {0}%"
+msgstr "Ընթացքի մեջ {0}%"
+
+#~ msgid "Error saving log file."
+#~ msgstr "Սխալ՝ մատյանի ֆայլը պահելիս։"
+
+#, java-format
+#~ msgid "File {0} saved."
+#~ msgstr "{0} ֆայլը պահված է։"
+
+#, java-format
+msgid "Invalid range: {0}."
+msgstr "Անվավեր միջակայք՝ {0}։"
+
+#, java-format
+msgid ""
+"Ambiguous page range definition: {0}. Use following formats: [n] or [n1-n2] "
+"or [-n] or [n-]"
+msgstr ""
+"Էջերի միջակայքի երկիմաստ սահմանում՝ {0}։ Օգտագործեք հետևյալ ձևաչափերը՝ [n] "
+"կամ [n1-n2] կամ [-n] կամ [n-]"
+
+#, java-format
+msgid "Invalid number: {0}."
+msgstr "Անվավեր թիվ՝ {0}։"
+
+#~ msgid "Split odd pages"
+#~ msgstr "Բաժանել կենտ էջերը"
+
+#~ msgid "Split even pages"
+#~ msgstr "Բաժանել զույգ էջերը"
+
+#~ msgid "Destination folder"
+#~ msgstr "Նպատակակետ պանակ"
+
+msgid "Pages to extract (ex: 2 or 5-23 or 2,5-7,12- or 3,last)"
+msgstr "Արտահանվող էջեր (օր․՝ 2 կամ 5-23 կամ 2,5-7,12- կամ 3,last)"
+
+msgid ""
+"Comma separated page numbers or ranges to extract (ex: 2 or 5-23 or 2,5-7,12-"
+" or 3,last)"
+msgstr ""
+"Ստորակետերով բաժանված էջերի համարներ կամ միջակայքեր՝ արտահանելու համար (օր․՝ "
+"2 կամ 5-23 կամ 2,5-7,12- կամ 3,last)"
+
+msgid "Merge multiple PDF documents or subsections of them."
+msgstr "Միավորել բազմաթիվ PDF փաստաթղթեր կամ դրանց ենթաբաժինները։"
+
+msgid "A .pdf extension is required for the repeating file"
+msgstr "Կրկնվող ֆայլի համար պահանջվում է .pdf ընդլայնում"
+
+msgid "A .pdf destination file extension is required"
+msgstr "Նպատակակետ ֆայլի համար պահանջվում է .pdf ընդլայնում"
+
+msgid "Default PDF version:"
+msgstr "Լռելյայն PDF տարբերակ՝"
+
+msgid "Default PDF version for generated PDF files"
+msgstr "Ստեղծվող PDF ֆայլերի լռելյայն PDF տարբերակը"
+
+msgid "Default prefix:"
+msgstr "Լռելյայն նախածանց՝"
+
+msgid ""
+"Default prefix for output file names, used in tools that generate multiple "
+"files"
+msgstr ""
+"Ելքային ֆայլերի անունների լռելյայն նախածանց՝ օգտագործվում է բազմաթիվ ֆայլեր "
+"ստեղծող գործիքներում"
+
+msgid "Set whether \"Discard bookmarks\" should be enabled by default"
+msgstr "Սահմանեք՝ արդյոք \"Հեռացնել էջանիշները\" պետք է միացված լինի լռելյայն"
+
+#, java-format
+msgid "Workspace loaded: {0}"
+msgstr "Աշխատանքային տարածքը բեռնված է՝ {0}"
+
+#, java-format
+msgid "The following file already existed and was skipped: {0}"
+msgstr "Հետևյալ ֆայլն արդեն գոյություն ուներ և բաց թողնվեց՝ {0}"
+
+msgid "Duplicate at Top"
+msgstr "Կրկնօրինակել վերևում"
+
+msgid "Duplicate Up"
+msgstr "Կրկնօրինակել վեր"
+
+msgid "Duplicate Down"
+msgstr "Կրկնօրինակել ներքև"
+
+msgid "Duplicate at Bottom"
+msgstr "Կրկնօրինակել ներքևում"
+
+#, java-format
+msgid "Error saving content to file {0}"
+msgstr "Սխալ՝ բովանդակությունը {0} ֆայլում պահելիս"
+
+#, java-format
+msgid "File {0} saved"
+msgstr "{0} ֆայլը պահպանվել է"
+
+msgid "Error saving content to clipboard"
+msgstr "Սխալ՝ բովանդակությունը սեղմատախտակին պահելիս"
+
+msgid "Follow us on Bluesky"
+msgstr "Հետևեք մեզ Bluesky-ում"
+
+#~ msgid "Font:"
+#~ msgstr "Տառատեսակ՝"
+
+msgid "Sets the application font"
+msgstr "Սահմանում է հավելվածի տառատեսակը"
+
+msgid "Default"
+msgstr "Լռելյայն"
+
+msgid "Light"
+msgstr "Բաց"
+
+msgid "Dark"
+msgstr "Մուգ"
+
+msgid "Unlock selected"
+msgstr "Ապակողպել ընտրվածը"
+
+msgid "Workspace has changed"
+msgstr "Աշխատանքային տարածքը փոխվել է"
+
+msgid "Do you want to save it?"
+msgstr "Ցանկանո՞ւմ եք պահել այն"
+
+msgid "Set as pace for all"
+msgstr "Սահմանել որպես քայլ բոլորի համար"
+
+msgid "Split at this bookmark level"
+msgstr "Բաժանել էջանիշի այս մակարդակում"
+
+msgid "Select the bookmark depth level at which to split the document"
+msgstr "Ընտրեք էջանիշի խորության մակարդակը, որով բաժանել փաստաթուղթը"
+
+msgid "Bookmark level"
+msgstr "Էջանիշի մակարդակ"
+
+msgid "Bookmark level selector"
+msgstr "Էջանիշի մակարդակի ընտրիչ"
+
+msgid "Select a bookmark level"
+msgstr "Ընտրեք էջանիշի մակարդակ"
+
+msgid "Select to split the PDF after a predefined set of pages"
+msgstr ""
+"Ընտրեք՝ PDF-ը նախապես սահմանված էջերի հավաքածուից հետո բաժանելու համար"
+
+msgid "Predefined set of pages to split after"
+msgstr "Նախապես սահմանված էջերի հավաքածու, որից հետո բաժանել"
+
+msgid ""
+"Choose which predefined set of pages to split after (odd pages, even pages "
+"or every page)"
+msgstr ""
+"Ընտրեք, թե որ նախապես սահմանված էջերի հավաքածուից հետո բաժանել (կենտ էջեր, "
+"զույգ էջեր կամ յուրաքանչյուր էջ)"
+
+msgid "Select to split the document after specific page numbers"
+msgstr "Ընտրեք՝ փաստաթուղթը կոնկրետ էջերի համարներից հետո բաժանելու համար"
+
+msgid "Page numbers to split at"
+msgstr "Էջերի համարներ, որոնցում բաժանել"
+
+msgid "Enter comma separated positive page numbers (Ex. 1,5,12...)"
+msgstr ""
+"Մուտքագրեք ստորակետերով բաժանված դրական էջերի համարներ (Օր․՝ 1,5,12...)"
+
+msgid "Select to split the document every 'n' pages"
+msgstr "Ընտրեք՝ փաստաթուղթը յուրաքանչյուր 'n' էջից բաժանելու համար"
+
+msgid "Number of pages for split"
+msgstr "Բաժանման էջերի քանակը"
+
+msgid "Enter a positive number of pages"
+msgstr "Մուտքագրեք էջերի դրական քանակ"
+
+msgid "Split at this size"
+msgstr "Բաժանել այս չափով"
+
+msgid "Enter a positive integer for the maximum file size"
+msgstr "Մուտքագրեք դրական ամբողջ թիվ ֆայլի առավելագույն չափի համար"
+
+msgid "Size unit for the split file size"
+msgstr "Չափի միավորը բաժանվող ֆայլի չափի համար"
+
+msgid "Page selection for rotation"
+msgstr "Էջերի ընտրություն պտտման համար"
+
+msgid "Choose which pages to rotate: all, even, or odd"
+msgstr "Ընտրեք, թե որ էջերը պտտել՝ բոլորը, զույգերը կամ կենտերը"
+
+msgid "Rotation angle"
+msgstr "Պտտման անկյուն"
+
+msgid "Choose the rotation angle to apply"
+msgstr "Ընտրեք կիրառվող պտտման անկյունը"
+
+msgid "Set pages you want to rotate (ex: 2 or 5-23 or 2,5-7,12-)"
+msgstr "Սահմանեք պտտվող էջերը (օր․՝ 2 կամ 5-23 կամ 2,5-7,12-)"
+
+msgid "Pages normalization"
+msgstr "Էջերի նորմալացում"
+
+msgid "Interactive forms (AcroForms)"
+msgstr "Ինտերակտիվ ձևեր (AcroForms)"
+
+msgid "Bookmarks handling"
+msgstr "Էջանիշների մշակում"
+
+msgid "Table of contents"
+msgstr "Բովանդակության աղյուսակ"
+
+msgid "Repeating PDF file"
+msgstr "Կրկնվող PDF ֆայլ"
+
+msgid "There are news available"
+msgstr "Հասանելի նորություններ կան"
+
+msgid "selected"
+msgstr "ընտրված"
+
+#, java-format
+msgid "{0} (with notification)"
+msgstr "{0} (ծանուցումով)"
+
+msgid "Collapse the sidebar"
+msgstr "Փլուզել կողային վահանակը"
+
+msgid "Expand the sidebar"
+msgstr "Ընդարձակել կողային վահանակը"
+
+msgid "PDF files to open"
+msgstr "Բացվող PDF ֆայլեր"
+
+msgid "file list"
+msgstr "ֆայլերի ցանկ"
+
+msgid "Available tasks"
+msgstr "Հասանելի առաջադրանքներ"
+
+msgid "Log messages"
+msgstr "Մատյանի հաղորդագրություններ"
+
+msgid "Save the log messages to a text file"
+msgstr "Պահել մատյանի հաղորդագրությունները տեքստային ֆայլում"
+
+msgid "Close the log panel"
+msgstr "Փակել մատյանի վահանակը"
+
+msgid "News items"
+msgstr "Նորությունների տարրեր"
+
+msgid "Close news panel"
+msgstr "Փակել նորությունների վահանակը"
+
+#~ msgid "About panel"
+#~ msgstr "Ծրագրի մասին վահանակ"
+
+#, java-format
+msgid "Help for {0}"
+msgstr "Օգնություն {0}-ի համար"
+
+msgid "Log register rows"
+msgstr "Մատյանի գրանցամատյանի տողեր"
+
+msgid "Language"
+msgstr "Լեզու"
+
+msgid "Startup tool"
+msgstr "Գործարկման գործիք"
+
+msgid "Theme"
+msgstr "Թեմա"
+
+msgid "Font"
+msgstr "Տառատեսակ"
+
+msgid "Font size"
+msgstr "Տառաչափ"
+
+msgid "Default PDF version"
+msgstr "Լռելյայն PDF տարբերակ"
+
+msgid "Manually select the output destination directory"
+msgstr "Ձեռքով ընտրել ելքային նպատակակետ պանակը"
+
+msgid "Default prefix"
+msgstr "Լռելյայն նախածանց"
+
+msgid "Default prefix for output file names"
+msgstr "Ելքային ֆայլերի անունների լռելյայն նախածանց"
+
+msgid "Right click to add special prefix keywords"
+msgstr "Աջ սեղմեք՝ հատուկ նախածանցային հիմնաբառեր ավելացնելու համար"
+
+msgid "Properties table"
+msgstr "Հատկությունների աղյուսակ"
+
+msgid "Properties"
+msgstr "Հատկություններ"
+
+msgid "Empty"
+msgstr "Դատարկ"
+
+msgid "Notification"
+msgstr "Ծանուցում"
+
+msgid "Close notification"
+msgstr "Փակել ծանուցումը"
+
+#, java-format
+msgid "Open the url {0}"
+msgstr "Բացել {0} հասցեն"
+
+#~ msgid "PDF document selection toolbar"
+#~ msgstr "PDF փաստաթղթի ընտրության գործիքագոտի"
+
+msgid "Clear the selected PDF document"
+msgstr "Մաքրել ընտրված PDF փաստաթուղթը"
+
+msgid "PDF encryption status"
+msgstr "PDF գաղտնագրման կարգավիճակ"
+
+msgid "PDF document password"
+msgstr "PDF փաստաթղթի գաղտնաբառ"
+
+msgid "Drag and drop PDF files here or use the Add button above"
+msgstr "Քաշեք և գցեք PDF ֆայլերն այստեղ կամ օգտագործեք վերևի Ավելացնել կոճակը"
+
+msgid "PDF documents selection table"
+msgstr "PDF փաստաթղթերի ընտրության աղյուսակ"
+
+msgid "PDF selection table"
+msgstr "PDF ընտրության աղյուսակ"
+
+#, java-format
+msgid "PDF documents selection table, {0} documents"
+msgstr "PDF փաստաթղթերի ընտրության աղյուսակ, {0} փաստաթուղթ"
+
+#, java-format
+msgid "{0} selected pages"
+msgstr "{0} ընտրված էջ"
+
+#, java-format
+msgid "Size: {0}"
+msgstr "Չափ՝ {0}"
+
+#, java-format
+msgid "Modified: {0}"
+msgstr "Փոփոխված՝ {0}"
+
+msgid "Number of total pages"
+msgstr "Ընդհանուր էջերի քանակը"
+
+#, java-format
+msgid "File name: {0}"
+msgstr "Ֆայլի անուն՝ {0}"
+
+#, java-format
+msgid "Row {0}"
+msgstr "Տող {0}"
+
+#~ msgid "Document selection toolbar"
+#~ msgstr "Փաստաթղթի ընտրության գործիքագոտի"
+
+#, java-format
+msgid "{0} pages"
+msgstr "{0} էջ"
+
+msgid "Set selected pages (ex: 2 or 5-23 or 2,5-7,12-)"
+msgstr "Սահմանեք ընտրված էջերը (օր․՝ 2 կամ 5-23 կամ 2,5-7,12-)"
+
+msgid "Select a PDF destination file"
+msgstr "Ընտրեք PDF նպատակակետ ֆայլ"
+
+msgid "Browse for destination PDF file"
+msgstr "Դիտարկել PDF նպատակակետ ֆայլը"
+
+#, java-format
+msgid "Browse for {0}"
+msgstr "Դիտարկել {0}-ը"
+
+#~ msgid "Compress the output PDF file"
+#~ msgstr "Սեղմել ելքային PDF ֆայլը"
+
+msgid "Select a PDF file"
+msgstr "Ընտրել PDF ֆայլ"
+
+msgid "Browse for source PDF file"
+msgstr "Դիտարկել աղբյուր PDF ֆայլը"
+
+msgid "Output PDF version"
+msgstr "Ելքային PDF տարբերակ"
+
+msgid "Output PDF version selector"
+msgstr "Ելքային PDF տարբերակի ընտրիչ"
+
+msgid "Output directory"
+msgstr "Ելքային պանակ"
+
+msgid "Browse for output directory"
+msgstr "Դիտարկել ելքային պանակը"
+
+msgid "Browse for directory"
+msgstr "Դիտարկել պանակը"
+
+#, java-format
+msgid "Invalid value: {0}"
+msgstr "Անվավեր արժեք՝ {0}"
+
+#, java-format
+#~ msgid "When selected, requires PDF version {0} or higher for the output file"
+#~ msgstr ""
+#~ "Ընտրվելիս պահանջում է PDF {0} կամ ավելի բարձր տարբերակ ելքային ֆայլի համար"
+
+msgid "Right click to add special prefix keywords like timestamp or filename"
+msgstr ""
+"Աջ սեղմեք՝ ժամանակի դրոշմ կամ ֆայլի անուն հատուկ նախածանցային հիմնաբառեր "
+"ավելացնելու համար"
+
+msgid "Open the task output file"
+msgstr "Բացել առաջադրանքի ելքային ֆայլը"
+
+msgid "Open the task output directory"
+msgstr "Բացել առաջադրանքի ելքային պանակը"
+
+msgid "Task footer"
+msgstr "Առաջադրանքի ստորագիր"
+
+msgid "Task progress"
+msgstr "Առաջադրանքի առաջընթաց"
+
+#, java-format
+msgid "Task progress: {0}"
+msgstr "Առաջադրանքի առաջընթաց՝ {0}"
+
+#, java-format
+msgid "Task status: {0}"
+msgstr "Առաջադրանքի կարգավիճակ՝ {0}"
+
+#, java-format
+msgid "Task status: {0}%"
+msgstr "Առաջադրանքի կարգավիճակ՝ {0}%"
+
+msgid "Output files compression"
+msgstr "Ելքային ֆայլերի սեղմում"
+
+msgid "Sets the default value for the compression policy of the output files"
+msgstr "Սահմանում է ելքային ֆայլերի սեղմման քաղաքականության լռելյայն արժեքը"
+
+msgid "Compress"
+msgstr "Սեղմել"
+
+msgid ""
+"all streams in the output PDF will be compressed by applying FlateDecode "
+"encoding"
+msgstr ""
+"ելքային PDF-ի բոլոր հոսքերը կսեղմվեն՝ կիրառելով FlateDecode կոդավորումը"
+
+msgid "Neutral"
+msgstr "Չեզոք"
+
+msgid "streams are left unchanged from the original file"
+msgstr "հոսքերը թողնվում են անփոփոխ բնօրինակ ֆայլի համեմատ"
+
+msgid "Uncompress"
+msgstr "Ապասեղմել"
+
+msgid ""
+"FlateDecode and LZWDecode filters will be removed from all streams. Useful "
+"for debugging or manual inspection"
+msgstr ""
+"FlateDecode և LZWDecode զտիչները կհեռացվեն բոլոր հոսքերից։ Օգտակար է "
+"վրիպազերծման կամ ձեռքով ստուգման համար"
+
+msgid "Unchanged"
+msgstr "Անփոփոխ"
+
+msgid "PDF version for generated PDF files"
+msgstr "PDF տարբերակ ստեղծվող PDF ֆայլերի համար"
+
+msgid "Sets the compression policy for the output files"
+msgstr "Սահմանում է ելքային ֆայլերի սեղմման քաղաքականությունը"
+
+msgid ""
+"If the output field is empty, it's automatically set using the selected PDF "
+"document's directory"
+msgstr ""
+"Եթե ելքային դաշտը դատարկ է, այն ավտոմատ կսահմանվի ընտրված PDF փաստաթղթի "
+"պանակի միջոցով"
+
+msgid "1 file selected"
+msgstr "1 ֆայլ ընտրված է"
+
+#, java-format
+msgid "{0} files selected"
+msgstr "Ընտրված է {0} ֆայլ"

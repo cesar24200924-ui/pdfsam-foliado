@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Manual — Foliar e Indexar PDF (PDFsam)</title>
+<style>
+  body { font-family: "Segoe UI", Arial, sans-serif; max-width: 900px; margin: 30px auto; padding: 0 20px; color: #222; line-height: 1.55; }
+  h1 { color: #b00000; border-bottom: 3px solid #b00000; padding-bottom: 6px; }
+  h2 { color: #0d33a6; margin-top: 2.2em; border-bottom: 1px solid #ccd; padding-bottom: 4px; }
+  h3 { margin-top: 1.6em; }
+  .paso { background: #f4f7fd; border-left: 4px solid #0d33a6; padding: 8px 14px; margin: 10px 0; }
+  .ojo { background: #fff8e6; border-left: 4px solid #e0a800; padding: 8px 14px; margin: 10px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0; }
+  td, th { border: 1px solid #ccd; padding: 6px 8px; vertical-align: top; text-align: left; }
+  th { background: #eef1f8; }
+  code { background: #f0f0f0; padding: 1px 5px; border-radius: 3px; }
+  .indice a { text-decoration: none; }
+  details { margin: 8px 0; padding: 6px 12px; background: #fafafa; border: 1px solid #e3e3e3; border-radius: 6px; }
+  summary { font-weight: bold; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<h1>Manual de Foliar e Indexar PDF</h1>
+<p>Esta versión de <b>PDFsam Basic</b> trae dos herramientas nuevas: <b>Foliar</b> y <b>Indexar PDF</b>.
+Las dos tienen <b>vista previa real</b>: lo que ve en pantalla es exactamente lo que queda en el PDF, y se actualiza solo cada vez que cambia una opción.
+Los PDF originales <b>nunca</b> se modifican: el resultado siempre se guarda aparte.</p>
+
+<div class="indice">
+<b>Contenido</b>
+<ol>
+  <li><a href="#abrir">Cómo abrir el programa (portable)</a></li>
+  <li><a href="#foliar">Foliar — paso a paso</a></li>
+  <li><a href="#lote">Foliar una carpeta o un ZIP completo</a></li>
+  <li><a href="#indexar">Indexar PDF — paso a paso</a></li>
+  <li><a href="#personalizar">Personalizar hojas (solo algunas hojas)</a></li>
+  <li><a href="#letras">Letras, colores y números en letras</a></li>
+  <li><a href="#faq">Preguntas frecuentes</a></li>
+</ol>
+</div>
+
+<h2 id="abrir">1. Cómo abrir el programa (portable)</h2>
+<p>Portable quiere decir que <b>no se instala</b>: se descomprime y se usa. Lo puede llevar en una USB.</p>
+<div class="paso"><b>Paso 1.</b> Descargue el archivo <code>PDFsam-Foliar-Indexar-portable.zip</code>.</div>
+<div class="paso"><b>Paso 2.</b> Haga clic derecho sobre el ZIP → <b>Extraer todo…</b> → elija una carpeta (por ejemplo <code>Documentos\PDFsam</code>) → <b>Extraer</b>.</div>
+<div class="paso"><b>Paso 3.</b> Entre a la carpeta <code>pdfsam</code> y haga doble clic en <code>pdfsam.exe</code>.</div>
+<div class="paso"><b>Paso 4.</b> En el menú de la izquierda (o en la pantalla de inicio, en el grupo <b>Herramientas de edición</b>) aparecen <b>Foliar</b> e <b>Indexar PDF</b>.</div>
+<div class="ojo"><b>Si Windows muestra “Windows protegió su PC”:</b> toque <b>Más información</b> → <b>Ejecutar de todas formas</b>. Sale porque el programa no tiene firma digital comprada; es normal en programas hechos a la medida.</div>
+<p>Para crear un acceso directo: clic derecho sobre <code>pdfsam.exe</code> → <b>Enviar a</b> → <b>Escritorio (crear acceso directo)</b>.</p>
+
+<h2 id="foliar">2. Foliar — paso a paso</h2>
+<p>Foliar pone la numeración tipo folio (<i>Folio 001, Folio 002…</i>) en cada hoja. Cada hoja lleva el folio <b>en la misma esquina tal como se lee</b>, aunque la hoja esté girada o sea de otro tamaño (carta, oficio, horizontal…).</p>
+
+<h3>Paso 1 — Elegir el PDF</h3>
+<div class="paso">Toque <b>📄 Elegir PDF</b> (en el cuadro <b>1. PDF a foliar</b> o en el centro de la pantalla), o <b>arrastre</b> el PDF desde el Explorador de Windows hasta la vista previa.
+Si el PDF tiene contraseña, el programa se la pide.</div>
+<p>A la derecha aparece la primera hoja ya con el folio. Con <b>◀ Anterior</b> y <b>Siguiente ▶</b> recorre las hojas. Al lado se ve el tamaño de la hoja (ej. <i>Carta · vertical</i>).</p>
+
+<h3>Paso 2 — El texto del folio</h3>
+<table>
+<tr><th>Opción</th><th>Qué hace</th><th>Ejemplo</th></tr>
+<tr><td>Texto antes del número</td><td>Lo que va antes del número. Puede dejarlo vacío para que salga solo el número.</td><td><code>Folio </code>, <code>Pág. </code>, <code>Fol. </code></td></tr>
+<tr><td>Empieza en</td><td>El primer número.</td><td>Si el expediente ya tiene 120 folios, ponga 121.</td></tr>
+<tr><td>Ceros (001)</td><td>Cuántas cifras lleva el número (rellena con ceros a la izquierda).</td><td>3 → 001 · 4 → 0001</td></tr>
+<tr><td>Tamaño letra</td><td>El tamaño de la letra del folio.</td><td>11</td></tr>
+<tr><td>Agregar el total</td><td>Agrega el total al final.</td><td>Folio 001 de 120</td></tr>
+<tr><td>Entre el número y el total</td><td>La palabra entre el número y el total.</td><td><code>de</code>, <code>DE</code>, <code>/</code></td></tr>
+<tr><td>Texto después del número</td><td>Lo que va al final.</td><td><code> - SAR</code></td></tr>
+</table>
+<p>Debajo aparece <b>“Así queda: …”</b> con un ejemplo de cómo se verá.</p>
+
+<h3>Paso 3 — Folio en letras (opcional)</h3>
+<p>Marque <b>Poner el folio en letras</b> para escribirlo como <i>FOLIO UNO, FOLIO DOS…</i> (siempre en español, en mayúsculas, con tildes: VEINTITRÉS, CIENTO VEINTIUNO…).</p>
+<ul>
+  <li><b>Texto antes del número en letras:</b> normalmente <code>FOLIO </code>.</li>
+  <li><b>También el folio en números (arriba):</b> si está marcado salen dos renglones (arriba <i>Folio 001</i>, abajo <i>FOLIO UNO</i>). Si lo desmarca, sale solo el renglón en letras.</li>
+</ul>
+
+<h3>Paso 4 — Posición</h3>
+<p>Elija la esquina: arriba o abajo, a la izquierda, al centro o a la derecha.</p>
+<div class="paso"><b>Posición libre:</b> haga clic (o arrastre) en la vista previa, en el lugar exacto donde quiere el folio. Mientras arrastra se ve un recuadro punteado; al soltar, el folio queda ahí y la opción cambia sola a <b>Libre</b>. La posición libre se guarda como proporción de la hoja, así queda en el mismo lugar en hojas de distinto tamaño.</div>
+
+<h3>Paso 5 — Color</h3>
+<p>Toque <b>Rojo</b>, <b>Negro</b> o <b>Azul</b>, o elija cualquier otro en <b>Más colores</b>. Debajo se ve el color elegido con su código (ej. #BF0000).</p>
+
+<h3>Paso 6 — Letra</h3>
+<p>Ver la sección <a href="#letras">Letras</a>.</p>
+
+<h3>Paso 7 — Más opciones</h3>
+<ul>
+  <li><b>Con recuadro:</b> dibuja un rectángulo alrededor del folio.</li>
+  <li><b>Distancia del borde:</b> qué tan lejos del borde de la hoja queda (en puntos; 28 puntos ≈ 1 cm).</li>
+  <li><b>Hojas sin folio al inicio:</b> por ejemplo 1 = la carátula no lleva folio y la numeración empieza en la hoja 2.</li>
+</ul>
+
+<h3>Paso 8 — Hojas a foliar</h3>
+<p>Vacío = todas. Puede escribir rangos: <code>3-50</code>, <code>1-10, 15, 20-</code> (<code>20-</code> quiere decir “de la 20 hasta el final”).</p>
+
+<h3>Paso 9 — Guardar</h3>
+<div class="paso">Toque <b>№ Foliar y guardar</b> (abajo a la izquierda, siempre visible). Elija dónde guardar; el nombre que sugiere es el original con <code>_foliado</code> al final. Al terminar puede tocar <b>Abrir el PDF</b> o <b>Abrir la carpeta</b>.</div>
+
+<h2 id="lote">3. Foliar una carpeta o un ZIP completo</h2>
+<p>Sirve para foliar muchos PDF de una vez, por ejemplo un expediente con subcarpetas.</p>
+<div class="paso"><b>Paso 1.</b> Configure el folio como quiere (texto, posición, color, letra…). Esas opciones se usan para todos los archivos.</div>
+<div class="paso"><b>Paso 2.</b> Toque <b>📁 Foliar una carpeta o ZIP</b> → <b>Elegir carpeta</b> o <b>Elegir ZIP</b>. También puede arrastrar la carpeta o el ZIP a la vista previa.</div>
+<div class="paso"><b>Paso 3.</b> El programa pregunta si la numeración <b>sigue de un archivo al siguiente</b>, como un solo expediente:
+<ul><li><b>Sí:</b> el segundo PDF continúa donde terminó el primero (en orden de carpetas y nombres).</li>
+<li><b>No:</b> cada PDF empieza otra vez en el número de “Empieza en”.</li></ul></div>
+<div class="paso"><b>Paso 4.</b> Aparece una <b>vista previa del árbol de carpetas</b> con cuántos PDF se van a procesar y cuántos archivos se copian igual (Word, Excel, fotos…). Toque <b>Procesar</b>.</div>
+<div class="paso"><b>Paso 5.</b> Si eligió un ZIP, pregunta si quiere el resultado <b>Como ZIP</b> o <b>Como carpeta</b>. Después elija dónde guardarlo.</div>
+<div class="paso"><b>Paso 6.</b> Se ve una barra con el porcentaje y “Archivo 35 de 120”. Puede tocar <b>Cancelar</b>: lo que ya se hizo queda guardado.</div>
+<div class="paso"><b>Paso 7.</b> Si algún PDF tenía contraseña, al final pregunta si quiere quitarle la seguridad (con su contraseña) y si también quiere foliarlo. Al final muestra un resumen.</div>
+<p><b>Qué se respeta:</b> la misma estructura de carpetas y subcarpetas (también las vacías), los ZIP que vengan dentro de la carpeta o dentro de otro ZIP (se abren, se folian sus PDF y se vuelven a armar como ZIP), y todo lo que no es PDF se copia igual. Si un archivo falla, se copia el original sin cambios y se avisa al final.</p>
+
+<h2 id="indexar">4. Indexar PDF — paso a paso</h2>
+<p>Indexar pone leyendas en rojo (o el color que elija) en cada hoja de muchos PDF a la vez:</p>
+<ul>
+  <li><b>Arriba a la izquierda:</b> un texto (por defecto <code>DPOT</code>).</li>
+  <li><b>Abajo a la izquierda:</b> un texto opcional (ej. <code>CONFIDENCIAL</code>).</li>
+  <li><b>Arriba a la derecha:</b> una parte del nombre del archivo o un texto libre, con la numeración <code>1/10</code>.</li>
+  <li><b>Abajo:</b> numeración adicional opcional (“Página 1 de 10”…).</li>
+</ul>
+
+<h3>Paso 1 — Archivos PDF</h3>
+<div class="paso">Toque <b>📄 Agregar PDF</b> (puede elegir varios) o <b>📁 Agregar carpeta</b> (entran todos los PDF de la carpeta y de sus subcarpetas). También puede arrastrarlos a la lista o a la vista previa. <b>🗑 Limpiar</b> vacía la lista.
+Haga clic en un archivo de la lista para verlo en la vista previa.</div>
+
+<h3>Paso 2 — Leyendas izquierdas</h3>
+<p>Marque y escriba el texto de arriba a la izquierda (encabezado) y, si quiere, el de abajo a la izquierda (pie de página).</p>
+
+<h3>Paso 3 — Leyenda derecha y numeración</h3>
+<p><b>Parte del nombre del archivo:</b> el nombre se corta en pedazos con el <b>separador</b> y se usa el <b>pedazo</b> que elija (0 = el primero).</p>
+<table>
+<tr><th>Nombre del archivo</th><th>Separador</th><th>Pedazo</th><th>Queda</th></tr>
+<tr><td>08011990123456 REQUERIMIENTO.pdf</td><td>espacio</td><td>0</td><td>08011990123456 1/10</td></tr>
+<tr><td>ACTA 2025 enero.pdf</td><td>espacio</td><td>1</td><td>2025 1/10</td></tr>
+<tr><td>REQ_SAR_08011990123456.pdf</td><td>_</td><td>2</td><td>08011990123456 1/10</td></tr>
+</table>
+<p>Debajo del separador aparece un ejemplo con el archivo que está viendo. Si el nombre no tiene el separador, se usa el nombre completo.</p>
+<ul>
+  <li><b>Texto libre:</b> en vez del nombre, el texto que escriba.</li>
+  <li><b>Agregar la numeración 1/10 al final:</b> la desmarca si no quiere el número.</li>
+  <li><b>Folio en letras debajo:</b> pone <i>FOLIO UNO, FOLIO DOS…</i> justo debajo de la leyenda derecha.</li>
+  <li><b>Repetir la numeración abajo:</b> abajo a la derecha o al centro, con el formato que elija: 1/10, Página 1 de 10, PÁGINA 1 DE 10, 1 de 10, 1 DE 10 o <b>Personalizado</b> (escriba <code>{pagina}</code> y <code>{total}</code>, ej. <code>Hoja {pagina} de {total}</code>).</li>
+</ul>
+
+<h3>Paso 4 — Letra, color y tamaño</h3>
+<p>Igual que en Foliar (ver <a href="#letras">Letras</a>). El tamaño normal es 20.</p>
+
+<h3>Paso 5 — Guardar</h3>
+<div class="paso">Toque <b>🏷 Indexar y guardar</b> y elija la carpeta de salida. Se crea <b>la misma estructura de subcarpetas con los mismos nombres</b>. No se puede elegir la carpeta donde están los originales (así nunca se reemplazan): use una carpeta nueva.</div>
+<p>Las opciones de Indexar (y de Foliar) se recuerdan para la próxima vez.</p>
+
+<h2 id="personalizar">5. Personalizar hojas (solo algunas hojas)</h2>
+<p>Lo general se aplica a todas las hojas. Con <b>Personalizar hojas</b> cambia solo algunas, por ejemplo una hoja donde el folio tapa una firma.</p>
+<div class="paso"><b>Paso 1.</b> Vaya a la hoja con ◀ ▶ y toque <b>✎ Personalizar esta hoja</b>. O toque <b>☰ Personalizar varias…</b> y escriba las hojas (ej. <code>5, 8-12</code>).</div>
+<div class="paso"><b>Paso 2.</b> Aparece un panel amarillo con lo que puede cambiar en esas hojas:
+<ul>
+  <li><b>No poner nada en estas hojas:</b> esas hojas quedan sin folio. En Foliar, además, <b>no cuentan</b> para la numeración.</li>
+  <li><b>Mover:</b> con las flechas ▲ ▼ ◀ ▶ (cada clic ≈ 1 mm) o <b>arrastrando con el ratón</b> en la vista previa (se ve una flecha azul). <b>A su lugar</b> lo regresa.</li>
+  <li><b>Color, Tamaño, Letra, Negrita</b> (y <b>Con recuadro</b> en Foliar).</li>
+</ul></div>
+<div class="paso"><b>Paso 3.</b> Toque <b>✓ Listo</b>. En la barra se ve la lista de hojas personalizadas, y en la hoja dice <i>✎ personalizada</i>.</div>
+<ul>
+  <li><b>⇉ Aplicar a todas las hojas de este PDF:</b> copia esos mismos cambios a todas las hojas.</li>
+  <li><b>↺ Quitar personalización:</b> esas hojas vuelven a lo general.</li>
+  <li><b>✕ Quitar todas las personalizaciones:</b> todas vuelven a lo general.</li>
+</ul>
+<p>En Indexar, <b>cada PDF de la lista tiene sus propias hojas personalizadas</b>.</p>
+
+<h2 id="letras">6. Letras, colores y números en letras</h2>
+<ul>
+  <li>Las tres letras con ★ (<b>Helvetica</b>, <b>Times</b>, <b>Courier</b>) siempre están y aceptan <b>Negrita</b>.</li>
+  <li>Además aparecen <b>las letras de esta computadora</b> (Arial, Calibri, Cambria…). Escriba en el buscador, por ejemplo <code>arial negrita</code>. Esas letras ya traen su versión “Negrita”, por eso la casilla Negrita se apaga.</li>
+  <li>De las letras de la computadora solo se guarda dentro del PDF lo que se usó, así el archivo casi no aumenta de peso.</li>
+  <li>Con las letras básicas (★) algunos símbolos raros no existen; si escribe uno, sale “?”. Las tildes y la Ñ sí funcionan.</li>
+</ul>
+
+<h2 id="faq">7. Preguntas frecuentes</h2>
+
+<h3>Generales</h3>
+<details><summary>¿Se modifica mi PDF original?</summary>
+<p>No. Siempre se guarda una copia nueva. En Foliar, si elige el mismo nombre del original, el programa no lo deja. En Indexar no deja elegir la carpeta de los originales.</p></details>
+<details><summary>¿Lo que veo en la vista previa es lo que queda?</summary>
+<p>Sí. La vista previa usa exactamente la misma función que se usa al guardar.</p></details>
+<details><summary>¿Necesito internet?</summary>
+<p>No. Todo se hace en su computadora; los PDF no salen a ningún lado.</p></details>
+<details><summary>¿Hay que instalar Java?</summary>
+<p>No. El programa portable ya trae todo lo que necesita adentro.</p></details>
+<details><summary>Windows dice “Windows protegió su PC”. ¿Es un virus?</summary>
+<p>No. Sale porque el programa no tiene una firma digital comprada. Toque <b>Más información</b> → <b>Ejecutar de todas formas</b>.</p></details>
+<details><summary>¿Las demás herramientas de PDFsam siguen igual?</summary>
+<p>Sí: Unir, Dividir, Girar, Extraer, Mezclar, etc. funcionan igual que siempre. Solo se agregaron Foliar e Indexar PDF.</p></details>
+<details><summary>¿Dónde se guardan las opciones que el programa recuerda?</summary>
+<p>En la carpeta de su usuario, en <code>.pdfsam-foliado\opciones.properties</code>. Si borra ese archivo, todo vuelve a lo normal.</p></details>
+<details><summary>¿Por qué los textos de las herramientas nuevas están en español aunque PDFsam esté en otro idioma?</summary>
+<p>Foliar e Indexar se hicieron en español. El resto de PDFsam sigue el idioma que tenga elegido en Ajustes.</p></details>
+
+<h3>Foliar</h3>
+<details><summary>Tengo hojas giradas u horizontales. ¿El folio sale de lado?</summary>
+<p>No. Cada hoja lleva el folio en la misma esquina tal como se lee, aunque esté girada o sea de otro tamaño.</p></details>
+<details><summary>La carátula no debe llevar folio. ¿Cómo hago?</summary>
+<p>En <b>7. Más opciones</b> → <b>Hojas sin folio al inicio</b> ponga 1. La hoja 2 será el Folio 001 (o el número de “Empieza en”).</p></details>
+<details><summary>Quiero que una hoja del medio no lleve folio y que no cuente.</summary>
+<p>Vaya a esa hoja → <b>✎ Personalizar esta hoja</b> → marque <b>No poner nada en estas hojas</b> → <b>✓ Listo</b>. Esa hoja no lleva folio y la siguiente sigue el número.</p></details>
+<details><summary>¿Cuál es la diferencia entre “Hojas sin folio al inicio” y “Hojas a foliar”?</summary>
+<p>“Hojas sin folio al inicio” salta las primeras hojas. “Hojas a foliar” elige exactamente qué hojas llevan folio (ej. <code>3-50</code>); las demás quedan sin folio.</p></details>
+<details><summary>El folio tapa un sello en una sola hoja.</summary>
+<p>Personalice esa hoja y muévalo con las flechas o arrastrándolo con el ratón en la vista previa. Las demás hojas no cambian.</p></details>
+<details><summary>¿Cómo pongo “FOLIO 001 DE 120”?</summary>
+<p>Texto antes del número: <code>FOLIO </code>; marque <b>Agregar el total</b>; Entre el número y el total: <code>DE</code>.</p></details>
+<details><summary>Ya tengo 250 folios en otro tomo. ¿Puedo seguir desde el 251?</summary>
+<p>Sí: ponga 251 en <b>Empieza en</b>.</p></details>
+<details><summary>¿Cómo pongo el folio solo en letras?</summary>
+<p>Marque <b>Poner el folio en letras</b> y desmarque <b>También el folio en números</b>.</p></details>
+<details><summary>Al foliar una carpeta, ¿en qué orden sigue la numeración?</summary>
+<p>En orden de carpetas y nombres (alfabético), igual que en el árbol de la vista previa. Si quiere otro orden, ponga números al inicio de los nombres (01, 02, 03…).</p></details>
+<details><summary>Algunos PDF de la carpeta tienen contraseña.</summary>
+<p>Se copian sin cambios y al final el programa pregunta si les quita la seguridad con su contraseña y si también los folia. Si no sabe la contraseña, quedan como el original.</p></details>
+<details><summary>¿Puedo cancelar a medio proceso?</summary>
+<p>Sí, con <b>Cancelar</b>. Lo que ya se hizo queda guardado.</p></details>
+<details><summary>¿Qué pasa con los Word, Excel y fotos que están en la carpeta?</summary>
+<p>Se copian igual, en la misma subcarpeta.</p></details>
+
+<h3>Indexar</h3>
+<details><summary>¿Qué es el “pedazo” del nombre?</summary>
+<p>El nombre del archivo se corta donde está el separador. El pedazo 0 es lo que está antes del primer separador, el 1 lo que sigue, y así. Vea los ejemplos de la tabla del paso 3.</p></details>
+<details><summary>¿Cómo sé que eligió bien la parte del nombre?</summary>
+<p>Debajo del separador aparece “Ej. con ‘nombre del archivo’: …” y en la vista previa se ve en la hoja.</p></details>
+<details><summary>¿Se mantienen mis subcarpetas?</summary>
+<p>Sí. Si agregó una carpeta, en la salida se crea esa misma carpeta con sus subcarpetas y los mismos nombres de archivo.</p></details>
+<details><summary>¿Por qué no me deja guardar en cierta carpeta?</summary>
+<p>Porque ahí adentro están los PDF originales y se reemplazarían. Elija o cree una carpeta nueva.</p></details>
+<details><summary>¿Puedo personalizar hojas de varios PDF distintos?</summary>
+<p>Sí. Elija el PDF en la lista y personalice sus hojas; cada PDF guarda las suyas.</p></details>
+<details><summary>¿Puedo poner “Página 1 de 10” en vez de “1/10” abajo?</summary>
+<p>Sí: marque <b>Repetir la numeración abajo</b> y elija el formato, o “Personalizado…” y escriba lo que quiera con <code>{pagina}</code> y <code>{total}</code>.</p></details>
+
+<h3>Letras y colores</h3>
+<details><summary>No encuentro una letra que tengo instalada.</summary>
+<p>Se buscan las letras <code>.ttf</code> de Windows (incluidas las instaladas solo para su usuario). Algunas letras <code>.otf</code> no se pueden usar dentro del PDF. Escriba parte del nombre en el buscador.</p></details>
+<details><summary>Elegí una letra y salió Helvetica.</summary>
+<p>Esa letra no se pudo incluir en el PDF (algunas letras no lo permiten). Pruebe con otra.</p></details>
+<details><summary>¿Por qué se apaga la casilla Negrita?</summary>
+<p>La negrita solo aplica a las tres letras básicas (★). En las letras de la computadora elija la versión que dice “Negrita” en la lista.</p></details>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+name: pruebas
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Descargar Java 25 (con JavaFX)
+        working-directory: ${{ runner.temp }}
+        run: curl -fsSL -o jdk.tar.gz "https://github.com/bell-sw/Liberica/releases/download/25.0.5.0.3+5/bellsoft-jdk25.0.5.0.3+5-linux-amd64-full.tar.gz"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'jdkfile'
+          jdkFile: ${{ runner.temp }}/jdk.tar.gz
+          java-version: '25.0.5'
+          architecture: x64
+          cache: 'maven'
+      - name: Instalar gettext
+        run: sudo apt-get update && sudo apt-get install -y gettext fonts-dejavu-core
+      - name: Compilar todo
+        run: mvn --batch-mode -DskipTests install 2>&1 | tee compilar.log
+      - name: Pruebas de Foliar e Indexar
+        if: always()
+        run: xvfb-run mvn --batch-mode -Djava.awt.headless=true -pl pdfsam-tools/pdfsam-foliado test 2>&1 | tee pruebas.log
+      - name: Guardar resultados en la rama "resultados"
+        if: always()
+        run: |
+          mkdir -p /tmp/res
+          cp compilar.log pruebas.log /tmp/res/ 2>/dev/null || true
+          cp -r pdfsam-tools/pdfsam-foliado/target/previas /tmp/res/ 2>/dev/null || true
+          cp -r pdfsam-tools/pdfsam-foliado/target/surefire-reports /tmp/res/ 2>/dev/null || true
+          cd /tmp/res
+          git init -q -b resultados
+          git config user.name "build"
+          git config user.email "build@localhost"
+          git add -A
+          git commit -q -m "Resultados ${GITHUB_SHA}"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" resultados
