@@ -77,6 +77,15 @@ class PantallasTest {
 
     static Scene escena(Pane p) {
         Scene s = new Scene(p, 1400, 860);
+        // el tema claro de PDFsam (leído de su carpeta, así las fotos se ven como en el programa)
+        File temas = new File("../../pdfsam-themes/src/main/resources/themes/light");
+        for (String css : List.of("colors.css", "theme.css", "tooltip.css", "progress.css", "list.css", "dialogs.css",
+                "combo.css", "scrollbars.css", "table.css", "theme.last.css")) {
+            File f = new File(temas, css);
+            if (f.isFile()) {
+                s.getStylesheets().add(f.toURI().toString());
+            }
+        }
         p.getStyleClass().addAll("pdfsam-container", "content-pane");
         return s;
     }
@@ -96,6 +105,7 @@ class PantallasTest {
         foto(s, "pantalla_foliar.png");
         Thread.sleep(2500);
         foto(s, "pantalla_foliar.png");
+        foto(s, "manual_foliar.png");
         enFx(() -> {
             panel.opcionesParaPrueba();
             return null;
@@ -104,6 +114,7 @@ class PantallasTest {
         foto(s, "pantalla_foliar_letras.png"); // acomoda la pantalla (sin ventana solo se acomoda al tomar la foto)
         Thread.sleep(2500);
         foto(s, "pantalla_foliar_letras.png");
+        foto(s, "manual_foliar_personalizar.png");
         assertNull(null);
     }
 
@@ -125,6 +136,7 @@ class PantallasTest {
         foto(s, "pantalla_indexar.png");
         Thread.sleep(2500);
         foto(s, "pantalla_indexar.png");
+        foto(s, "manual_indexar.png");
     }
 
     @Test
@@ -142,5 +154,29 @@ class PantallasTest {
         foto(s, "pantalla_girar.png");
         Thread.sleep(3000);
         foto(s, "pantalla_girar.png");
+        foto(s, "manual_girar.png");
+        enFx(() -> {
+            panel.paraPrueba();
+            return null;
+        });
+        Thread.sleep(1500);
+        foto(s, "manual_girar_eligiendo.png");
+        Thread.sleep(2500);
+        foto(s, "manual_girar_eligiendo.png");
+    }
+
+    @Test
+    void manual() throws Exception {
+        ManualPanel panel = enFx(ManualPanel::new);
+        Scene s = enFx(() -> escena(panel));
+        foto(s, "pantalla_manual.png");
+        Thread.sleep(1000);
+        foto(s, "pantalla_manual.png");
+        enFx(() -> {
+            panel.ir("girar");
+            return null;
+        });
+        Thread.sleep(500);
+        foto(s, "pantalla_manual_girar.png");
     }
 }

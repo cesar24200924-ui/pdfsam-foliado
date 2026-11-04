@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="es">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8"/>
 <title>Manual — Foliar, Indexar y Girar PDF (PDFsam)</title>
 <style>
   body { font-family: "Segoe UI", Arial, sans-serif; max-width: 900px; margin: 30px auto; padding: 0 20px; color: #222; line-height: 1.55; }
@@ -45,15 +45,18 @@ Los PDF originales <b>nunca</b> se modifican: el resultado siempre se guarda apa
 <div class="paso"><b>Paso 1.</b> Descargue el archivo <code>PDFsam-Foliar-Indexar-portable.zip</code>.</div>
 <div class="paso"><b>Paso 2.</b> Haga clic derecho sobre el ZIP → <b>Extraer todo…</b> → elija una carpeta (por ejemplo <code>Documentos\PDFsam</code>) → <b>Extraer</b>.</div>
 <div class="paso"><b>Paso 3.</b> Entre a la carpeta <code>PDFsam-Foliar-Indexar</code> y haga doble clic en <code>pdfsam.exe</code>. Ahí mismo está este manual.</div>
-<div class="paso"><b>Paso 4.</b> En el menú de la izquierda (o en la pantalla de inicio, en el grupo <b>Herramientas de edición</b>) aparecen <b>Foliar</b> e <b>Indexar PDF</b>.</div>
+<div class="paso"><b>Paso 4.</b> En el menú de la izquierda (o en la pantalla de inicio) aparecen <b>Foliar</b>, <b>Indexar PDF</b>, <b>Girar</b> y <b>Manual (Foliar, Indexar, Girar)</b>.</div>
 <div class="ojo"><b>Si Windows muestra “Windows protegió su PC”:</b> toque <b>Más información</b> → <b>Ejecutar de todas formas</b>. Sale porque el programa no tiene firma digital comprada; es normal en programas hechos a la medida.</div>
+<p><b>Este manual también está dentro del programa:</b> en el menú de PDFsam toque <b>Manual (Foliar, Indexar, Girar)</b>, o el botón <b>Manual</b> que tiene cada una de las tres herramientas.</p>
 <p>Para crear un acceso directo: clic derecho sobre <code>pdfsam.exe</code> → <b>Enviar a</b> → <b>Escritorio (crear acceso directo)</b>.</p>
 
 <h2 id="foliar">2. Foliar — paso a paso</h2>
 <p>Foliar pone la numeración tipo folio (<i>Folio 001, Folio 002…</i>) en cada hoja. Cada hoja lleva el folio <b>en la misma esquina tal como se lee</b>, aunque la hoja esté girada o sea de otro tamaño (carta, oficio, horizontal…).</p>
 
+<figure><img src="img/foliar.png" alt="La pantalla de Foliar: a la izquierda las opciones, a la derecha la vista previa con el folio ya puesto."/></figure>
+
 <h3>Paso 1 — Elegir el PDF</h3>
-<div class="paso">Toque <b>📄 Elegir PDF</b> (en el cuadro <b>1. PDF a foliar</b> o en el centro de la pantalla), o <b>arrastre</b> el PDF desde el Explorador de Windows hasta la vista previa.
+<div class="paso">Toque <b>Elegir PDF</b> (en el cuadro <b>1. PDF a foliar</b> o en el centro de la pantalla), o <b>arrastre</b> el PDF desde el Explorador de Windows hasta la vista previa.
 Si el PDF tiene contraseña, el programa se la pide.</div>
 <p>A la derecha aparece la primera hoja ya con el folio. Con <b>◀ Anterior</b> y <b>Siguiente ▶</b> recorre las hojas. Al lado se ve el tamaño de la hoja (ej. <i>Carta · vertical</i>).</p>
 
@@ -98,12 +101,12 @@ Si el PDF tiene contraseña, el programa se la pide.</div>
 <p>Vacío = todas. Puede escribir rangos: <code>3-50</code>, <code>1-10, 15, 20-</code> (<code>20-</code> quiere decir “de la 20 hasta el final”).</p>
 
 <h3>Paso 9 — Guardar</h3>
-<div class="paso">Toque <b>№ Foliar y guardar</b> (abajo a la izquierda, siempre visible). Elija dónde guardar; el nombre que sugiere es el original con <code>_foliado</code> al final. Al terminar puede tocar <b>Abrir el PDF</b> o <b>Abrir la carpeta</b>.</div>
+<div class="paso">Toque <b>Foliar y guardar</b> (abajo a la izquierda, siempre visible). Elija dónde guardar; el nombre que sugiere es el original con <code>_foliado</code> al final. Al terminar puede tocar <b>Abrir el PDF</b> o <b>Abrir la carpeta</b>.</div>
 
 <h2 id="lote">3. Foliar una carpeta o un ZIP completo</h2>
 <p>Sirve para foliar muchos PDF de una vez, por ejemplo un expediente con subcarpetas.</p>
 <div class="paso"><b>Paso 1.</b> Configure el folio como quiere (texto, posición, color, letra…). Esas opciones se usan para todos los archivos.</div>
-<div class="paso"><b>Paso 2.</b> Toque <b>📁 Foliar una carpeta o ZIP</b> → <b>Elegir carpeta</b> o <b>Elegir ZIP</b>. También puede arrastrar la carpeta o el ZIP a la vista previa.</div>
+<div class="paso"><b>Paso 2.</b> Toque <b>Foliar una carpeta o ZIP</b> → <b>Elegir carpeta</b> o <b>Elegir ZIP</b>. También puede arrastrar la carpeta o el ZIP a la vista previa.</div>
 <div class="paso"><b>Paso 3.</b> El programa pregunta si la numeración <b>sigue de un archivo al siguiente</b>, como un solo expediente:
 <ul><li><b>Sí:</b> el segundo PDF continúa donde terminó el primero (en orden de carpetas y nombres).</li>
 <li><b>No:</b> cada PDF empieza otra vez en el número de “Empieza en”.</li></ul></div>
@@ -122,8 +125,10 @@ Si el PDF tiene contraseña, el programa se la pide.</div>
   <li><b>Abajo:</b> numeración adicional opcional (“Página 1 de 10”…).</li>
 </ul>
 
+<figure><img src="img/indexar.png" alt="La pantalla de Indexar PDF: la lista de archivos, las leyendas y la vista previa con DPOT y el número del archivo con 1/5."/></figure>
+
 <h3>Paso 1 — Archivos PDF</h3>
-<div class="paso">Toque <b>📄 Agregar PDF</b> (puede elegir varios) o <b>📁 Agregar carpeta</b> (entran todos los PDF de la carpeta y de sus subcarpetas). También puede arrastrarlos a la lista o a la vista previa. <b>🗑 Limpiar</b> vacía la lista.
+<div class="paso">Toque <b>Agregar PDF</b> (puede elegir varios) o <b>Agregar carpeta</b> (entran todos los PDF de la carpeta y de sus subcarpetas). También puede arrastrarlos a la lista o a la vista previa. <b>Limpiar</b> vacía la lista.
 Haga clic en un archivo de la lista para verlo en la vista previa.</div>
 
 <h3>Paso 2 — Leyendas izquierdas</h3>
@@ -149,23 +154,24 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
 <p>Igual que en Foliar (ver <a href="#letras">Letras</a>). El tamaño normal es 20.</p>
 
 <h3>Paso 5 — Guardar</h3>
-<div class="paso">Toque <b>🏷 Indexar y guardar</b> y elija la carpeta de salida. Se crea <b>la misma estructura de subcarpetas con los mismos nombres</b>. No se puede elegir la carpeta donde están los originales (así nunca se reemplazan): use una carpeta nueva.</div>
+<div class="paso">Toque <b>Indexar y guardar</b> y elija la carpeta de salida. Se crea <b>la misma estructura de subcarpetas con los mismos nombres</b>. No se puede elegir la carpeta donde están los originales (así nunca se reemplazan): use una carpeta nueva.</div>
 <p>Las opciones de Indexar (y de Foliar) se recuerdan para la próxima vez.</p>
 
 <h2 id="personalizar">5. Personalizar hojas (solo algunas hojas)</h2>
 <p>Lo general se aplica a todas las hojas. Con <b>Personalizar hojas</b> cambia solo algunas, por ejemplo una hoja donde el folio tapa una firma.</p>
-<div class="paso"><b>Paso 1.</b> Vaya a la hoja con ◀ ▶ y toque <b>✎ Personalizar esta hoja</b>. O toque <b>☰ Personalizar varias…</b> y escriba las hojas (ej. <code>5, 8-12</code>).</div>
+<div class="paso"><b>Paso 1.</b> Vaya a la hoja con ◀ ▶ y toque <b>Personalizar esta hoja</b>. O toque <b>Personalizar varias…</b> y escriba las hojas (ej. <code>5, 8-12</code>).</div>
 <div class="paso"><b>Paso 2.</b> Aparece un panel amarillo con lo que puede cambiar en esas hojas:
 <ul>
   <li><b>No poner nada en estas hojas:</b> esas hojas quedan sin folio. En Foliar, además, <b>no cuentan</b> para la numeración.</li>
   <li><b>Mover:</b> con las flechas ▲ ▼ ◀ ▶ (cada clic ≈ 1 mm) o <b>arrastrando con el ratón</b> en la vista previa (se ve una flecha azul). <b>A su lugar</b> lo regresa.</li>
   <li><b>Color, Tamaño, Letra, Negrita</b> (y <b>Con recuadro</b> en Foliar).</li>
 </ul></div>
-<div class="paso"><b>Paso 3.</b> Toque <b>✓ Listo</b>. En la barra se ve la lista de hojas personalizadas, y en la hoja dice <i>✎ personalizada</i>.</div>
+<figure><img src="img/foliar_personalizar.png" alt="Personalizando la hoja 2: el panel amarillo con No poner nada, Mover, Color, Tamaño, Letra y Recuadro."/></figure>
+<div class="paso"><b>Paso 3.</b> Toque <b>Listo</b>. En la barra se ve la lista de hojas personalizadas, y en la hoja dice <i>✎ personalizada</i>.</div>
 <ul>
-  <li><b>⇉ Aplicar a todas las hojas de este PDF:</b> copia esos mismos cambios a todas las hojas.</li>
-  <li><b>↺ Quitar personalización:</b> esas hojas vuelven a lo general.</li>
-  <li><b>✕ Quitar todas las personalizaciones:</b> todas vuelven a lo general.</li>
+  <li><b>Aplicar a todas las hojas de este PDF:</b> copia esos mismos cambios a todas las hojas.</li>
+  <li><b>Quitar personalización:</b> esas hojas vuelven a lo general.</li>
+  <li><b>Quitar todas las personalizaciones:</b> todas vuelven a lo general.</li>
 </ul>
 <p>En Indexar, <b>cada PDF de la lista tiene sus propias hojas personalizadas</b>.</p>
 
@@ -180,6 +186,8 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
 <h2 id="girar">7. Girar — viendo las hojas en miniatura</h2>
 <p>El <b>Girar</b> de PDFsam ahora es interactivo: ve todas las hojas en pequeño (miniaturas) y las gira viéndolas, una por una, varias o todas. Además puede <b>quitar</b> hojas, <b>duplicarlas</b>, <b>cambiarlas de lugar</b>, <b>insertar otro PDF</b> u <b>hojas en blanco</b> y <b>guardar solo las hojas elegidas</b> como un PDF nuevo. El PDF original no se toca: se guarda una copia.</p>
 
+<figure><img src="img/girar.png" alt="La pantalla de Girar: arriba los botones, al centro todas las hojas en miniatura y a la derecha la selección."/></figure>
+
 <h3>Paso 1 — Abrir el PDF</h3>
 <div class="paso">En el menú de PDFsam toque <b>Girar</b>. Luego <b>Elegir PDF</b>, o arrastre el PDF a la pantalla. Aparecen todas las hojas en miniatura (las imágenes se van cargando, primero las que se están viendo).</div>
 
@@ -193,6 +201,7 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
 <tr><td>Quitar la selección</td><td>Clic en un espacio vacío entre las hojas.</td></tr>
 </table>
 <p>A la derecha, en <b>Selección</b>, dice qué hojas eligió y cuáles ya están giradas.</p>
+<figure><img src="img/girar_eligiendo.png" alt="Hojas elegidas (con borde azul), una girada (etiqueta amarilla), una duplicada y una hoja en blanco insertada."/></figure>
 
 <h3>Paso 3 — Girar</h3>
 <ul>
@@ -255,7 +264,7 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
 <details><summary>La carátula no debe llevar folio. ¿Cómo hago?</summary>
 <p>En <b>7. Más opciones</b> → <b>Hojas sin folio al inicio</b> ponga 1. La hoja 2 será el Folio 001 (o el número de “Empieza en”).</p></details>
 <details><summary>Quiero que una hoja del medio no lleve folio y que no cuente.</summary>
-<p>Vaya a esa hoja → <b>✎ Personalizar esta hoja</b> → marque <b>No poner nada en estas hojas</b> → <b>✓ Listo</b>. Esa hoja no lleva folio y la siguiente sigue el número.</p></details>
+<p>Vaya a esa hoja → <b>Personalizar esta hoja</b> → marque <b>No poner nada en estas hojas</b> → <b>Listo</b>. Esa hoja no lleva folio y la siguiente sigue el número.</p></details>
 <details><summary>¿Cuál es la diferencia entre “Hojas sin folio al inicio” y “Hojas a foliar”?</summary>
 <p>“Hojas sin folio al inicio” salta las primeras hojas. “Hojas a foliar” elige exactamente qué hojas llevan folio (ej. <code>3-50</code>); las demás quedan sin folio.</p></details>
 <details><summary>El folio tapa un sello en una sola hoja.</summary>

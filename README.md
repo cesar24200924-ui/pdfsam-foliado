@@ -6,7 +6,7 @@ Versión modificada de [PDFsam Basic](https://github.com/torakiki/pdfsam) con es
 - **Girar** (reemplaza al de PDFsam): con miniaturas, girar, quitar, duplicar y arrastrar hojas, insertar otro PDF u hojas en blanco, guardar solo las elegidas, ver en grande, deshacer/rehacer y carpetas o ZIP completos.
 - **Indexar PDF**: pone leyendas en cada hoja de muchos PDF a la vez (DPOT arriba a la izquierda, parte del nombre del archivo con 1/10 arriba a la derecha, pie de página, numeración abajo), respetando las subcarpetas.
 
-El código de las herramientas nuevas está en `pdfsam-tools/pdfsam-foliado`. El manual está en `docs/Manual-Foliar-Indexar.html`.
+El código de las herramientas nuevas está en `pdfsam-tools/pdfsam-foliado`. El manual (con imágenes) está en `pdfsam-tools/pdfsam-foliado/src/main/resources/org/pdfsam/tools/foliado/manual` y también dentro del programa (menú "Manual").
 
 ## Programa portable para Windows
 

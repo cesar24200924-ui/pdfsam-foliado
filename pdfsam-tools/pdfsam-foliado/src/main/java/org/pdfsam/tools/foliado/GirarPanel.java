@@ -180,7 +180,8 @@ class GirarPanel extends BorderPane {
         zoom.setAlignment(Pos.CENTER_LEFT);
 
         FlowPane barra = new FlowPane(6, 6, elegir, lote, sep(), izq, der, voltear, todasIzq, todasDer, sep(),
-                duplicar, quitar, insertar, blanco, sep(), todo, btnDeshacer, btnRehacer, sep(), zoom, guardar);
+                duplicar, quitar, insertar, blanco, sep(), todo, btnDeshacer, btnRehacer, sep(), zoom, guardar,
+                Ui.boton("Manual", UniconsLine.BOOK_OPEN, () -> ManualPanel.abrir(this, "girar")));
         barra.setAlignment(Pos.CENTER_LEFT);
         barra.setPadding(new Insets(8));
         lblArchivo.setStyle("-fx-font-weight: bold;");
@@ -1103,6 +1104,19 @@ class GirarPanel extends BorderPane {
                     (h, t) -> p.poner(t == 0 ? 1 : (double) h / t, "Hoja " + h + " de " + t));
             return salida;
         }, r -> Ui.terminado(this, r, "PDF guardado", lista.size() + (lista.size() == 1 ? " hoja" : " hojas")), null);
+    }
+
+    /** Solo para la prueba de pantallas: hojas elegidas, una girada, una duplicada y una en blanco. */
+    void paraPrueba() {
+        girarUna(1, 90);
+        duplicar(List.of(3));
+        seleccion.clear();
+        seleccion.add(0);
+        hojaEnBlanco();
+        seleccion.clear();
+        seleccion.add(2);
+        seleccion.add(3);
+        actualizarSeleccion();
     }
 
     // ------------------------------------------------------------ carpetas y ZIP

@@ -207,7 +207,9 @@ class FoliarPanel extends BorderPane {
         btnFoliar.getStyleClass().addAll("footer-button", "run-button");
         btnFoliar.setMaxWidth(Double.MAX_VALUE);
         btnFoliar.setDisable(true);
-        VBox abajo = new VBox(btnFoliar);
+        Button manual = Ui.boton("Manual", UniconsLine.BOOK_OPEN, () -> ManualPanel.abrir(this, "foliar"));
+        manual.setMaxWidth(Double.MAX_VALUE);
+        VBox abajo = new VBox(6, btnFoliar, manual);
         abajo.setPadding(new Insets(8));
         VBox izq = new VBox(scroll, abajo);
         izq.setPrefWidth(420);

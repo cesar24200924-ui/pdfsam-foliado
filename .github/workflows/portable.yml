@@ -39,11 +39,13 @@ jobs:
           cd armar
           7z x ../pdfsam-basic/target/pdfsam-basic-*-windows*.zip > /dev/null
           mv pdfsam-basic-*/pdfsam "PDFsam-Foliar-Indexar"
-          cp ../docs/Manual-Foliar-Indexar.html "PDFsam-Foliar-Indexar/"
+          M=../pdfsam-tools/pdfsam-foliado/src/main/resources/org/pdfsam/tools/foliado/manual
+          mkdir -p "PDFsam-Foliar-Indexar/Manual"
+          cp -r $M/* "PDFsam-Foliar-Indexar/Manual/"
           7z a -tzip "../entrega/PDFsam-Foliar-Indexar-portable.zip" "PDFsam-Foliar-Indexar" > /dev/null
           cd ..
           git archive --format=zip -o "entrega/PDFsam-Foliar-Indexar-codigo-fuente.zip" HEAD
-          cp docs/Manual-Foliar-Indexar.html entrega/
+          cd armar/PDFsam-Foliar-Indexar && 7z a -tzip "../../entrega/Manual-Foliar-Indexar-Girar.zip" Manual > /dev/null && cd ../..
           ls -la entrega
       - name: Publicar
         uses: softprops/action-gh-release@v2

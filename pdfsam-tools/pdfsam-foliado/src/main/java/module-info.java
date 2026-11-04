@@ -10,6 +10,7 @@ import org.pdfsam.model.tool.Tool;
 import org.pdfsam.tools.foliado.FoliarTool;
 import org.pdfsam.tools.foliado.IndexarTool;
 import org.pdfsam.tools.foliado.GirarTool;
+import org.pdfsam.tools.foliado.ManualTool;
 
 module org.pdfsam.tools.foliado {
     exports org.pdfsam.tools.foliado;
@@ -19,11 +20,12 @@ module org.pdfsam.tools.foliado {
     requires javafx.graphics;
     requires javafx.controls;
     requires java.desktop;
+    requires java.xml;
     requires org.sejda.sambox;
     requires org.sejda.io;
     requires org.apache.fontbox;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.unicons;
 
-    provides Tool with FoliarTool, IndexarTool, GirarTool;
+    provides Tool with FoliarTool, IndexarTool, GirarTool, ManualTool;
 }

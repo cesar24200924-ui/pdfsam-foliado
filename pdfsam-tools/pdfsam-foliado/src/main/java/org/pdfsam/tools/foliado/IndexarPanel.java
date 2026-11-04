@@ -226,7 +226,9 @@ class IndexarPanel extends BorderPane {
         btnIndexar.getStyleClass().addAll("footer-button", "run-button");
         btnIndexar.setMaxWidth(Double.MAX_VALUE);
         btnIndexar.setDisable(true);
-        VBox abajo = new VBox(btnIndexar);
+        Button manual = Ui.boton("Manual", UniconsLine.BOOK_OPEN, () -> ManualPanel.abrir(this, "indexar"));
+        manual.setMaxWidth(Double.MAX_VALUE);
+        VBox abajo = new VBox(6, btnIndexar, manual);
         abajo.setPadding(new Insets(8));
         VBox izq = new VBox(scroll, abajo);
         izq.setPrefWidth(430);
