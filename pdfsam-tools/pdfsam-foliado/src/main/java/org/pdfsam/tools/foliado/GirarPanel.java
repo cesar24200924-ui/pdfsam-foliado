@@ -1131,7 +1131,7 @@ class GirarPanel extends BorderPane {
         Label t = new Label("Se giran TODAS las hojas de todos los PDF.");
         t.setStyle("-fx-font-weight: bold;");
         Label nombre = new Label(origen.getName());
-        nombre.setStyle("-fx-text-fill: -fx-accent; -fx-font-weight: bold;");
+        nombre.setStyle("-fx-text-fill: #0d33a6; -fx-font-weight: bold;");
         ToggleGroup g = new ToggleGroup();
         RadioButton r90 = new RadioButton("A la derecha (90°)");
         RadioButton r270 = new RadioButton("A la izquierda (90°)");

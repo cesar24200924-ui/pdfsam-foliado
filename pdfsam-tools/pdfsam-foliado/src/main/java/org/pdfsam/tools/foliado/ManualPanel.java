@@ -412,7 +412,7 @@ class ManualPanel extends BorderPane {
         if ("a".equals(tag)) {
             String href = e.getAttribute("href");
             Hyperlink h = new Hyperlink(e.getTextContent().trim());
-            h.setStyle("-fx-font-size: " + base + "px; -fx-padding: 0;");
+            h.setStyle("-fx-font-size: " + base + "px; -fx-padding: 0; -fx-text-fill: #0d33a6; -fx-underline: true;");
             if (href.startsWith("#")) {
                 h.setOnAction(x -> ir(href.substring(1)));
             }

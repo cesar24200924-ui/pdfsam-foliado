@@ -192,7 +192,7 @@ class IndexarPanel extends BorderPane {
         HBox fd = new HBox(10, Controles.conEtiqueta("Separador (espacio, - o _)", delimitador),
                 Controles.conEtiqueta("Pedazo (0 = el primero)", bloque));
         lblEjemplo.setWrapText(true);
-        lblEjemplo.setStyle("-fx-text-fill: -fx-accent; -fx-font-size: 0.92em;");
+        lblEjemplo.setStyle("-fx-text-fill: #0d33a6; -fx-font-size: 0.92em;");
         VBox sub = indentar(modoNombre, indentar(fd, lblEjemplo), modoLibre, indentar(derTexto), derNumeros);
         VBox sub2 = indentar(Controles.conEtiqueta("Texto antes del número en letras", letrasTexto), Controles.nota(
                 "Va justo debajo de la leyenda de arriba a la derecha, con el número de cada hoja, en español."));

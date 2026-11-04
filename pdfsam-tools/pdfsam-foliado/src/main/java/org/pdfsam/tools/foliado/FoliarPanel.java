@@ -137,7 +137,7 @@ class FoliarPanel extends BorderPane {
         g2.add(Controles.conEtiqueta("Entre el número y el total", palabraDe), 0, 0);
         g2.add(Controles.conEtiqueta("Texto después del número", sufijo), 1, 0);
         asiQueda.setWrapText(true);
-        asiQueda.setStyle("-fx-font-weight: bold; -fx-text-fill: -fx-accent;");
+        asiQueda.setStyle("-fx-font-weight: bold; -fx-text-fill: #0d33a6;");
         VBox pTexto = Controles.bloque(Controles.titulo("Texto antes del número"), prefijo,
                 Controles.nota("Ej.: 'Folio ', 'Pág. ', 'Fol. ' o vacío para solo el número"), g, conTotal, g2,
                 asiQueda, Controles.nota(

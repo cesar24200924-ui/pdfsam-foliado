@@ -87,6 +87,10 @@ class PantallasTest {
             }
         }
         p.getStyleClass().addAll("pdfsam-container", "content-pane");
+        // en una ventana de verdad (así la pantalla se dibuja completa antes de cada foto)
+        javafx.stage.Stage st = new javafx.stage.Stage();
+        st.setScene(s);
+        st.show();
         return s;
     }
 
