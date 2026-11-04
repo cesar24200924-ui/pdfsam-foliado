@@ -11,6 +11,7 @@ package org.pdfsam.tools.foliado;
 import javafx.application.Platform;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Node;
@@ -24,8 +25,10 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
@@ -44,6 +47,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.unicons.UniconsLine;
 import org.pdfsam.ui.components.support.Style;
 
@@ -61,27 +65,40 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Girar PDF viendo las hojas en miniatura (igual que en el gestor de PDF):
+ * Girar (y organizar) PDF viendo las hojas en miniatura:
  * <ul>
  * <li>Clic: elegir una hoja. Ctrl + clic: varias. Shift + clic: un rango. Ctrl + A: todas.</li>
- * <li>Botones al pasar el ratón sobre la hoja: girar a la izquierda o a la derecha.</li>
- * <li>Arrastrar una hoja: cambiarla de lugar.</li>
- * <li>Doble clic: verla en grande (y girarla ahí mismo).</li>
- * <li>Deshacer / Rehacer (Ctrl + Z / Ctrl + Y).</li>
+ * <li>Botones al pasar el ratón sobre la hoja: girar izquierda/derecha, duplicar, quitar.</li>
+ * <li>Arrastrar una hoja: cambiarla de lugar. Doble clic: verla en grande.</li>
+ * <li>Insertar otro PDF u hoja en blanco, guardar solo las elegidas como PDF nuevo.</li>
+ * <li>Deshacer / Rehacer (Ctrl + Z / Ctrl + Y). Supr: quitar las elegidas.</li>
  * <li>Girar una carpeta o un ZIP completo, respetando las subcarpetas.</li>
  * </ul>
  * El PDF original nunca se modifica: se guarda una copia.
  */
 class GirarPanel extends BorderPane {
 
-    /** Una hoja en pantalla: de qué hoja del PDF viene y cuánto se giró. */
+    /** Una hoja en pantalla: de qué PDF y qué hoja viene (archivo null = hoja en blanco) y cuánto se giró. */
     private static final class Hoja {
-        final int origen;
+        final File archivo;
+        final int pagina;
         int giro;
+        final float anchoBlanco, altoBlanco;
 
-        Hoja(int origen, int giro) {
-            this.origen = origen;
+        Hoja(File archivo, int pagina, int giro, float anchoBlanco, float altoBlanco) {
+            this.archivo = archivo;
+            this.pagina = pagina;
             this.giro = giro;
+            this.anchoBlanco = anchoBlanco;
+            this.altoBlanco = altoBlanco;
+        }
+
+        Hoja copia() {
+            return new Hoja(archivo, pagina, giro, anchoBlanco, altoBlanco);
+        }
+
+        String clave() {
+            return archivo == null ? "blanco:" + anchoBlanco + "x" + altoBlanco : archivo.getAbsolutePath() + "#" + pagina;
         }
     }
 
@@ -92,17 +109,18 @@ class GirarPanel extends BorderPane {
     });
 
     private File archivo;
-    private String clave;
-    private Motor.Previa previa;
+    /** PDF abiertos para ver las miniaturas (el principal y los insertados) */
+    private final Map<File, Motor.Previa> previas = new HashMap<>();
+    private final Map<File, String> claves = new HashMap<>();
     private final List<Hoja> hojas = new ArrayList<>();
     private final Set<Integer> seleccion = new TreeSet<>(); // posiciones en pantalla
     private Integer ultimo;
-    private final Deque<List<int[]>> deshacer = new ArrayDeque<>(), rehacer = new ArrayDeque<>();
+    private final Deque<List<Hoja>> deshacer = new ArrayDeque<>(), rehacer = new ArrayDeque<>();
 
-    /** miniaturas ya hechas: hoja del original -> imagen (y el ancho con que se hizo) */
-    private final Map<Integer, Image> imagenes = new HashMap<>();
-    private final Map<Integer, Integer> anchoImagen = new HashMap<>();
-    private final Set<Integer> pedidas = new LinkedHashSet<>();
+    /** miniaturas ya hechas: clave de la hoja -> imagen (y el ancho con que se hizo) */
+    private final Map<String, Image> imagenes = new HashMap<>();
+    private final Map<String, Integer> anchoImagen = new HashMap<>();
+    private final Set<String> pedidas = new LinkedHashSet<>();
 
     private final FlowPane cuadricula = new FlowPane(14, 14);
     private final ScrollPane scroll = new ScrollPane(cuadricula);
@@ -112,7 +130,7 @@ class GirarPanel extends BorderPane {
     private final Label lblArchivo = new Label("");
     private final Label lblSel = new Label("Ninguna hoja elegida.");
     private final Label lblCambios = Controles.nota("");
-    private final Button btnGuardar, btnDeshacer, btnRehacer;
+    private final Button btnDeshacer, btnRehacer;
     private final List<Button> conPdf = new ArrayList<>();
     private int origenArrastre = -1;
 
@@ -141,29 +159,28 @@ class GirarPanel extends BorderPane {
         menu.getItems().addAll(mc, mz);
         lote.setOnAction(e -> menu.show(lote, Side.BOTTOM, 0, 0));
 
-        Button izq = conPdf(Ui.boton("Girar izq.", UniconsLine.REDO, () -> girarSeleccion(-90)));
-        izq.getGraphic().setScaleX(-1); // la flecha hacia la izquierda
+        Button izq = conPdf(espejo(Ui.boton("Girar izq.", UniconsLine.REDO, () -> girarSeleccion(-90))));
         Button der = conPdf(Ui.boton("Girar der.", UniconsLine.REDO, () -> girarSeleccion(90)));
         Button voltear = conPdf(Ui.boton("Voltear 180°", UniconsLine.SYNC, () -> girarSeleccion(180)));
-        Button todasIzq = conPdf(Ui.boton("Todas a la izq.", UniconsLine.REDO, () -> girarTodas(-90)));
-        todasIzq.getGraphic().setScaleX(-1);
+        Button todasIzq = conPdf(espejo(Ui.boton("Todas a la izq.", UniconsLine.REDO, () -> girarTodas(-90))));
         Button todasDer = conPdf(Ui.boton("Todas a la der.", UniconsLine.REDO, () -> girarTodas(90)));
+        Button duplicar = conPdf(Ui.boton("Duplicar", UniconsLine.COPY_ALT, this::duplicarSeleccion));
+        Button quitar = conPdf(Ui.boton("Quitar", UniconsLine.TRASH_ALT, this::quitarSeleccion));
+        Button insertar = conPdf(Ui.boton("Insertar PDF", UniconsLine.FILE_PLUS_ALT, this::insertarPdf));
+        Button blanco = conPdf(Ui.boton("Hoja en blanco", UniconsLine.FILE_BLANK, this::hojaEnBlanco));
         Button todo = conPdf(Ui.boton("Seleccionar todo", UniconsLine.CHECK_SQUARE, this::seleccionarTodo));
-        btnDeshacer = conPdf(Ui.boton("Deshacer", UniconsLine.REDO, this::deshacer));
-        btnDeshacer.getGraphic().setScaleX(-1);
+        btnDeshacer = conPdf(espejo(Ui.boton("Deshacer", UniconsLine.REDO, this::deshacer)));
         btnRehacer = conPdf(Ui.boton("Rehacer", UniconsLine.REDO, this::rehacer));
-        btnGuardar = conPdf(Ui.boton("Guardar PDF", UniconsLine.SAVE, this::guardar));
-        btnGuardar.getStyleClass().addAll("footer-button", "run-button");
+        Button guardar = conPdf(Ui.boton("Guardar PDF", UniconsLine.SAVE, this::guardar));
+        guardar.getStyleClass().addAll("footer-button", "run-button");
 
         tamano.setPrefWidth(130);
         tamano.valueProperty().addListener((o, a, b) -> redibujar());
         HBox zoom = new HBox(6, new Label("Tamaño"), tamano);
         zoom.setAlignment(Pos.CENTER_LEFT);
 
-        FlowPane barra = new FlowPane(6, 6, elegir, lote, new Separator(javafx.geometry.Orientation.VERTICAL), izq, der,
-                voltear, new Separator(javafx.geometry.Orientation.VERTICAL), todasIzq, todasDer,
-                new Separator(javafx.geometry.Orientation.VERTICAL), todo, btnDeshacer, btnRehacer,
-                new Separator(javafx.geometry.Orientation.VERTICAL), zoom, btnGuardar);
+        FlowPane barra = new FlowPane(6, 6, elegir, lote, sep(), izq, der, voltear, todasIzq, todasDer, sep(),
+                duplicar, quitar, insertar, blanco, sep(), todo, btnDeshacer, btnRehacer, sep(), zoom, guardar);
         barra.setAlignment(Pos.CENTER_LEFT);
         barra.setPadding(new Insets(8));
         lblArchivo.setStyle("-fx-font-weight: bold;");
@@ -229,22 +246,29 @@ class GirarPanel extends BorderPane {
         lblSel.setWrapText(true);
         Label ayuda = new Label("Arrastre una hoja para cambiarla de lugar. Doble clic para verla en grande. "
                 + "Ctrl + clic para elegir varias. Shift + clic para un rango. Al pasar el ratón sobre una hoja "
-                + "aparecen los botones para girarla.");
+                + "aparecen los botones para girarla, duplicarla o quitarla. Supr quita las elegidas.");
         ayuda.setWrapText(true);
         ayuda.setStyle("-fx-background-color: rgba(43,125,233,0.12); -fx-padding: 8; -fx-background-radius: 6;");
         Button sDer = conPdf(Ui.boton("Girar seleccionadas a la der.", UniconsLine.REDO, () -> girarSeleccion(90)));
-        Button sIzq = conPdf(Ui.boton("Girar seleccionadas a la izq.", UniconsLine.REDO, () -> girarSeleccion(-90)));
-        sIzq.getGraphic().setScaleX(-1);
+        Button sIzq = conPdf(
+                espejo(Ui.boton("Girar seleccionadas a la izq.", UniconsLine.REDO, () -> girarSeleccion(-90))));
+        Button sQuitar = conPdf(Ui.boton("Quitar seleccionadas", UniconsLine.TRASH_ALT, this::quitarSeleccion));
+        sQuitar.setStyle("-fx-text-fill: #c62828;");
+        Button sExtraer = conPdf(Ui.boton("Guardar selección como PDF", UniconsLine.FILE_EXPORT, this::extraer));
         Button sLote = Ui.boton("Girar una carpeta o ZIP", UniconsLine.FOLDER, () -> menu.show(lote, Side.BOTTOM, 0, 0));
-        for (Button b : List.of(sDer, sIzq, sLote)) {
+        for (Button b : List.of(sDer, sIzq, sQuitar, sExtraer, sLote)) {
             b.setMaxWidth(Double.MAX_VALUE);
         }
-        VBox panel = new VBox(8, titulo, lblSel, lblCambios, ayuda, sDer, sIzq, sLote);
+        VBox panel = new VBox(8, titulo, lblSel, lblCambios, ayuda, sDer, sIzq, sQuitar, sExtraer, sLote);
         panel.setPadding(new Insets(14));
         panel.setPrefWidth(270);
         panel.setMinWidth(230);
         panel.setStyle("-fx-border-color: transparent transparent transparent rgba(127,127,127,0.35);");
-        setRight(panel);
+        ScrollPane scrollPanel = new ScrollPane(panel);
+        scrollPanel.setFitToWidth(true);
+        scrollPanel.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPanel.setPrefWidth(285);
+        setRight(scrollPanel);
 
         // teclas
         sceneProperty().addListener((o, a, s) -> {
@@ -257,8 +281,25 @@ class GirarPanel extends BorderPane {
                         () -> siVisible(this::seleccionarTodo));
             }
         });
+        // Supr: solo cuando el foco está en las miniaturas (para no borrar hojas al escribir en otra parte)
+        scroll.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.DELETE && !seleccion.isEmpty()) {
+                quitarSeleccion();
+                e.consume();
+            }
+        });
         mostrarZona(true);
         actualizarBotones();
+    }
+
+    private static Separator sep() {
+        return new Separator(Orientation.VERTICAL);
+    }
+
+    /** El ícono de "girar a la derecha" al revés = a la izquierda (o deshacer). */
+    private static Button espejo(Button b) {
+        b.getGraphic().setScaleX(-1);
+        return b;
     }
 
     private Button conPdf(Button b) {
@@ -267,7 +308,7 @@ class GirarPanel extends BorderPane {
     }
 
     private void siVisible(Runnable r) {
-        if (getScene() != null && isVisible() && getParent() != null && previa != null) {
+        if (getScene() != null && getParent() != null && archivo != null) {
             r.run();
         }
     }
@@ -301,56 +342,80 @@ class GirarPanel extends BorderPane {
             Ui.aviso(this, "Arrastre o elija un archivo PDF.");
             return;
         }
-        if (previa != null && hayCambios() && !Ui.pregunta(this,
-                "Tiene cambios sin guardar en el PDF que está abierto. ¿Quiere abrir el otro de todas formas?",
-                "Cambios sin guardar")) {
+        if (archivo != null) {
+            // ya hay un PDF abierto: ¿abrir este otro o insertarlo?
+            int r = Ui.elegir(this, "Ya hay un PDF abierto", "¿Qué quiere hacer con \"" + pdf.getName() + "\"?",
+                    "Insertar sus hojas", "Abrir en lugar del otro");
+            if (r < 0) {
+                return;
+            }
+            if (r == 0) {
+                insertar(pdf);
+                return;
+            }
+            if (hayCambios() && !Ui.pregunta(this,
+                    "Tiene cambios sin guardar en el PDF que está abierto. ¿Quiere abrir el otro de todas formas?",
+                    "Cambios sin guardar")) {
+                return;
+            }
+        }
+        Motor.Previa p = abrirPrevia(pdf);
+        if (p == null) {
             return;
         }
-        String c = null;
-        if (Motor.pideClave(pdf)) {
+        cerrarTodo();
+        previas.put(pdf, p);
+        archivo = pdf;
+        hojas.clear();
+        for (int i = 0; i < p.hojas(); i++) {
+            hojas.add(new Hoja(pdf, i, 0, 0, 0));
+        }
+        seleccion.clear();
+        ultimo = null;
+        deshacer.clear();
+        rehacer.clear();
+        imagenes.clear();
+        anchoImagen.clear();
+        pedidas.clear();
+        lblArchivo.setText(pdf.getName() + "  ·  " + p.hojas() + " hojas");
+        mostrarZona(false);
+        actualizarSeleccion();
+    }
+
+    /** Abre un PDF para ver sus hojas (pide la contraseña si tiene). null si no se pudo. */
+    private Motor.Previa abrirPrevia(File pdf) {
+        String c = claves.get(pdf);
+        if (c == null && Motor.pideClave(pdf)) {
             c = Ui.pedirClave(this, pdf.getName(), null);
             if (c == null) {
-                return;
+                return null;
             }
         }
         try {
             Motor.Previa p = new Motor.Previa(pdf, c);
-            cerrarPrevia();
-            previa = p;
-            archivo = pdf;
-            clave = c;
-            hojas.clear();
-            for (int i = 0; i < p.hojas(); i++) {
-                hojas.add(new Hoja(i, 0));
+            if (c != null) {
+                claves.put(pdf, c);
             }
-            seleccion.clear();
-            ultimo = null;
-            deshacer.clear();
-            rehacer.clear();
-            imagenes.clear();
-            anchoImagen.clear();
-            pedidas.clear();
-            lblArchivo.setText(pdf.getName() + "  ·  " + p.hojas() + " hojas");
-            mostrarZona(false);
-            redibujar();
-            actualizarSeleccion();
+            return p;
         } catch (Exception e) {
             Ui.error(this, Ui.textoError(e));
+            return null;
         }
     }
 
-    private void cerrarPrevia() {
-        if (previa != null) {
-            Motor.Previa vieja = previa;
-            previa = null;
-            HILO.submit(() -> {
+    private void cerrarTodo() {
+        List<Motor.Previa> viejas = new ArrayList<>(previas.values());
+        previas.clear();
+        claves.clear();
+        HILO.submit(() -> {
+            for (Motor.Previa v : viejas) {
                 try {
-                    vieja.close();
+                    v.close();
                 } catch (Exception e) {
                     // nada
                 }
-            });
-        }
+            }
+        });
     }
 
     // ------------------------------------------------------------ miniaturas
@@ -369,6 +434,25 @@ class GirarPanel extends BorderPane {
         actualizarBotones();
     }
 
+    private String detalle(Hoja h, int pos) {
+        if (h.archivo == null) {
+            return "  (en blanco)";
+        }
+        if (!h.archivo.equals(archivo)) {
+            return "  (" + Motor.sinExtension(h.archivo.getName()) + ", hoja " + (h.pagina + 1) + ")";
+        }
+        int veces = 0;
+        for (int i = 0; i < pos; i++) {
+            if (hojas.get(i).clave().equals(h.clave())) {
+                veces++;
+            }
+        }
+        if (veces > 0) {
+            return "  (copia de " + (h.pagina + 1) + ")";
+        }
+        return h.pagina != pos ? "  (antes " + (h.pagina + 1) + ")" : "";
+    }
+
     private Node celda(int pos) {
         Hoja h = hojas.get(pos);
         int lado = lado();
@@ -378,7 +462,7 @@ class GirarPanel extends BorderPane {
         iv.setFitHeight(lado - 12);
         iv.setSmooth(true);
         iv.setRotate(h.giro);
-        Image img = imagenes.get(h.origen);
+        Image img = h.archivo == null ? blanco(h) : imagenes.get(h.clave());
         if (img != null) {
             iv.setImage(img);
         }
@@ -391,15 +475,16 @@ class GirarPanel extends BorderPane {
                 + "-fx-border-color: " + (elegida ? "#2b7de9" : "rgba(0,0,0,0.18)") + "; -fx-border-width: "
                 + (elegida ? 3 : 1) + "; -fx-background-radius: 4; -fx-border-radius: 4;");
         if (img == null) {
-            Label cargando = new Label("Hoja " + (h.origen + 1) + "…");
+            Label cargando = new Label("Hoja " + (h.pagina + 1) + "…");
             cargando.setOpacity(0.5);
             marco.getChildren().add(cargando);
         }
 
         // botones al pasar el ratón
-        Button bi = botonChico(UniconsLine.REDO, "Girar a la izquierda", true, () -> girarUna(pos, -90));
-        Button bd = botonChico(UniconsLine.REDO, "Girar a la derecha", false, () -> girarUna(pos, 90));
-        HBox botones = new HBox(4, bi, bd);
+        HBox botones = new HBox(3, botonChico(UniconsLine.REDO, "Girar a la izquierda", true, () -> girarUna(pos, -90)),
+                botonChico(UniconsLine.REDO, "Girar a la derecha", false, () -> girarUna(pos, 90)),
+                botonChico(UniconsLine.COPY_ALT, "Duplicar", false, () -> duplicar(List.of(pos))),
+                botonChico(UniconsLine.TRASH_ALT, "Quitar", false, () -> quitar(List.of(pos))));
         botones.setAlignment(Pos.TOP_CENTER);
         botones.setPadding(new Insets(4));
         botones.setPickOnBounds(false);
@@ -415,8 +500,8 @@ class GirarPanel extends BorderPane {
             marco.getChildren().add(g);
         }
 
-        Label numero = new Label(String.valueOf(pos + 1)
-                + (h.origen != pos ? "  (antes " + (h.origen + 1) + ")" : ""));
+        Label numero = new Label((pos + 1) + detalle(h, pos));
+        numero.setMaxWidth(lado + 20);
         numero.setStyle(elegida ? "-fx-font-weight: bold; -fx-text-fill: #2b7de9;" : "");
         VBox celda = new VBox(4, marco, numero);
         celda.setAlignment(Pos.TOP_CENTER);
@@ -463,72 +548,85 @@ class GirarPanel extends BorderPane {
         return celda;
     }
 
-    private Button botonChico(org.kordamp.ikonli.Ikon icono, String ayuda, boolean espejo, Runnable accion) {
+    private static Image blanco(Hoja h) {
+        int w = 60, ht = (int) Math.max(20, Math.round(60 * h.altoBlanco / Math.max(1, h.anchoBlanco)));
+        WritableImage img = new WritableImage(w, ht);
+        for (int y = 0; y < ht; y++) {
+            for (int x = 0; x < w; x++) {
+                boolean borde = x == 0 || y == 0 || x == w - 1 || y == ht - 1;
+                img.getPixelWriter().setArgb(x, y, borde ? 0xffcfcfcf : 0xffffffff);
+            }
+        }
+        return img;
+    }
+
+    private Button botonChico(Ikon icono, String ayuda, boolean alReves, Runnable accion) {
         Button b = Ui.boton("", icono, accion);
-        if (espejo) {
+        if (alReves) {
             b.getGraphic().setScaleX(-1);
         }
-        b.setTooltip(new javafx.scene.control.Tooltip(ayuda));
+        b.setTooltip(new Tooltip(ayuda));
         b.setStyle("-fx-background-color: rgba(255,255,255,0.92); -fx-border-color: rgba(0,0,0,0.25); "
-                + "-fx-border-radius: 4; -fx-background-radius: 4; -fx-padding: 3 6 3 6;");
+                + "-fx-border-radius: 4; -fx-background-radius: 4; -fx-padding: 3 5 3 5;");
         b.setFocusTraversable(false);
         return b;
     }
 
-    /** Pide las miniaturas de las hojas que se están viendo (primero) y, después, las demás. */
+    /** Pide las miniaturas de las hojas que se están viendo (y las de cerca). */
     private void pedirVisibles() {
-        if (previa == null) {
+        if (archivo == null) {
             return;
         }
         Bounds vista = scroll.localToScene(scroll.getLayoutBounds());
         int lado = lado();
-        List<Integer> visibles = new ArrayList<>();
         for (Node n : cuadricula.getChildren()) {
             Bounds b = n.localToScene(n.getLayoutBounds());
-            if (b.intersects(vista.getMinX(), vista.getMinY() - 400, vista.getWidth(), vista.getHeight() + 800)) {
-                int pos = (Integer) n.getUserData();
-                if (pos < hojas.size()) {
-                    visibles.add(hojas.get(pos).origen);
-                }
+            if (!b.intersects(vista.getMinX(), vista.getMinY() - 400, vista.getWidth(), vista.getHeight() + 800)) {
+                continue;
             }
-        }
-        for (Integer origen : visibles) {
-            Integer hecho = anchoImagen.get(origen);
-            if ((hecho == null || hecho < lado * 0.9) && pedidas.add(origen)) {
-                pedirImagen(origen, lado);
+            int pos = (Integer) n.getUserData();
+            if (pos >= hojas.size() || hojas.get(pos).archivo == null) {
+                continue;
+            }
+            Hoja h = hojas.get(pos);
+            Integer hecho = anchoImagen.get(h.clave());
+            if ((hecho == null || hecho < lado * 0.9) && pedidas.add(h.clave())) {
+                pedirImagen(h, lado);
             }
         }
     }
 
-    private void pedirImagen(int origen, int lado) {
-        Motor.Previa p = previa;
+    private void pedirImagen(Hoja h, int lado) {
+        Motor.Previa p = previas.get(h.archivo);
+        String clave = h.clave();
+        if (p == null) {
+            pedidas.remove(clave);
+            return;
+        }
         int px = (int) Math.min(900, lado * 1.25);
+        int pagina = h.pagina;
         HILO.submit(() -> {
-            if (p != previa) {
-                return;
-            }
             try {
-                var b = p.imagen(origen, px, null);
-                var fx = Ui.imagenFx(b);
+                var fx = Ui.imagenFx(p.imagen(pagina, px, null));
                 Platform.runLater(() -> {
-                    pedidas.remove(origen);
-                    if (p != previa) {
+                    pedidas.remove(clave);
+                    if (!previas.containsValue(p)) {
                         return;
                     }
-                    imagenes.put(origen, fx);
-                    anchoImagen.put(origen, px);
-                    ponerImagen(origen, fx);
+                    imagenes.put(clave, fx);
+                    anchoImagen.put(clave, px);
+                    ponerImagen(clave, fx);
                 });
             } catch (Exception e) {
-                Platform.runLater(() -> pedidas.remove(origen));
+                Platform.runLater(() -> pedidas.remove(clave));
             }
         });
     }
 
-    private void ponerImagen(int origen, Image img) {
+    private void ponerImagen(String clave, Image img) {
         for (Node n : cuadricula.getChildren()) {
             int pos = (Integer) n.getUserData();
-            if (pos < hojas.size() && hojas.get(pos).origen == origen) {
+            if (pos < hojas.size() && hojas.get(pos).clave().equals(clave)) {
                 StackPane marco = (StackPane) ((VBox) n).getChildren().get(0);
                 ImageView iv = (ImageView) marco.getChildren().get(0);
                 iv.setImage(img);
@@ -542,6 +640,7 @@ class GirarPanel extends BorderPane {
         if (e.getButton() != MouseButton.PRIMARY) {
             return;
         }
+        scroll.requestFocus();
         if (e.getClickCount() == 2) {
             verEnGrande(pos);
             return;
@@ -575,6 +674,7 @@ class GirarPanel extends BorderPane {
     }
 
     private void actualizarSeleccion() {
+        seleccion.removeIf(i -> i >= hojas.size());
         if (seleccion.isEmpty()) {
             lblSel.setText("Ninguna hoja elegida.");
         } else if (seleccion.size() == hojas.size()) {
@@ -584,39 +684,42 @@ class GirarPanel extends BorderPane {
                     seleccion.size() + " hojas elegidas: " + Motor.textoHojas(seleccion));
         }
         List<Integer> giradas = new ArrayList<>();
-        boolean movidas = false;
         for (int i = 0; i < hojas.size(); i++) {
             if (hojas.get(i).giro % 360 != 0) {
                 giradas.add(i);
             }
-            movidas |= hojas.get(i).origen != i;
         }
         StringBuilder c = new StringBuilder();
+        if (archivo != null) {
+            c.append("El PDF queda con ").append(hojas.size()).append(hojas.size() == 1 ? " hoja." : " hojas.");
+        }
         if (!giradas.isEmpty()) {
-            c.append("Giradas: ").append(Motor.textoHojas(giradas));
+            c.append("\nGiradas: ").append(Motor.textoHojas(giradas));
         }
-        if (movidas) {
-            c.append(c.isEmpty() ? "" : "\n").append("Hay hojas cambiadas de lugar.");
+        if (archivo != null && hayCambios() && giradas.isEmpty()) {
+            c.append("\nHay hojas cambiadas de lugar, quitadas o agregadas.");
+        } else if (archivo != null && !hayCambios()) {
+            c.append("\nSin cambios todavía.");
         }
-        lblCambios.setText(c.isEmpty() ? (previa == null ? "" : "Sin cambios todavía.") : c.toString());
+        lblCambios.setText(c.toString());
+        if (archivo != null) {
+            lblArchivo.setText(archivo.getName() + "  ·  " + hojas.size() + " hojas");
+        }
         redibujar();
     }
 
     // ------------------------------------------------------------ cambios (con deshacer)
-    private List<int[]> estado() {
-        List<int[]> r = new ArrayList<>();
+    private List<Hoja> estado() {
+        List<Hoja> r = new ArrayList<>();
         for (Hoja h : hojas) {
-            r.add(new int[] { h.origen, h.giro });
+            r.add(h.copia());
         }
         return r;
     }
 
-    private void poner(List<int[]> e) {
+    private void poner(List<Hoja> e) {
         hojas.clear();
-        for (int[] x : e) {
-            hojas.add(new Hoja(x[0], x[1]));
-        }
-        seleccion.removeIf(i -> i >= hojas.size());
+        hojas.addAll(e);
     }
 
     private void antes() {
@@ -644,8 +747,16 @@ class GirarPanel extends BorderPane {
     }
 
     private boolean hayCambios() {
+        Motor.Previa p = previas.get(archivo);
+        if (p == null) {
+            return false;
+        }
+        if (hojas.size() != p.hojas()) {
+            return true;
+        }
         for (int i = 0; i < hojas.size(); i++) {
-            if (hojas.get(i).giro % 360 != 0 || hojas.get(i).origen != i) {
+            Hoja h = hojas.get(i);
+            if (h.giro % 360 != 0 || h.pagina != i || !archivo.equals(h.archivo)) {
                 return true;
             }
         }
@@ -656,6 +767,15 @@ class GirarPanel extends BorderPane {
         return ((g % 360) + 360) % 360;
     }
 
+    private boolean hayElegidas() {
+        if (seleccion.isEmpty()) {
+            Ui.aviso(this, "Primero elija una o varias hojas (clic sobre ellas). Para elegir todas: Ctrl + A o "
+                    + "\"Seleccionar todo\".");
+            return false;
+        }
+        return true;
+    }
+
     private void girarUna(int pos, int grados) {
         antes();
         hojas.get(pos).giro = normal(hojas.get(pos).giro + grados);
@@ -663,9 +783,7 @@ class GirarPanel extends BorderPane {
     }
 
     private void girarSeleccion(int grados) {
-        if (seleccion.isEmpty()) {
-            Ui.aviso(this, "Primero elija una o varias hojas (clic sobre ellas). Para elegir todas: Ctrl + A o "
-                    + "\"Seleccionar todo\".");
+        if (!hayElegidas()) {
             return;
         }
         antes();
@@ -680,6 +798,107 @@ class GirarPanel extends BorderPane {
         for (Hoja h : hojas) {
             h.giro = normal(h.giro + grados);
         }
+        actualizarSeleccion();
+    }
+
+    private void quitarSeleccion() {
+        if (hayElegidas()) {
+            quitar(new ArrayList<>(seleccion));
+        }
+    }
+
+    private void quitar(List<Integer> posiciones) {
+        if (posiciones.size() >= hojas.size()) {
+            Ui.aviso(this, "No se pueden quitar todas las hojas: el PDF tiene que quedar con al menos una.");
+            return;
+        }
+        antes();
+        List<Integer> orden = new ArrayList<>(posiciones);
+        orden.sort((a, b) -> b - a);
+        for (int i : orden) {
+            hojas.remove(i);
+        }
+        seleccion.clear();
+        ultimo = null;
+        actualizarSeleccion();
+    }
+
+    private void duplicarSeleccion() {
+        if (hayElegidas()) {
+            duplicar(new ArrayList<>(seleccion));
+        }
+    }
+
+    /** Cada hoja elegida queda con su copia justo al lado. */
+    private void duplicar(List<Integer> posiciones) {
+        antes();
+        List<Integer> orden = new ArrayList<>(posiciones);
+        orden.sort((a, b) -> b - a);
+        for (int i : orden) {
+            hojas.add(i + 1, hojas.get(i).copia());
+        }
+        seleccion.clear();
+        actualizarSeleccion();
+    }
+
+    /** Dónde se insertan hojas nuevas: después de la última elegida (o al final). */
+    private int lugarParaInsertar() {
+        return seleccion.isEmpty() ? hojas.size() : ((TreeSet<Integer>) seleccion).last() + 1;
+    }
+
+    private void insertarPdf() {
+        List<File> f = Ui.elegirPdfs(this, false);
+        if (f != null && !f.isEmpty()) {
+            insertar(f.get(0));
+        }
+    }
+
+    private void insertar(File pdf) {
+        Motor.Previa p = previas.get(pdf);
+        if (p == null) {
+            p = abrirPrevia(pdf);
+            if (p == null) {
+                return;
+            }
+            previas.put(pdf, p);
+        }
+        int lugar = lugarParaInsertar();
+        antes();
+        List<Hoja> nuevas = new ArrayList<>();
+        for (int i = 0; i < p.hojas(); i++) {
+            nuevas.add(new Hoja(pdf, i, 0, 0, 0));
+        }
+        hojas.addAll(lugar, nuevas);
+        seleccion.clear();
+        for (int k = 0; k < nuevas.size(); k++) {
+            seleccion.add(lugar + k);
+        }
+        ultimo = lugar;
+        actualizarSeleccion();
+    }
+
+    private void hojaEnBlanco() {
+        int lugar = lugarParaInsertar();
+        // del mismo tamaño que la hoja de al lado (o carta)
+        float w = 612, h = 792;
+        int vecina = Math.min(hojas.size() - 1, Math.max(0, lugar - 1));
+        if (!hojas.isEmpty()) {
+            Hoja v = hojas.get(vecina);
+            if (v.archivo == null) {
+                w = v.anchoBlanco;
+                h = v.altoBlanco;
+            } else if (previas.get(v.archivo) != null) {
+                float[] t = previas.get(v.archivo).tamano(v.pagina);
+                boolean deLado = v.giro % 180 != 0;
+                w = deLado ? t[1] : t[0];
+                h = deLado ? t[0] : t[1];
+            }
+        }
+        antes();
+        hojas.add(lugar, new Hoja(null, -1, 0, w, h));
+        seleccion.clear();
+        seleccion.add(lugar);
+        ultimo = lugar;
         actualizarSeleccion();
     }
 
@@ -714,7 +933,7 @@ class GirarPanel extends BorderPane {
     }
 
     private void actualizarBotones() {
-        boolean hay = previa != null;
+        boolean hay = archivo != null;
         for (Button b : conPdf) {
             b.setDisable(!hay);
         }
@@ -724,7 +943,7 @@ class GirarPanel extends BorderPane {
 
     // ------------------------------------------------------------ ver en grande
     private void verEnGrande(int inicio) {
-        if (previa == null) {
+        if (archivo == null) {
             return;
         }
         Stage s = new Stage();
@@ -744,22 +963,35 @@ class GirarPanel extends BorderPane {
         lbl.setStyle("-fx-font-weight: bold;");
         Runnable[] mostrar = new Runnable[1];
         mostrar[0] = () -> {
+            if (hojas.isEmpty()) {
+                s.close();
+                return;
+            }
+            pos[0] = Math.min(pos[0], hojas.size() - 1);
             Hoja h = hojas.get(pos[0]);
             s.setTitle("Hoja " + (pos[0] + 1) + " de " + hojas.size());
-            lbl.setText("Hoja " + (pos[0] + 1) + " de " + hojas.size()
+            lbl.setText("Hoja " + (pos[0] + 1) + " de " + hojas.size() + detalle(h, pos[0])
                     + (h.giro != 0 ? "  ·  girada " + (h.giro > 180 ? h.giro - 360 : h.giro) + "°" : ""));
             iv.setRotate(h.giro);
             double W = Math.max(200, area.getWidth() - 30), H = Math.max(200, area.getHeight() - 30);
             boolean deLado = h.giro % 180 != 0;
             iv.setFitWidth(deLado ? H : W);
             iv.setFitHeight(deLado ? W : H);
-            Motor.Previa p = previa;
-            int origen = h.origen;
+            if (h.archivo == null) {
+                iv.setImage(blanco(h));
+                return;
+            }
+            Motor.Previa p = previas.get(h.archivo);
+            String clave = h.clave();
+            if (p == null) {
+                return;
+            }
+            iv.setImage(imagenes.get(clave));
             HILO.submit(() -> {
                 try {
-                    var img = Ui.imagenFx(p.imagen(origen, 1400, null));
+                    var img = Ui.imagenFx(p.imagen(h.pagina, 1400, null));
                     Platform.runLater(() -> {
-                        if (hojas.size() > pos[0] && hojas.get(pos[0]).origen == origen) {
+                        if (hojas.size() > pos[0] && hojas.get(pos[0]).clave().equals(clave)) {
                             iv.setImage(img);
                         }
                     });
@@ -780,19 +1012,22 @@ class GirarPanel extends BorderPane {
                 mostrar[0].run();
             }
         });
-        Button gi = Ui.boton("Girar izq.", UniconsLine.REDO, () -> {
+        Button gi = espejo(Ui.boton("Girar izq.", UniconsLine.REDO, () -> {
             girarUna(pos[0], -90);
             mostrar[0].run();
-        });
-        gi.getGraphic().setScaleX(-1);
+        }));
         Button gd = Ui.boton("Girar der.", UniconsLine.REDO, () -> {
             girarUna(pos[0], 90);
+            mostrar[0].run();
+        });
+        Button q = Ui.boton("Quitar", UniconsLine.TRASH_ALT, () -> {
+            quitar(List.of(pos[0]));
             mostrar[0].run();
         });
         Button cerrar = Ui.boton("Cerrar", s::close);
         Region espacio = new Region();
         HBox.setHgrow(espacio, Priority.ALWAYS);
-        HBox barra = new HBox(8, ant, sig, lbl, espacio, gi, gd, cerrar);
+        HBox barra = new HBox(8, ant, sig, lbl, espacio, gi, gd, q, cerrar);
         barra.setAlignment(Pos.CENTER_LEFT);
         barra.setPadding(new Insets(8));
         BorderPane raiz = new BorderPane(area);
@@ -819,33 +1054,55 @@ class GirarPanel extends BorderPane {
     }
 
     // ------------------------------------------------------------ guardar
+    private List<Motor.HojaArmada> armadas(List<Hoja> lista) {
+        List<Motor.HojaArmada> r = new ArrayList<>();
+        for (Hoja h : lista) {
+            r.add(new Motor.HojaArmada(h.archivo, h.pagina, h.giro, h.anchoBlanco, h.altoBlanco));
+        }
+        return r;
+    }
+
     private void guardar() {
-        if (previa == null) {
+        if (archivo == null) {
             return;
         }
         if (!hayCambios() && !Ui.pregunta(this, "No hay cambios: el PDF quedaría igual. ¿Guardarlo de todas formas?",
                 "Guardar PDF")) {
             return;
         }
-        File salida = Ui.guardarComo(this, Ui.sugerir(archivo, "girado"), "PDF", ".pdf", "Guardar el PDF girado");
+        guardarComo(armadas(hojas), "girado", "Guardar el PDF");
+    }
+
+    /** Guardar selección como PDF: un PDF nuevo solo con las hojas elegidas (con sus giros). */
+    private void extraer() {
+        if (!hayElegidas()) {
+            return;
+        }
+        List<Hoja> elegidas = new ArrayList<>();
+        for (Integer i : seleccion) {
+            elegidas.add(hojas.get(i));
+        }
+        guardarComo(armadas(elegidas), "seleccion", "Guardar las hojas elegidas como PDF");
+    }
+
+    private void guardarComo(List<Motor.HojaArmada> lista, String sufijo, String titulo) {
+        File salida = Ui.guardarComo(this, Ui.sugerir(archivo, sufijo), "PDF", ".pdf", titulo);
         if (salida == null) {
             return;
         }
-        if (salida.getAbsoluteFile().equals(archivo.getAbsoluteFile())) {
-            Ui.aviso(this, "Elija otro nombre: así el PDF original no se reemplaza.");
-            return;
+        for (File f : previas.keySet()) {
+            if (salida.getAbsoluteFile().equals(f.getAbsoluteFile())) {
+                Ui.aviso(this, "Elija otro nombre: así el PDF original no se reemplaza.");
+                return;
+            }
         }
-        List<Motor.HojaGirada> lista = new ArrayList<>();
-        for (Hoja h : hojas) {
-            lista.add(new Motor.HojaGirada(h.origen, h.giro));
-        }
-        File entrada = archivo;
-        String c = clave;
+        File principal = archivo;
+        Map<File, String> c = new HashMap<>(claves);
         Ui.enSegundoPlano(this, "Guardando", false, p -> {
-            Motor.girarYOrdenar(entrada, salida, c, lista,
+            Motor.armar(principal, c, lista, salida,
                     (h, t) -> p.poner(t == 0 ? 1 : (double) h / t, "Hoja " + h + " de " + t));
             return salida;
-        }, r -> Ui.terminado(this, r, "PDF guardado", null), null);
+        }, r -> Ui.terminado(this, r, "PDF guardado", lista.size() + (lista.size() == 1 ? " hoja" : " hojas")), null);
     }
 
     // ------------------------------------------------------------ carpetas y ZIP

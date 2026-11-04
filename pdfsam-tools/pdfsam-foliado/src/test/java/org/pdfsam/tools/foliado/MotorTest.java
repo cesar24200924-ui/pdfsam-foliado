@@ -354,4 +354,46 @@ class MotorTest {
             assertEquals(0, d.getPage(1).getRotation());
         }
     }
+
+    @Test
+    void armarQuitarDuplicarInsertar() throws Exception {
+        File dir = Files.createTempDirectory("pa").toFile();
+        File a = pdfDePrueba(dir, "a.pdf");
+        File otro = new File(dir, "otro.pdf");
+        try (PDDocument d = new PDDocument()) {
+            PDPage p = new PDPage(new PDRectangle(300, 300));
+            d.addPage(p);
+            try (PDPageContentStream cs = new PDPageContentStream(d, p)) {
+                cs.beginText();
+                cs.setFont(PDType1Font.HELVETICA(), 20);
+                cs.newLineAtOffset(50, 150);
+                cs.showText("OTRO PDF");
+                cs.endText();
+            }
+            d.writeTo(otro);
+        }
+        File salida = new File(dir, "armado.pdf");
+        // hoja 1, copia de la hoja 1 girada, hoja en blanco, hoja del otro PDF, hoja 5 (se quitaron 2, 3 y 4)
+        Motor.armar(a, Map.of(), List.of(new Motor.HojaArmada(a, 0, 0, 0, 0), new Motor.HojaArmada(a, 0, 90, 0, 0),
+                new Motor.HojaArmada(null, -1, 0, 612, 792), new Motor.HojaArmada(otro, 0, 0, 0, 0),
+                new Motor.HojaArmada(a, 4, 0, 0, 0)), salida, null);
+        try (PDDocument d = Motor.abrir(salida, null)) {
+            assertEquals(5, d.getNumberOfPages());
+            assertEquals(0, d.getPage(0).getRotation());
+            assertEquals(90, d.getPage(1).getRotation());
+            String[] esperado = { "HOJA1", "HOJA1", "", "OTROPDF", "HOJA5" };
+            for (int k = 0; k < 5; k++) {
+                PDFTextStripper st = new PDFTextStripper();
+                st.setStartPage(k + 1);
+                st.setEndPage(k + 1);
+                String t = st.getText(d).replaceAll("\\s", "");
+                if (esperado[k].isEmpty()) {
+                    assertEquals("", t);
+                } else {
+                    assertTrue(t.contains(esperado[k]), "hoja " + (k + 1) + ": " + t);
+                }
+            }
+        }
+        imagenes(salida, "armado");
+    }
 }

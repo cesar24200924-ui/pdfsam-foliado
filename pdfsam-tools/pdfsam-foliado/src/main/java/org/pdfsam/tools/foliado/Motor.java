@@ -10,6 +10,7 @@ package org.pdfsam.tools.foliado;
 
 import org.sejda.io.SeekableSources;
 import org.sejda.sambox.cos.COSBase;
+import org.sejda.sambox.cos.COSDictionary;
 import org.sejda.sambox.cos.COSName;
 import org.sejda.sambox.input.PDFParser;
 import org.sejda.sambox.output.WriteOption;
@@ -810,6 +811,96 @@ public final class Motor {
                 }
             }
             guardar(doc, salida);
+        }
+    }
+
+    /**
+     * Una hoja del PDF que se va a armar: de qué archivo y qué hoja viene (archivo null = hoja en blanco del tamaño
+     * dado) y cuánto se gira.
+     */
+    public record HojaArmada(File archivo, int pagina, int giro, float anchoBlanco, float altoBlanco) {
+    }
+
+    /**
+     * Arma el PDF con las hojas en este orden: girar, quitar, duplicar, insertar hojas de otros PDF y hojas en blanco.
+     * Se parte del PDF principal (así se conservan sus marcadores y datos) y se rehace su lista de hojas.
+     */
+    public static void armar(File principal, Map<File, String> claves, List<HojaArmada> hojas, File salida,
+            BiConsumer<Integer, Integer> avance) throws IOException {
+        if (hojas.isEmpty()) {
+            throw new IOException("El PDF tiene que quedar con al menos una hoja.");
+        }
+        Map<File, PDDocument> abiertos = new HashMap<>();
+        try {
+            PDDocument doc = abrir(principal, claves.get(principal));
+            abiertos.put(principal, doc);
+            List<PDPage> originales = new ArrayList<>();
+            for (PDPage p : doc.getPages()) {
+                originales.add(p);
+            }
+            heredar(originales);
+            for (PDPage p : originales) {
+                doc.getPages().remove(p);
+            }
+            Map<String, Boolean> usadas = new HashMap<>();
+            int n = 0;
+            for (HojaArmada h : hojas) {
+                PDPage hoja;
+                if (h.archivo() == null) {
+                    hoja = new PDPage(new PDRectangle(h.anchoBlanco(), h.altoBlanco()));
+                } else {
+                    PDDocument origen = abiertos.get(h.archivo());
+                    if (origen == null) {
+                        origen = abrir(h.archivo(), claves.get(h.archivo()));
+                        abiertos.put(h.archivo(), origen);
+                        List<PDPage> lista = new ArrayList<>();
+                        for (PDPage p : origen.getPages()) {
+                            lista.add(p);
+                        }
+                        heredar(lista);
+                    }
+                    PDPage base = origen == doc ? originales.get(h.pagina()) : origen.getPage(h.pagina());
+                    String clave = h.archivo().getAbsolutePath() + "#" + h.pagina();
+                    if (origen == doc && usadas.putIfAbsent(clave, true) == null) {
+                        hoja = base; // la primera vez va la hoja misma
+                    } else {
+                        // copia (hoja duplicada o de otro PDF): comparte el contenido, no lo repite
+                        COSDictionary copia = new COSDictionary(base.getCOSObject());
+                        copia.removeItem(COSName.PARENT);
+                        hoja = new PDPage(copia);
+                    }
+                }
+                if (h.giro() % 360 != 0) {
+                    hoja.setRotation((((hoja.getRotation() + h.giro()) % 360) + 360) % 360);
+                }
+                doc.getPages().add(hoja);
+                if (avance != null && ++n % 20 == 0) {
+                    avance.accept(n, hojas.size());
+                }
+            }
+            guardar(doc, salida);
+        } finally {
+            for (PDDocument d : abiertos.values()) {
+                try {
+                    d.close();
+                } catch (IOException e) {
+                    // nada
+                }
+            }
+        }
+    }
+
+    /** Lo que la hoja heredaba de las "carpetas" internas del PDF se le pone a ella misma (así no se pierde). */
+    private static void heredar(List<PDPage> paginas) {
+        for (PDPage p : paginas) {
+            for (COSName clave : HEREDABLES) {
+                if (p.getCOSObject().getItem(clave) == null) {
+                    COSBase v = PDPageTree.getInheritableAttribute(p.getCOSObject(), clave);
+                    if (v != null) {
+                        p.getCOSObject().setItem(clave, v);
+                    }
+                }
+            }
         }
     }
 

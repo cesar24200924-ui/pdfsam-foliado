@@ -178,7 +178,7 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
 </ul>
 
 <h2 id="girar">7. Girar — viendo las hojas en miniatura</h2>
-<p>El <b>Girar</b> de PDFsam ahora es interactivo: ve todas las hojas en pequeño (miniaturas) y las gira viéndolas, una por una, varias o todas. También puede cambiarlas de lugar arrastrándolas. El PDF original no se toca: se guarda una copia.</p>
+<p>El <b>Girar</b> de PDFsam ahora es interactivo: ve todas las hojas en pequeño (miniaturas) y las gira viéndolas, una por una, varias o todas. Además puede <b>quitar</b> hojas, <b>duplicarlas</b>, <b>cambiarlas de lugar</b>, <b>insertar otro PDF</b> u <b>hojas en blanco</b> y <b>guardar solo las hojas elegidas</b> como un PDF nuevo. El PDF original no se toca: se guarda una copia.</p>
 
 <h3>Paso 1 — Abrir el PDF</h3>
 <div class="paso">En el menú de PDFsam toque <b>Girar</b>. Luego <b>Elegir PDF</b>, o arrastre el PDF a la pantalla. Aparecen todas las hojas en miniatura (las imágenes se van cargando, primero las que se están viendo).</div>
@@ -202,13 +202,24 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
 </ul>
 <p>Cada hoja girada muestra una etiqueta amarilla con los grados (ej. <i>↻ 90°</i>).</p>
 
-<h3>Paso 4 — Cambiar hojas de lugar (opcional)</h3>
+<h3>Paso 4 — Quitar, duplicar, insertar (opcional)</h3>
+<table>
+<tr><th>Para…</th><th>Haga esto</th></tr>
+<tr><td><b>Quitar</b> (eliminar) hojas</td><td>Pase el ratón sobre la hoja y toque el botón del <b>basurero</b>. Para varias: elíjalas y toque <b>Quitar</b> (arriba), <b>Quitar seleccionadas</b> (a la derecha) o la tecla <b>Supr</b>. Si se equivocó: <b>Deshacer</b>.</td></tr>
+<tr><td><b>Duplicar</b> una hoja</td><td>Botón de <b>dos hojitas</b> sobre la hoja, o elija varias y toque <b>Duplicar</b>. La copia queda justo al lado y dice <i>(copia de 3)</i>.</td></tr>
+<tr><td><b>Insertar otro PDF</b></td><td>Elija la hoja después de la cual quiere meterlo y toque <b>Insertar PDF</b>. Si no elige ninguna, va al final. También puede arrastrar el otro PDF a la pantalla y elegir <b>Insertar sus hojas</b>. Esas hojas dicen debajo de qué PDF vienen.</td></tr>
+<tr><td><b>Hoja en blanco</b></td><td>Elija la hoja de antes y toque <b>Hoja en blanco</b>. Sale del mismo tamaño que la hoja de al lado.</td></tr>
+<tr><td><b>Guardar selección como PDF</b></td><td>Elija las hojas que quiere sacar y toque <b>Guardar selección como PDF</b> (a la derecha). Se crea un PDF nuevo solo con esas hojas (con sus giros); el resto no cambia.</td></tr>
+</table>
+<p>A la derecha siempre dice con cuántas hojas quedará el PDF.</p>
+
+<h3>Paso 5 — Cambiar hojas de lugar (opcional)</h3>
 <div class="paso">Arrastre una hoja y suéltela sobre otra: una raya azul indica si quedará antes (lado izquierdo) o después (lado derecho). Si tenía varias elegidas y arrastra una de ellas, se mueven todas juntas. Debajo de cada hoja se ve su número nuevo y, si se movió, <i>(antes 7)</i>.</div>
 
-<h3>Paso 5 — Ver en grande</h3>
-<div class="paso">Doble clic sobre una hoja la abre en grande. Ahí puede girarla, pasar a la anterior o a la siguiente (también con las flechas del teclado) y cerrar con <b>Esc</b>.</div>
+<h3>Paso 6 — Ver en grande</h3>
+<div class="paso">Doble clic sobre una hoja la abre en grande. Ahí puede girarla, quitarla, pasar a la anterior o a la siguiente (también con las flechas del teclado) y cerrar con <b>Esc</b>.</div>
 
-<h3>Paso 6 — Deshacer y guardar</h3>
+<h3>Paso 7 — Deshacer y guardar</h3>
 <ul>
   <li><b>Deshacer</b> / <b>Rehacer</b> (o <b>Ctrl + Z</b> / <b>Ctrl + Y</b>) regresan o repiten los cambios.</li>
   <li><b>Tamaño</b>: la barrita de arriba agranda o achica las miniaturas.</li>
@@ -291,6 +302,18 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
 <p>Sí. Todo se guarda junto al tocar <b>Guardar PDF</b>.</p></details>
 <details><summary>¿Los marcadores (índice) del PDF se pierden si cambio hojas de lugar?</summary>
 <p>No: siguen apuntando a la misma hoja, esté donde esté.</p></details>
+<details><summary>Quité una hoja por error.</summary>
+<p>Toque <b>Deshacer</b> (Ctrl + Z). Mientras no guarde, puede deshacer todo lo que hizo.</p></details>
+<details><summary>¿La tecla Supr me puede borrar hojas sin querer?</summary>
+<p>Solo funciona después de hacer clic en las miniaturas, y solo quita las hojas elegidas (con borde azul). Igual se puede deshacer.</p></details>
+<details><summary>Si duplico una hoja, ¿el PDF pesa el doble?</summary>
+<p>No. La copia usa el mismo contenido de la hoja original, no lo repite; el PDF casi no aumenta de peso.</p></details>
+<details><summary>¿Puedo insertar un PDF que tiene contraseña?</summary>
+<p>Sí, el programa le pide la contraseña al insertarlo.</p></details>
+<details><summary>¿Cuál es la diferencia entre “Guardar PDF” y “Guardar selección como PDF”?</summary>
+<p>“Guardar PDF” guarda todas las hojas tal como las ve. “Guardar selección como PDF” guarda solo las hojas elegidas, en un PDF aparte.</p></details>
+<details><summary>¿Puedo dejar el PDF sin ninguna hoja?</summary>
+<p>No, tiene que quedar con al menos una.</p></details>
 <details><summary>Quiero girar todas las hojas de 30 PDF.</summary>
 <p>Póngalos en una carpeta y use <b>Girar una carpeta o ZIP</b>.</p></details>
 
