@@ -9,7 +9,7 @@ El código de las herramientas nuevas está en `pdfsam-tools/pdfsam-foliado`. El
 
 ## Programa portable para Windows
 
-En **Releases** está `PDFsam-Foliar-Indexar-portable.zip`: se descomprime y se abre `pdfsam\pdfsam.exe`, sin instalar nada.
+En **Releases** está `PDFsam-Foliar-Indexar-portable.zip`: se descomprime y se abre `PDFsam-Foliar-Indexar\pdfsam.exe`, sin instalar nada.
 Se arma solo con GitHub Actions (flujo `portable`) cada vez que se crea una etiqueta `v…`.
 
 ## Licencia

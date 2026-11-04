@@ -35,11 +35,14 @@ jobs:
       - name: Preparar los archivos
         shell: bash
         run: |
-          mkdir entrega
-          cp pdfsam-basic/target/pdfsam-basic-*-windows*.zip "entrega/PDFsam-Foliar-Indexar-portable.zip"
+          mkdir entrega armar
+          cd armar
+          7z x ../pdfsam-basic/target/pdfsam-basic-*-windows*.zip > /dev/null
+          mv pdfsam-basic-*/pdfsam "PDFsam-Foliar-Indexar"
+          cp ../docs/Manual-Foliar-Indexar.html "PDFsam-Foliar-Indexar/"
+          7z a -tzip "../entrega/PDFsam-Foliar-Indexar-portable.zip" "PDFsam-Foliar-Indexar" > /dev/null
+          cd ..
           git archive --format=zip -o "entrega/PDFsam-Foliar-Indexar-codigo-fuente.zip" HEAD
-          mkdir -p extra/pdfsam && cp docs/Manual-Foliar-Indexar.html extra/pdfsam/
-          cd extra && 7z a "../entrega/PDFsam-Foliar-Indexar-portable.zip" pdfsam/Manual-Foliar-Indexar.html && cd ..
           cp docs/Manual-Foliar-Indexar.html entrega/
           ls -la entrega
       - name: Publicar
