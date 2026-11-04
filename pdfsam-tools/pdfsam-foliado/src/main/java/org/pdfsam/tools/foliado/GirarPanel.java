@@ -136,6 +136,7 @@ class GirarPanel extends BorderPane {
 
     GirarPanel() {
         getStyleClass().addAll(Style.CONTAINER.css());
+        Ui.estilo(this);
 
         // ---------- barra de arriba
         Button elegir = Ui.boton("Elegir PDF", UniconsLine.FILE_ALT, this::elegir);
@@ -217,8 +218,7 @@ class GirarPanel extends BorderPane {
         zona.setAlignment(Pos.CENTER);
         zona.setPadding(new Insets(30));
         zona.setMaxSize(560, 200);
-        zona.setStyle("-fx-border-color: -fx-accent; -fx-border-style: dashed; -fx-border-width: 2; "
-                + "-fx-border-radius: 8; -fx-background-radius: 8; -fx-background-color: rgba(127,127,127,0.06);");
+        zona.getStyleClass().add("foliado-zona");
         centro.getChildren().addAll(scroll, zona);
         centro.setStyle("-fx-background-color: rgba(127,127,127,0.12);");
         centro.setMinSize(200, 200);
@@ -249,12 +249,12 @@ class GirarPanel extends BorderPane {
                 + "Ctrl + clic para elegir varias. Shift + clic para un rango. Al pasar el ratón sobre una hoja "
                 + "aparecen los botones para girarla, duplicarla o quitarla. Supr quita las elegidas.");
         ayuda.setWrapText(true);
-        ayuda.setStyle("-fx-background-color: rgba(43,125,233,0.12); -fx-padding: 8; -fx-background-radius: 6;");
+        ayuda.getStyleClass().add("foliado-ayuda");
         Button sDer = conPdf(Ui.boton("Girar seleccionadas a la der.", UniconsLine.REDO, () -> girarSeleccion(90)));
         Button sIzq = conPdf(
                 espejo(Ui.boton("Girar seleccionadas a la izq.", UniconsLine.REDO, () -> girarSeleccion(-90))));
         Button sQuitar = conPdf(Ui.boton("Quitar seleccionadas", UniconsLine.TRASH_ALT, this::quitarSeleccion));
-        sQuitar.setStyle("-fx-text-fill: #c62828;");
+        sQuitar.setStyle("-fx-text-fill: #e05252;");
         Button sExtraer = conPdf(Ui.boton("Guardar selección como PDF", UniconsLine.FILE_EXPORT, this::extraer));
         Button sLote = Ui.boton("Girar una carpeta o ZIP", UniconsLine.FOLDER, () -> menu.show(lote, Side.BOTTOM, 0, 0));
         for (Button b : List.of(sDer, sIzq, sQuitar, sExtraer, sLote)) {
@@ -1139,7 +1139,8 @@ class GirarPanel extends BorderPane {
         Label t = new Label("Se giran TODAS las hojas de todos los PDF.");
         t.setStyle("-fx-font-weight: bold;");
         Label nombre = new Label(origen.getName());
-        nombre.setStyle("-fx-text-fill: #0d33a6; -fx-font-weight: bold;");
+        nombre.getStyleClass().add("foliado-acento");
+        nombre.setStyle("-fx-font-weight: bold;");
         ToggleGroup g = new ToggleGroup();
         RadioButton r90 = new RadioButton("A la derecha (90°)");
         RadioButton r270 = new RadioButton("A la izquierda (90°)");
@@ -1162,6 +1163,7 @@ class GirarPanel extends BorderPane {
         HBox b = new HBox(8, cancelar, girar);
         b.setAlignment(Pos.CENTER_RIGHT);
         VBox caja = new VBox(8, t, nombre, r90, r270, r180, b);
+        Ui.estilo(caja);
         caja.setPadding(new Insets(20));
         caja.setPrefWidth(420);
         caja.getStyleClass().addAll(Style.CONTAINER.css());

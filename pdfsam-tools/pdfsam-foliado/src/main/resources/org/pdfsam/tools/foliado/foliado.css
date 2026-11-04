@@ -1,0 +1,95 @@
+/*
+ * Colores de Foliar, Indexar y Girar. Las zonas de color (pastel) siempre llevan letra oscura,
+ * así se leen bien con el tema claro y con el tema oscuro.
+ */
+.foliado-pastel-azul {
+    -fx-background-color: #e9f1fb;
+    -fx-border-color: #c9dbf2;
+    -fx-border-width: 1 0 1 0;
+}
+.foliado-pastel-amarillo {
+    -fx-background-color: #fff6dc;
+    -fx-border-color: #f2d27a;
+    -fx-border-width: 1;
+}
+.foliado-zona {
+    -fx-background-color: #f3eefa;
+    -fx-border-color: #9cc0f0;
+    -fx-border-style: dashed;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+.foliado-ayuda {
+    -fx-background-color: #eaf2fd;
+    -fx-background-radius: 6;
+    -fx-padding: 8;
+}
+
+/* letra oscura dentro de las zonas de color */
+.foliado-pastel-azul .label, .foliado-pastel-amarillo .label, .foliado-zona .label, .foliado-ayuda,
+.foliado-pastel-azul .check-box, .foliado-pastel-amarillo .check-box,
+.foliado-pastel-azul .radio-button, .foliado-pastel-amarillo .radio-button {
+    -fx-text-fill: #2f3b4a;
+}
+.foliado-pastel-amarillo .check-box > .box,
+.foliado-pastel-azul .check-box > .box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #9aa8ba;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+}
+.foliado-pastel-amarillo .check-box:selected > .box,
+.foliado-pastel-azul .check-box:selected > .box {
+    -fx-background-color: #4a7fc1;
+    -fx-border-color: #4a7fc1;
+}
+.foliado-pastel-amarillo .check-box:selected > .box > .mark,
+.foliado-pastel-azul .check-box:selected > .box > .mark {
+    -fx-background-color: #ffffff;
+}
+
+/* botones dentro de las zonas de color */
+.foliado-pastel-azul .button, .foliado-pastel-amarillo .button, .foliado-zona .button {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #2f3b4a;
+    -fx-border-color: #c9dbf2;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+.foliado-pastel-azul .button:hover, .foliado-pastel-amarillo .button:hover, .foliado-zona .button:hover {
+    -fx-background-color: #dbe9fb;
+}
+.foliado-pastel-azul .button:disabled, .foliado-pastel-amarillo .button:disabled {
+    -fx-opacity: 0.55;
+}
+.foliado-pastel-azul .button .ikonli-font-icon, .foliado-pastel-amarillo .button .ikonli-font-icon,
+.foliado-zona .button .ikonli-font-icon {
+    -fx-icon-color: #4a7fc1;
+}
+
+/* listas, cajas de texto, combos y colores dentro de las zonas de color */
+.foliado-pastel-amarillo .combo-box-base, .foliado-pastel-amarillo .text-field, .foliado-pastel-amarillo .spinner,
+.foliado-pastel-amarillo .color-picker {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #c9b77a;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+.foliado-pastel-amarillo .combo-box .list-cell, .foliado-pastel-amarillo .text-field,
+.foliado-pastel-amarillo .color-picker .color-picker-label, .foliado-pastel-amarillo .spinner .text-field {
+    -fx-text-fill: #2f3b4a;
+    -fx-background-color: #ffffff;
+}
+.foliado-pastel-amarillo .arrow, .foliado-pastel-amarillo .increment-arrow, .foliado-pastel-amarillo .decrement-arrow {
+    -fx-background-color: #4a7fc1;
+}
+.foliado-pastel-amarillo .spinner .increment-arrow-button, .foliado-pastel-amarillo .spinner .decrement-arrow-button,
+.foliado-pastel-amarillo .combo-box-base > .arrow-button {
+    -fx-background-color: #f1f5fb;
+}
+
+/* textos de ejemplo ("Así queda") que se leen en los dos temas */
+.foliado-acento {
+    -fx-text-fill: #3f7fd6;
+}

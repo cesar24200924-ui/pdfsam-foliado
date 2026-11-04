@@ -80,8 +80,7 @@ class EditorHojas extends VBox {
         FlowPane barra = new FlowPane(8, 6, esta, varias, lblLista, btnQuitarTodo);
         barra.setAlignment(Pos.CENTER_LEFT);
         barra.setPadding(new Insets(6, 8, 6, 8));
-        barra.setStyle("-fx-background-color: rgba(43,125,233,0.10); -fx-border-color: rgba(43,125,233,0.35); "
-                + "-fx-border-width: 1 0 1 0;");
+        barra.getStyleClass().add("foliado-pastel-azul");
 
         // panel de cambios (solo visible mientras se edita)
         lblEditando.setStyle("-fx-font-weight: bold;");
@@ -122,7 +121,7 @@ class EditorHojas extends VBox {
         nota.setOpacity(0.75);
         panel.getChildren().addAll(p1, p2, nota);
         panel.setPadding(new Insets(8));
-        panel.setStyle("-fx-background-color: #fff8e6; -fx-border-color: #f1d77a; -fx-border-width: 1;");
+        panel.getStyleClass().add("foliado-pastel-amarillo");
         panel.setVisible(false);
         panel.setManaged(false);
 

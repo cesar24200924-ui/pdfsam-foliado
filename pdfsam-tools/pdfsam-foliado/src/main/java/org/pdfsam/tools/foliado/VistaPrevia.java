@@ -105,8 +105,7 @@ class VistaPrevia extends BorderPane {
         zona.setAlignment(Pos.CENTER);
         zona.setPadding(new Insets(30));
         zona.setMaxSize(520, 200);
-        zona.setStyle("-fx-border-color: -fx-accent; -fx-border-style: dashed; -fx-border-width: 2; "
-                + "-fx-border-radius: 8; -fx-background-radius: 8; -fx-background-color: rgba(127,127,127,0.06);");
+        zona.getStyleClass().add("foliado-zona");
 
         imagen.setPreserveRatio(true);
         imagen.setStyle("-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 10, 0, 0, 2);");
