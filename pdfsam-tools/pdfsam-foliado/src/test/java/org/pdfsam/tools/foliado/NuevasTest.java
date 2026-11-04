@@ -104,8 +104,10 @@ class NuevasTest {
         List<String> nombres = new ArrayList<>();
         try (ZipFile z = new ZipFile(zip)) {
             z.stream().map(ZipEntry::getName).forEach(nombres::add);
-            ZipEntry acta = z.stream().filter(e -> e.getName().endsWith("acta.pdf")).findFirst().orElseThrow();
-            File f = new File(dir, "acta_sacada.pdf");
+            ZipEntry acta = z.stream().filter(e -> e.getName().endsWith("acta.pdf")).findFirst()
+                    .orElseThrow(() -> new AssertionError("sin acta.pdf: " + nombres + " / " + L.procesables));
+            File f = File.createTempFile("acta_sacada", ".pdf", dir);
+            f.delete();
             Files.copy(z.getInputStream(acta), f.toPath());
             assertTrue(MotorTest.texto(f).contains("Folio"), "el PDF de adentro quedó foliado");
         }
