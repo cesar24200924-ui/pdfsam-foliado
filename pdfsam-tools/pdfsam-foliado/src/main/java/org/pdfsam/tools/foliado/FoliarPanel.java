@@ -385,7 +385,7 @@ class FoliarPanel extends BorderPane {
         }
     }
 
-    private void recibir(List<File> rutas) {
+    void recibir(List<File> rutas) {
         if (rutas.isEmpty()) {
             return;
         }
@@ -424,6 +424,15 @@ class FoliarPanel extends BorderPane {
         } catch (Exception e) {
             Ui.error(this, Ui.textoError(e));
         }
+    }
+
+    /** Solo para la prueba de pantallas: varias opciones marcadas y una hoja personalizándose. */
+    void opcionesParaPrueba() {
+        enLetras.setSelected(true);
+        conTotal.setSelected(true);
+        recuadro.setSelected(true);
+        vista.irA(1);
+        editor.editarActual();
     }
 
     // ------------------------------------------------------------ guardar

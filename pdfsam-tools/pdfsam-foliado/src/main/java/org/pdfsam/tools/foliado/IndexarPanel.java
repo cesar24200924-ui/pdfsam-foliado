@@ -410,7 +410,7 @@ class IndexarPanel extends BorderPane {
     }
 
     // ------------------------------------------------------------ archivos
-    private void recibir(List<File> rutas) {
+    void recibir(List<File> rutas) {
         List<Item> nuevos = new ArrayList<>();
         for (File r : rutas) {
             if (r.isDirectory()) {
