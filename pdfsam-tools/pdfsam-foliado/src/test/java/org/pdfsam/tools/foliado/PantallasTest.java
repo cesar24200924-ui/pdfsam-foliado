@@ -214,4 +214,60 @@ class PantallasTest {
         Thread.sleep(800);
         foto(s, "pantalla_manual_oscuro.png");
     }
+
+    static Scene oscura(Pane p) throws Exception {
+        return enFx(() -> {
+            try {
+                return escenaOscura(p);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    @Test
+    void pantallasConTemaOscuro() throws Exception {
+        File dir = Files.createTempDirectory("po").toFile();
+        File pdf = MotorTest.pdfDePrueba(dir, "acta.pdf");
+        FoliarPanel f = enFx(FoliarPanel::new);
+        Scene sf = oscura(f);
+        enFx(() -> {
+            f.recibir(List.of(pdf));
+            return null;
+        });
+        Thread.sleep(1500);
+        enFx(() -> {
+            f.opcionesParaPrueba();
+            return null;
+        });
+        Thread.sleep(2500);
+        foto(sf, "oscuro_foliar.png");
+
+        File sub = new File(dir, "Expediente");
+        sub.mkdirs();
+        MotorTest.pdfDePrueba(sub, "08011990123456 REQUERIMIENTO.pdf");
+        IndexarPanel x = enFx(IndexarPanel::new);
+        Scene sx = oscura(x);
+        enFx(() -> {
+            x.recibir(List.of(sub));
+            return null;
+        });
+        Thread.sleep(2500);
+        foto(sx, "oscuro_indexar.png");
+
+        GirarPanel g = enFx(GirarPanel::new);
+        Scene sg = oscura(g);
+        foto(sg, "oscuro_girar_vacio.png");
+        enFx(() -> {
+            g.recibir(List.of(pdf));
+            return null;
+        });
+        Thread.sleep(1500);
+        enFx(() -> {
+            g.paraPrueba();
+            return null;
+        });
+        Thread.sleep(2500);
+        foto(sg, "oscuro_girar.png");
+    }
 }

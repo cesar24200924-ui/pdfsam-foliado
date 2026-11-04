@@ -74,6 +74,7 @@ class FoliarPanel extends BorderPane {
     private final Label lblArchivo = new Label("");
 
     FoliarPanel() {
+        Ui.estilo(this);
         Runnable r = this::refrescar;
         inicio = Controles.numero(0, 99999, (int) Config.numero("foliar.inicio", 1), r);
         digitos = Controles.numero(1, 6, (int) Config.numero("foliar.digitos", 3), r);
@@ -137,7 +138,8 @@ class FoliarPanel extends BorderPane {
         g2.add(Controles.conEtiqueta("Entre el número y el total", palabraDe), 0, 0);
         g2.add(Controles.conEtiqueta("Texto después del número", sufijo), 1, 0);
         asiQueda.setWrapText(true);
-        asiQueda.setStyle("-fx-font-weight: bold; -fx-text-fill: #0d33a6;");
+        asiQueda.getStyleClass().add("foliado-acento");
+        asiQueda.setStyle("-fx-font-weight: bold;");
         VBox pTexto = Controles.bloque(Controles.titulo("Texto antes del número"), prefijo,
                 Controles.nota("Ej.: 'Folio ', 'Pág. ', 'Fol. ' o vacío para solo el número"), g, conTotal, g2,
                 asiQueda, Controles.nota(

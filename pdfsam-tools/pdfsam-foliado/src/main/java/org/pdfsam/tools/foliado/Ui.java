@@ -296,6 +296,14 @@ final class Ui {
         return b;
     }
 
+    /** Los colores de estas herramientas (se leen bien con el tema claro y con el oscuro). */
+    static void estilo(javafx.scene.Parent p) {
+        var css = Ui.class.getResource("/org/pdfsam/tools/foliado/foliado.css");
+        if (css != null && !p.getStylesheets().contains(css.toExternalForm())) {
+            p.getStylesheets().add(css.toExternalForm());
+        }
+    }
+
     static Button boton(String texto, Runnable accion) {
         Button b = new Button(texto);
         b.getStyleClass().addAll(Style.BUTTON.css());
