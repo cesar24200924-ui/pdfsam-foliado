@@ -68,6 +68,11 @@ class ManualPanel extends BorderPane {
 
     ManualPanel() {
         getStyleClass().addAll(Style.CONTAINER.css());
+        getStyleClass().add("manual-foliado");
+        var css = ManualPanel.class.getResource("/org/pdfsam/tools/foliado/manual.css");
+        if (css != null) {
+            getStylesheets().add(css.toExternalForm());
+        }
         contenido.setPadding(new Insets(20, 30, 40, 30));
         contenido.setMaxWidth(980);
         contenido.setFillWidth(true);
@@ -283,7 +288,6 @@ class ManualPanel extends BorderPane {
             TitledPane tp = new TitledPane(titulo, v);
             tp.setExpanded(false);
             tp.setAnimated(false);
-            tp.setStyle("-fx-base: #e9f1fb; -fx-text-fill: #2f3b4a; -fx-background-color: #fdfcf8;");
             v.setStyle("-fx-background-color: #f8fbff;");
             tp.setMaxWidth(Double.MAX_VALUE);
             return tp;

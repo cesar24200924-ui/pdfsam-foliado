@@ -75,6 +75,18 @@ class PantallasTest {
         ImageIO.write(b, "png", new File(MotorTest.SALIDA, nombre));
     }
 
+    static Scene escenaOscura(Pane p) throws Exception {
+        Scene s = escena(p);
+        File temas = new File("../../pdfsam-themes/src/main/resources/themes/dark");
+        for (String css : List.of("colors.css", "theme.css")) {
+            File f = new File(temas, css);
+            if (f.isFile()) {
+                s.getStylesheets().add(f.toURI().toString());
+            }
+        }
+        return s;
+    }
+
     static Scene escena(Pane p) {
         Scene s = new Scene(p, 1400, 860);
         // el tema claro de PDFsam (leído de su carpeta, así las fotos se ven como en el programa)
@@ -182,5 +194,24 @@ class PantallasTest {
         });
         Thread.sleep(500);
         foto(s, "pantalla_manual_girar.png");
+    }
+
+    @Test
+    void manualConTemaOscuro() throws Exception {
+        ManualPanel panel = enFx(ManualPanel::new);
+        Scene s = enFx(() -> {
+            try {
+                return escenaOscura(panel);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        Thread.sleep(800);
+        enFx(() -> {
+            panel.ir("faq");
+            return null;
+        });
+        Thread.sleep(800);
+        foto(s, "pantalla_manual_oscuro.png");
     }
 }
