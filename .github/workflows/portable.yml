@@ -64,12 +64,15 @@ jobs:
             --win-upgrade-uuid 7b0f6c58-3f1e-4c6a-9a0e-5d2f1b7e9c41
           ls -la instalador
           cp instalador/*.exe "entrega/PDFsam-Foliar-Indexar-instalador.exe"
-      - name: Juntar todo en un ZIP
+      - name: Juntar todo en un ZIP (3 carpetas)
         shell: bash
         run: |
-          cd entrega
-          7z a -tzip "PDFsam-Foliar-Indexar-TODO.zip" "PDFsam-Foliar-Indexar-portable.zip" "PDFsam-Foliar-Indexar-instalador.exe" "PDFsam-Foliar-Indexar-codigo-fuente.zip" "Manual-Foliar-Indexar-Girar.zip" > /dev/null
-          ls -la
+          mkdir -p todo/"1 - Portable" todo/"2 - Instalador" todo/"3 - Codigo fuente"
+          cp -r armar/PDFsam-Foliar-Indexar todo/"1 - Portable"/
+          cp entrega/PDFsam-Foliar-Indexar-instalador.exe todo/"2 - Instalador"/
+          cp entrega/PDFsam-Foliar-Indexar-codigo-fuente.zip todo/"3 - Codigo fuente"/
+          cd todo && 7z a -tzip "../entrega/PDFsam-Foliar-Indexar-TODO.zip" "1 - Portable" "2 - Instalador" "3 - Codigo fuente" > /dev/null
+          cd .. && ls -la entrega
       - name: Publicar
         uses: softprops/action-gh-release@v2
         with:

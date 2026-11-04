@@ -567,8 +567,16 @@ class GirarPanel extends BorderPane {
             b.getGraphic().setScaleX(-1);
         }
         b.setTooltip(new Tooltip(ayuda));
-        b.setStyle("-fx-background-color: rgba(255,255,255,0.92); -fx-border-color: rgba(0,0,0,0.25); "
-                + "-fx-border-radius: 4; -fx-background-radius: 4; -fx-padding: 3 5 3 5;");
+        // de color, para que se vean bien sobre la hoja blanca (el de quitar en rojo)
+        boolean quitar = icono == UniconsLine.TRASH_ALT;
+        String fondo = quitar ? "#d32f2f" : "#1f6fd1";
+        b.setStyle("-fx-background-color: " + fondo + "; -fx-border-color: rgba(0,0,0,0.35); "
+                + "-fx-border-radius: 4; -fx-background-radius: 4; -fx-padding: 4 6 4 6; "
+                + "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 4, 0, 0, 1);");
+        if (b.getGraphic() instanceof org.kordamp.ikonli.javafx.FontIcon fi) {
+            fi.setIconColor(javafx.scene.paint.Color.WHITE);
+            fi.setIconSize(16);
+        }
         b.setFocusTraversable(false);
         return b;
     }
