@@ -40,7 +40,7 @@ import java.util.WeakHashMap;
  * Texto que se puede cambiar después en Adobe ("Rellenar y firmar"): en vez de escribirlo fijo en la hoja, cada
  * folio o leyenda se pone como una casilla de formulario que ya trae el texto, con la misma letra, tamaño, color y
  * posición. Se ve y se imprime igual. Las letras de la computadora se meten completas para que Adobe pueda escribir
- * con ellas.
+ * con ellas; si una no se puede usar, se pasa a Helvetica (básica de Adobe) y sigue editable.
  */
 final class Editables {
     /** Mientras se foliá o indexa un documento con la opción marcada. */
@@ -118,6 +118,15 @@ final class Editables {
         });
     }
 
+    private static boolean sirve(PDFont l, String texto) {
+        try {
+            l.encode(texto);
+            return true;
+        } catch (IOException | IllegalArgumentException | IllegalStateException e) {
+            return false;
+        }
+    }
+
     /**
      * Pone el texto como casilla en la hoja. (x, y) = inicio de la línea base, como se ve la hoja. Devuelve false si
      * no se pudo (entonces se escribe fijo, como siempre).
@@ -125,13 +134,13 @@ final class Editables {
     boolean campo(Motor.Hoja h, float x, float y, String texto, PDFont letra, float tamano, Color color) {
         try {
             PDFont l = letraCasilla(letra);
-            if (l == null) {
-                return false;
-            }
-            try {
-                l.encode(texto);
-            } catch (IOException | IllegalArgumentException | IllegalStateException e) {
-                return false; // una letra rara que no entra: se escribe fijo
+            if (l == null || !sirve(l, texto)) {
+                // esa letra no se puede usar en la casilla: se pasa a una básica de Adobe (sigue editable)
+                l = letra instanceof PDType1Font && letra.getName() != null && letra.getName().contains("Bold") ?
+                        PDType1Font.HELVETICA_BOLD() : PDType1Font.HELVETICA();
+                if (!sirve(l, texto)) {
+                    return false; // un carácter que ni la básica tiene: se escribe fijo
+                }
             }
             float ancho = Motor.anchoTexto(l, texto, tamano);
             float holgura = 2;
