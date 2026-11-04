@@ -33,15 +33,16 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 /**
- * Procesar muchos archivos de una vez: una carpeta con todas sus subcarpetas, o un ZIP (que también puede traer
- * otros ZIP adentro). Así trabaja:
+ * Procesar muchos archivos de una vez: una carpeta con todas sus subcarpetas, o un comprimido (ZIP, RAR, 7z, TAR,
+ * GZ... ver Comprimidos) que también puede traer otros comprimidos adentro. Así trabaja:
  * <ol>
- * <li>preparar(): arma la lista de archivos. Si es ZIP, lo abre en una carpeta temporal (los ZIP de adentro
- * también).</li>
+ * <li>preparar(): arma la lista de archivos. Si es comprimido, lo abre en una carpeta temporal (los de adentro
+ * también; si tienen contraseña, la pregunta).</li>
  * <li>ejecutar(): procesa cada PDF y lo guarda en el destino con LA MISMA estructura de carpetas. Lo que no es PDF
  * se copia igual. Si un archivo falla, se copia el original y se anota. No se detiene.</li>
  * <li>reintentar(): al final, para los protegidos, con la contraseña que dé el usuario.</li>
- * <li>finalizar(): si el resultado es ZIP, lo arma (con los ZIP de adentro otra vez como ZIP).</li>
+ * <li>finalizar(): si el resultado es ZIP, lo arma (los comprimidos de adentro vuelven como ZIP: RAR no se puede
+ * crear con programas libres).</li>
  * </ol>
  */
 final class Lote {
@@ -80,11 +81,13 @@ final class Lote {
     final List<Fallido> fallidos = new ArrayList<>();
     int hechos;
     Path destinoTrabajo;
+    /** Pregunta la contraseña de los comprimidos que la tengan (null = se saltan). */
+    Comprimidos.PideClave pide;
     final AtomicBoolean cancelar = new AtomicBoolean(false);
 
     Lote(File origen) throws IOException {
         this.origen = origen.getAbsoluteFile();
-        this.esZip = this.origen.isFile() && this.origen.getName().toLowerCase(Locale.ROOT).endsWith(".zip");
+        this.esZip = this.origen.isFile() && Comprimidos.es(this.origen.getName());
         this.temp = Files.createTempDirectory("pdfsam_lote_");
     }
 
@@ -92,19 +95,19 @@ final class Lote {
     Lote preparar() throws IOException {
         if (esZip) {
             raiz = temp.resolve("origen");
-            extraerZip(origen.toPath(), raiz);
+            abrir(origen.toPath(), raiz);
         } else {
             raiz = origen.toPath();
             boolean hayZip;
             try (Stream<Path> s = Files.walk(raiz)) {
-                hayZip = s.anyMatch(p -> p.getFileName().toString().toLowerCase(Locale.ROOT).endsWith(".zip"));
+                hayZip = s.anyMatch(p -> Comprimidos.es(p.getFileName().toString()));
             }
             if (hayZip) {
-                // los ZIP de adentro también se abren (en una copia: los originales no se tocan)
+                // los comprimidos de adentro también se abren (en una copia: los originales no se tocan)
                 Path copia = temp.resolve("origen");
                 copiarCarpeta(raiz, copia);
-                abrirZipsInternos(copia);
                 raiz = copia;
+                abrirInternos(copia);
             }
         }
         carpetas.clear();
@@ -150,7 +153,7 @@ final class Lote {
 
     String nombreOrigen() {
         String n = origen.getName();
-        return esZip ? Motor.sinExtension(n) : n;
+        return esZip ? Comprimidos.base(n) : n;
     }
 
     // ------------------------------------------------------------ ejecutar
@@ -277,8 +280,61 @@ final class Lote {
         }
     }
 
-    /** Extrae un ZIP (con los nombres en español bien leídos) y abre los ZIP de adentro. */
-    static void extraerZip(Path zip, Path destino) throws IOException {
+    /** Abre un comprimido en 'destino' y también los comprimidos que traiga adentro. */
+    void abrir(Path archivo, Path destino) throws IOException {
+        Comprimidos.extraer(archivo, destino, pide);
+        abrirInternos(destino);
+    }
+
+    /**
+     * Cada comprimido de adentro ("x.rar", "x.zip", "x.7z"...) se cambia por la carpeta "x.zip.__zip__": al final
+     * vuelve a ser "x.zip". Si tiene contraseña y no se da, o está dañado, se copia tal cual y se avisa.
+     */
+    void abrirInternos(Path carpeta) throws IOException {
+        List<Path> lista;
+        try (Stream<Path> s = Files.walk(carpeta)) {
+            lista = s.filter(Files::isRegularFile).filter(p -> Comprimidos.es(p.getFileName().toString())).sorted()
+                    .toList();
+        }
+        for (Path z : lista) {
+            if (!Files.exists(z)) {
+                continue;
+            }
+            Path dest = carpetaPara(z);
+            String rel = raiz != null && z.startsWith(raiz) ? raiz.relativize(z).toString() : z.getFileName().toString();
+            try {
+                List<Path> partes = Comprimidos.partes(z);
+                abrir(z, dest);
+                Files.delete(z);
+                for (Path p : partes) {
+                    Files.deleteIfExists(p);
+                }
+            } catch (Comprimidos.SinClave e) {
+                borrar(dest);
+                fallidos.add(new Fallido(rel, "comprimido", "tiene contraseña: se copió sin abrir"));
+            } catch (IOException e) {
+                borrar(dest); // dañado: se copia tal cual
+                fallidos.add(new Fallido(rel, "comprimido", "no se pudo abrir: se copió tal cual"));
+            }
+        }
+    }
+
+    /** "x.rar" -> carpeta "x.zip.__zip__" (o "x (2).zip.__zip__" si ya hay un x.zip al lado). */
+    static Path carpetaPara(Path archivo) {
+        String base = Comprimidos.base(archivo.getFileName().toString());
+        boolean esZip = "zip".equals(Comprimidos.extension(archivo.getFileName().toString()));
+        for (int i = 1; ; i++) {
+            String n = base + (i == 1 ? "" : " (" + i + ")") + ".zip";
+            Path carpeta = archivo.resolveSibling(n + MARCA_ZIP);
+            Path zip = archivo.resolveSibling(n);
+            if (!Files.exists(carpeta) && (!Files.exists(zip) || (esZip && zip.equals(archivo)))) {
+                return carpeta;
+            }
+        }
+    }
+
+    /** Extrae un ZIP sin contraseña sin el motor de 7-Zip (con los nombres en español bien leídos). */
+    static void extraerZipSolo(Path zip, Path destino) throws IOException {
         Files.createDirectories(destino);
         try {
             extraer(zip, destino, java.nio.charset.StandardCharsets.UTF_8);
@@ -288,7 +344,6 @@ final class Lote {
             Files.createDirectories(destino);
             extraer(zip, destino, Charset.forName("IBM850"));
         }
-        abrirZipsInternos(destino);
     }
 
     private static void extraer(Path zip, Path destino, Charset juego) throws IOException {
@@ -312,24 +367,6 @@ final class Lote {
                 try (InputStream in = z.getInputStream(e)) {
                     Files.copy(in, fin, StandardCopyOption.REPLACE_EXISTING);
                 }
-            }
-        }
-    }
-
-    /** Cada "x.zip" de adentro se cambia por la carpeta "x.zip.__zip__". */
-    static void abrirZipsInternos(Path carpeta) throws IOException {
-        List<Path> zips;
-        try (Stream<Path> s = Files.walk(carpeta)) {
-            zips = s.filter(Files::isRegularFile)
-                    .filter(p -> p.getFileName().toString().toLowerCase(Locale.ROOT).endsWith(".zip")).toList();
-        }
-        for (Path z : zips) {
-            Path dest = z.resolveSibling(z.getFileName() + MARCA_ZIP);
-            try {
-                extraerZip(z, dest);
-                Files.delete(z);
-            } catch (IOException e) {
-                borrar(dest); // ZIP dañado: se copia tal cual
             }
         }
     }

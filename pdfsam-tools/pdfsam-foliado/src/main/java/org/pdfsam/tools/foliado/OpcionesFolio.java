@@ -34,6 +34,8 @@ public class OpcionesFolio {
     public Color color = new Color(191, 0, 0);
     /** "Helvetica", "Times", "Courier" o la ruta de una letra .ttf */
     public String fuente = "Helvetica";
+    /** El folio queda como casilla de formulario: se puede cambiar en Adobe con "Rellenar y firmar". */
+    public boolean editable = false;
 
     public OpcionesFolio copia() {
         OpcionesFolio o = new OpcionesFolio();
@@ -57,6 +59,7 @@ public class OpcionesFolio {
         o.textoLetras = textoLetras;
         o.color = color;
         o.fuente = fuente;
+        o.editable = editable;
         return o;
     }
 }

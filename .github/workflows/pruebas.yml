@@ -24,7 +24,7 @@ jobs:
           architecture: x64
           cache: 'maven'
       - name: Instalar gettext
-        run: sudo apt-get update && sudo apt-get install -y gettext fonts-dejavu-core
+        run: sudo apt-get update && sudo apt-get install -y gettext fonts-dejavu-core p7zip-full && (sudo apt-get install -y rar || true)
       - name: Compilar todo
         run: set -o pipefail; mvn --batch-mode -DskipTests install 2>&1 | tee compilar.log
       - name: Pruebas de Foliar e Indexar

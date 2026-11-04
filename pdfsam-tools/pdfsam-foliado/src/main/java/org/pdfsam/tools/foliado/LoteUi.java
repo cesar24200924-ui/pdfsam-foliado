@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Pasos en pantalla para procesar una carpeta (con subcarpetas) o un ZIP:
+ * Pasos en pantalla para procesar una carpeta (con subcarpetas) o un comprimido (ZIP, RAR, 7z...):
  * <ol>
  * <li>Vista previa: árbol de carpetas y cuántos archivos se van a procesar.</li>
  * <li>Pregunta dónde guardar (y si es ZIP, si el resultado va como ZIP o como carpeta).</li>
@@ -81,6 +81,7 @@ final class LoteUi {
             Ui.error(padre, Ui.textoError(e));
             return;
         }
+        L.pide = (archivo, mala) -> Ui.enFx(() -> Ui.pedirClaveComprimido(padre, archivo, mala));
         Ui.enSegundoPlano(padre, titulo, false, p -> {
             p.poner(-1, "Revisando carpetas y archivos…");
             return L.preparar();
@@ -94,7 +95,7 @@ final class LoteUi {
             Runnable alEmpezar) {
         if (L.procesables.isEmpty()) {
             L.limpiar();
-            Ui.aviso(padre, "No se encontraron archivos PDF para procesar en esa carpeta o ZIP.");
+            Ui.aviso(padre, "No se encontraron archivos PDF para procesar en esa carpeta o comprimido.");
             return;
         }
         Stage v = new Stage();
@@ -127,7 +128,7 @@ final class LoteUi {
         tabla.getColumns().addAll(List.of(c1, c2, c3));
         int[] r0 = arbol.getOrDefault(".", new int[2]);
         TreeItem<Fila> raiz = new TreeItem<>(
-                new Fila(L.nombreOrigen() + (L.esZip ? ".zip" : ""), r0[0], r0[1]));
+                new Fila(L.esZip ? L.origen.getName() : L.nombreOrigen(), r0[0], r0[1]));
         raiz.setExpanded(true);
         Map<String, TreeItem<Fila>> nodos = new HashMap<>();
         nodos.put(".", raiz);
@@ -190,7 +191,9 @@ final class LoteUi {
             Runnable alEmpezar) {
         String nombre = L.nombreOrigen() + "_" + sufijo;
         String formato = "carpeta";
-        if (L.esZip) {
+        if (L.esZip && !"zip".equals(Comprimidos.extension(L.origen.getName()))) {
+            formato = "zip"; // RAR, 7z...: el resultado va en ZIP (RAR no se puede crear con programas libres)
+        } else if (L.esZip) {
             int r = Ui.elegir(padre, "¿Cómo quiere el resultado?",
                     "Las carpetas y subcarpetas quedan igual en los dos casos.", "Como ZIP", "Como carpeta");
             if (r < 0) {
@@ -324,7 +327,7 @@ final class LoteUi {
                 sinResolver.add(f);
             }
         }
-        int bien = L.hechos - sinResolver.size();
+        int bien = L.hechos - (int) sinResolver.stream().filter(f -> !"comprimido".equals(f.motivo)).count();
         StringBuilder d = new StringBuilder(bien + " de " + total + " archivos procesados.");
         if (cancelado) {
             d.append(" Se canceló: lo que ya se hizo se quedó guardado.");

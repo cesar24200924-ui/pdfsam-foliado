@@ -40,5 +40,16 @@
 			<groupId>org.kordamp.ikonli</groupId>
 			<artifactId>ikonli-javafx</artifactId>
 		</dependency>
+		<!-- abrir RAR, 7z, TAR, GZ... (7-Zip-JBinding, LGPL 2.1 + restricción de unRAR) -->
+		<dependency>
+			<groupId>net.sf.sevenzipjbinding</groupId>
+			<artifactId>sevenzipjbinding</artifactId>
+			<version>16.02-2.01</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.sevenzipjbinding</groupId>
+			<artifactId>sevenzipjbinding-all-platforms</artifactId>
+			<version>16.02-2.01</version>
+		</dependency>
 	</dependencies>
 </project>

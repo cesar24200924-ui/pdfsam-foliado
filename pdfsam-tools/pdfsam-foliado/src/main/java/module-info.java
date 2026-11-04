@@ -26,6 +26,9 @@ module org.pdfsam.tools.foliado {
     requires org.apache.fontbox;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.unicons;
+    // para abrir RAR, 7z, TAR, GZ... (motor de 7-Zip; LGPL)
+    requires sevenzipjbinding;
+    requires sevenzipjbinding.all.platforms;
 
     provides Tool with FoliarTool, IndexarTool, GirarTool, ManualTool;
 }

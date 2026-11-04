@@ -28,7 +28,7 @@ public class FoliarTool implements Tool {
 
     private final ToolDescriptor descriptor = builder().category(ToolCategory.EDIT)
             .inputTypes(ToolInputOutputType.MULTIPLE_PDF, ToolInputOutputType.SINGLE_PDF).name("Foliar")
-            .description("Pone el folio (Folio 001, 002…) en cada hoja, con vista previa, en la esquina que elija o arrastrándolo. También carpetas y ZIP completos.")
+            .description("Pone el folio (Folio 001, 002…) en cada hoja, con vista previa, en la esquina que elija o arrastrándolo. También carpetas y comprimidos (ZIP, RAR, 7z...).")
             .priority(ToolPriority.HIGH.getPriority()).build();
 
     private FoliarPanel panel;

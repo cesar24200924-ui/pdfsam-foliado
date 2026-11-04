@@ -28,7 +28,7 @@ public class GirarTool implements Tool {
 
     private final ToolDescriptor descriptor = builder().category(ToolCategory.OTHER)
             .inputTypes(ToolInputOutputType.MULTIPLE_PDF, ToolInputOutputType.SINGLE_PDF).name("Girar")
-            .description("Gira, quita, duplica y cambia de lugar las hojas viéndolas en miniatura; inserta otro PDF u hojas en blanco y guarda solo las elegidas. También carpetas y ZIP completos.")
+            .description("Gira, quita, duplica y cambia de lugar las hojas viéndolas en miniatura; inserta otro PDF u hojas en blanco y guarda solo las elegidas. También carpetas y comprimidos (ZIP, RAR, 7z...).")
             .priority(ToolPriority.HIGH.getPriority()).build();
 
     private GirarPanel panel;
