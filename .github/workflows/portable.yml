@@ -49,6 +49,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_type == 'tag' && github.ref_name || 'portable' }}
-          name: PDFsam con Foliar e Indexar ${{ github.ref_type == 'tag' && github.ref_name || '' }}
+          name: PDFsam con Foliar e Indexar (portable para Windows)
           prerelease: false
           files: entrega/*
