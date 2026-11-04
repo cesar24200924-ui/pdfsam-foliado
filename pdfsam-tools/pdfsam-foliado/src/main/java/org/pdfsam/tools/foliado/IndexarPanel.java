@@ -101,6 +101,9 @@ class IndexarPanel extends BorderPane {
     private final Controles.SelectorLetra letra;
     private final Controles.SelectorColor color;
     private final Spinner<Integer> tamano;
+    private final CheckBox recuadro = new CheckBox("Con recuadro");
+    private final Spinner<Integer> lateral, vertical, saltar;
+    private final TextField hojas = Ui.campo("");
     private final Button btnIndexar;
     private final VistaPrevia vista;
     private final EditorHojas editor;
@@ -144,6 +147,10 @@ class IndexarPanel extends BorderPane {
         formato.setMaxWidth(Double.MAX_VALUE);
         formatoPropio = Ui.campo(conocido == null ? d.extraFormato : "{pagina}/{total}");
         tamano = Controles.numero(6, 48, Math.round(d.tamano), r);
+        recuadro.setSelected(d.recuadro);
+        lateral = Controles.numero(0, 300, Math.round(d.lateral), r);
+        vertical = Controles.numero(0, 300, Math.round(d.vertical), r);
+        saltar = Controles.numero(0, 999, 0, r);
         letra = new Controles.SelectorLetra(d.fuente, d.negrita, r);
         color = new Controles.SelectorColor(d.color, COLORES, r);
 
@@ -208,11 +215,30 @@ class IndexarPanel extends BorderPane {
         ft.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
         VBox pLetra = Controles.bloque(letra, color, ft);
 
+        // ---------- 5. más opciones (como en Foliar)
+        javafx.scene.layout.GridPane g3 = new javafx.scene.layout.GridPane();
+        g3.setHgap(6);
+        g3.setVgap(6);
+        for (int k = 0; k < 2; k++) {
+            javafx.scene.layout.ColumnConstraints c = new javafx.scene.layout.ColumnConstraints();
+            c.setPercentWidth(50);
+            g3.getColumnConstraints().add(c);
+        }
+        g3.add(Controles.conEtiqueta("Distancia de los lados", lateral), 0, 0);
+        g3.add(Controles.conEtiqueta("Distancia de arriba y abajo", vertical), 1, 0);
+        g3.add(Controles.conEtiqueta("Hojas sin leyendas al inicio", saltar), 0, 1);
+        VBox pMas = Controles.bloque(recuadro, g3, Controles.nota(
+                "Distancias en puntos (28 puntos ≈ 1 cm). Las hojas del inicio que se saltan no cuentan en la "
+                        + "numeración: la primera hoja con leyendas es la 1."),
+                Controles.titulo("Hojas a indexar"), hojas,
+                Controles.nota("Vacío = todas. Ej.: 3-50. Vale para todos los PDF de la lista."));
+
         VBox opciones = new VBox(Style.DEFAULT_SPACING);
         opciones.getChildren().addAll(Views.titledPane("1. Archivos PDF", pArchivos),
                 Views.titledPane("2. Leyendas izquierdas", pIzq),
                 Views.titledPane("3. Leyenda derecha y numeración", pDer),
-                Views.titledPane("4. Letra, color y tamaño", pLetra), Views.titledPane("5. Carpeta de salida",
+                Views.titledPane("4. Letra, color y tamaño", pLetra), Views.titledPane("5. Más opciones", pMas),
+                Views.titledPane("6. Carpeta de salida",
                         Controles.nota("Al guardar elige la carpeta. Se crea la misma estructura de subcarpetas con "
                                 + "los mismos nombres. No se puede usar la carpeta donde están los originales (así "
                                 + "nunca se reemplazan).")));
@@ -248,6 +274,9 @@ class IndexarPanel extends BorderPane {
         editor.setVisible(false);
         editor.setManaged(false);
         vista.ponerDebajoDeNavegacion(editor);
+        // al cambiar la letra general, cambia en todas las hojas (también en las personalizadas)
+        letra.nombre.addListener((ob, a, b) -> editor.cambiarLetraEnTodas(b, null));
+        letra.negrita.selectedProperty().addListener((ob, a, b) -> editor.cambiarLetraEnTodas(null, b));
         vista.alCambiarHoja(this::rotular);
         vista.dibujo(this::dibujo);
         vista.raton(new VistaPrevia.Raton() {
@@ -272,10 +301,10 @@ class IndexarPanel extends BorderPane {
         setCenter(vista);
         BorderPane.setMargin(vista, new Insets(0, 0, 0, 4));
 
-        for (TextField t : List.of(izqTexto, abajoIzqTexto, delimitador, derTexto, letrasTexto, formatoPropio)) {
+        for (TextField t : List.of(izqTexto, abajoIzqTexto, delimitador, derTexto, letrasTexto, formatoPropio, hojas)) {
             t.textProperty().addListener((o, a, b) -> refrescar());
         }
-        for (CheckBox c : List.of(izqOn, abajoIzqOn, derOn, derNumeros, letrasOn, extraOn)) {
+        for (CheckBox c : List.of(izqOn, abajoIzqOn, derOn, derNumeros, letrasOn, extraOn, recuadro)) {
             c.selectedProperty().addListener((o, a, b) -> refrescar());
         }
         derModo.selectedToggleProperty().addListener((o, a, b) -> refrescar());
@@ -337,6 +366,11 @@ class IndexarPanel extends BorderPane {
         o.color = color.color.get();
         o.fuente = letra.ruta();
         o.negrita = letra.negritaEfectiva();
+        o.recuadro = recuadro.isSelected();
+        o.lateral = Controles.valor(lateral, 51);
+        o.vertical = Controles.valor(vertical, 23);
+        o.saltar = Controles.valor(saltar, 0);
+        o.paginas = hojas.getText() == null ? "" : hojas.getText().trim();
         return o;
     }
 
@@ -361,6 +395,9 @@ class IndexarPanel extends BorderPane {
         o.color = Motor.colorDeHex(Config.texto("indexar.color", Motor.hexDeColor(o.color)));
         o.fuente = Config.texto("indexar.fuente", o.fuente);
         o.negrita = Config.si("indexar.negrita", o.negrita);
+        o.recuadro = Config.si("indexar.recuadro", o.recuadro);
+        o.lateral = Config.numero("indexar.lateral", o.lateral);
+        o.vertical = Config.numero("indexar.vertical", o.vertical);
         return o;
     }
 
@@ -384,6 +421,9 @@ class IndexarPanel extends BorderPane {
         Config.poner("indexar.color", Motor.hexDeColor(o.color));
         Config.poner("indexar.fuente", o.fuente);
         Config.poner("indexar.negrita", letra.negrita.isSelected());
+        Config.poner("indexar.recuadro", o.recuadro);
+        Config.poner("indexar.lateral", o.lateral);
+        Config.poner("indexar.vertical", o.vertical);
         Config.guardar();
     }
 
@@ -409,10 +449,23 @@ class IndexarPanel extends BorderPane {
         }
         OpcionesIndexar o = opciones();
         int i = vista.indice();
-        long total = vista.total();
         String nombre = Motor.sinExtension(items.get(actual).origen().getName());
-        ReglaHoja regla = editor.porHoja().get(i);
-        return (doc, hoja, letras) -> Motor.indexarHoja(doc, hoja, i + 1, total, nombre, o, regla, letras);
+        Map<Integer, ReglaHoja> porHoja = editor.porHoja();
+        List<Integer> paginas;
+        try {
+            paginas = Motor.listaPaginasFlexible(o.paginas, vista.total());
+        } catch (IllegalArgumentException e) {
+            paginas = null; // a medio escribir
+        }
+        List<Integer> elegidas = Motor.hojasIndexadas(vista.total(), o, paginas, porHoja);
+        int pos = elegidas.indexOf(i);
+        if (pos < 0) {
+            return (doc, hoja, letras) -> {
+            }; // esta hoja no lleva leyendas
+        }
+        long numero = pos + 1, total = elegidas.size();
+        ReglaHoja regla = porHoja.get(i);
+        return (doc, hoja, letras) -> Motor.indexarHoja(doc, hoja, numero, total, nombre, o, regla, letras);
     }
 
     // ------------------------------------------------------------ archivos
@@ -507,6 +560,12 @@ class IndexarPanel extends BorderPane {
             return;
         }
         OpcionesIndexar o = opciones();
+        try {
+            Motor.listaPaginasFlexible(o.paginas, Integer.MAX_VALUE / 2);
+        } catch (IllegalArgumentException e) {
+            Ui.aviso(this, "Hojas a indexar: " + e.getMessage());
+            return;
+        }
         File carpeta = Ui.elegirCarpeta(this, "¿En qué carpeta guardo los PDF indexados?", null);
         if (carpeta == null) {
             return;

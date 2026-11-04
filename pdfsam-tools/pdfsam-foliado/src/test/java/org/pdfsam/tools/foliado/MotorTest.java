@@ -396,4 +396,33 @@ class MotorTest {
         }
         imagenes(salida, "armado");
     }
+
+    @Test
+    void indexarMasOpciones() throws Exception {
+        File dir = Files.createTempDirectory("pim").toFile();
+        File pdf = pdfDePrueba(dir, "08011990123456 ACTA.pdf");
+        File salida = new File(dir, "s.pdf");
+        OpcionesIndexar o = new OpcionesIndexar();
+        o.saltar = 1;
+        o.recuadro = true;
+        o.lateral = 80;
+        o.vertical = 40;
+        o.paginas = "1-4";
+        Motor.indexar(pdf, salida, null, pdf.getName(), o, null, null);
+        try (PDDocument d = Motor.abrir(salida, null)) {
+            String[] esperado = { "", "1/3", "2/3", "3/3", "" };
+            for (int k = 0; k < 5; k++) {
+                PDFTextStripper st = new PDFTextStripper();
+                st.setStartPage(k + 1);
+                st.setEndPage(k + 1);
+                String t = st.getText(d).replaceAll("\\s", "");
+                if (esperado[k].isEmpty()) {
+                    assertFalse(t.contains("DPOT"), "hoja " + (k + 1) + ": " + t);
+                } else {
+                    assertTrue(t.contains("DPOT") && t.contains(esperado[k]), "hoja " + (k + 1) + ": " + t);
+                }
+            }
+        }
+        imagenes(salida, "indexar_mas_opciones");
+    }
 }

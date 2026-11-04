@@ -320,6 +320,41 @@ class EditorHojas extends VBox {
         }
     }
 
+    /**
+     * La letra general cambió: pasa a TODAS las hojas personalizadas (de este PDF y de los otros de la lista).
+     * nombre o negrita en null = no cambia eso.
+     */
+    void cambiarLetraEnTodas(String nombre, Boolean conNegrita) {
+        List<Map<Integer, ReglaHoja>> todas = new ArrayList<>(porDoc.values());
+        if (!porDoc.containsValue(reglas)) {
+            todas.add(reglas);
+        }
+        for (Map<Integer, ReglaHoja> m : todas) {
+            for (ReglaHoja r : m.values()) {
+                if (nombre != null) {
+                    r.fuente = nombre;
+                }
+                if (conNegrita != null) {
+                    r.negrita = conNegrita;
+                }
+            }
+        }
+        if (!grupo.isEmpty()) {
+            cargando = true;
+            if (nombre != null) {
+                if (!fuente.getItems().contains(nombre)) {
+                    fuente.getItems().add(nombre);
+                }
+                fuente.setValue(nombre);
+            }
+            if (conNegrita != null) {
+                negrita.setSelected(conNegrita);
+            }
+            cargando = false;
+        }
+        alCambiar.run();
+    }
+
     // ---------------------------------------------------------------- para el motor
     /** Las reglas listas para el motor (la letra pasa de nombre a archivo). */
     Map<Integer, ReglaHoja> porHoja() {

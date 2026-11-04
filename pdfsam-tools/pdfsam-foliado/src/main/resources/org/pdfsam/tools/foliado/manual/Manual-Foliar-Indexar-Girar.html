@@ -51,6 +51,7 @@ Los PDF originales <b>nunca</b> se modifican: el resultado siempre se guarda apa
 <div class="paso"><b>Paso 4.</b> En el menú de la izquierda (o en la pantalla de inicio) aparecen <b>Foliar</b>, <b>Indexar PDF</b>, <b>Girar</b> y <b>Manual (Foliar, Indexar, Girar)</b>.</div>
 <div class="ojo"><b>Si Windows muestra “Windows protegió su PC”:</b> toque <b>Más información</b> → <b>Ejecutar de todas formas</b>. Sale porque el programa no tiene firma digital comprada; es normal en programas hechos a la medida.</div>
 <p><b>Este manual también está dentro del programa:</b> en el menú de PDFsam toque <b>Manual (Foliar, Indexar, Girar)</b>, o el botón <b>Manual</b> que tiene cada una de las tres herramientas.</p>
+<p><b>Para regresar al Inicio</b> desde cualquier herramienta, toque el botón <b>← Inicio</b> que está arriba, en todas las pantallas.</p>
 <p>Para crear un acceso directo: clic derecho sobre <code>pdfsam.exe</code> → <b>Enviar a</b> → <b>Escritorio (crear acceso directo)</b>.</p>
 
 <h2 id="foliar">2. Foliar — paso a paso</h2>
@@ -156,7 +157,15 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
 <h3>Paso 4 — Letra, color y tamaño</h3>
 <p>Igual que en Foliar (ver <a href="#letras">Letras</a>). El tamaño normal es 20.</p>
 
-<h3>Paso 5 — Guardar</h3>
+<h3>Paso 5 — Más opciones</h3>
+<ul>
+  <li><b>Con recuadro:</b> dibuja un rectángulo alrededor de cada leyenda.</li>
+  <li><b>Distancia de los lados</b> y <b>Distancia de arriba y abajo:</b> qué tan separadas de las orillas quedan las leyendas (en puntos; 28 puntos ≈ 1 cm). Lo normal es 51 a los lados y 23 arriba y abajo.</li>
+  <li><b>Hojas sin leyendas al inicio:</b> por ejemplo 1 = la carátula queda sin leyendas. Esas hojas no cuentan: la siguiente hoja dice <i>1/9</i> si el PDF tiene 10 hojas.</li>
+  <li><b>Hojas a indexar:</b> vacío = todas. Ej. <code>3-50</code>: solo esas hojas llevan leyendas, y la numeración cuenta solo esas. Vale para todos los PDF de la lista (si un PDF es más corto, se usan las hojas que tenga).</li>
+</ul>
+
+<h3>Paso 6 — Guardar</h3>
 <div class="paso">Toque <b>Indexar y guardar</b> y elija la carpeta de salida. Se crea <b>la misma estructura de subcarpetas con los mismos nombres</b>. No se puede elegir la carpeta donde están los originales (así nunca se reemplazan): use una carpeta nueva.</div>
 <p>Las opciones de Indexar (y de Foliar) se recuerdan para la próxima vez.</p>
 
@@ -177,6 +186,7 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
   <li><b>Quitar todas las personalizaciones:</b> todas vuelven a lo general.</li>
 </ul>
 <p>En Indexar, <b>cada PDF de la lista tiene sus propias hojas personalizadas</b>.</p>
+<p><b>Cambio de letra:</b> si después de personalizar cambia la <b>letra general</b> (o la negrita), el cambio se aplica a <b>todas</b> las hojas, también a las personalizadas y a las de los otros PDF de la lista. Para que una hoja tenga otra letra, cámbiela al final desde su personalización.</p>
 
 <h2 id="letras">6. Letras, colores y números en letras</h2>
 <ul>
@@ -248,6 +258,8 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
 <p>No. Siempre se guarda una copia nueva. En Foliar, si elige el mismo nombre del original, el programa no lo deja. En Indexar no deja elegir la carpeta de los originales.</p></details>
 <details><summary>¿Lo que veo en la vista previa es lo que queda?</summary>
 <p>Sí. La vista previa usa exactamente la misma función que se usa al guardar.</p></details>
+<details><summary>¿Cómo regreso a la pantalla de Inicio?</summary>
+<p>Con el botón <b>← Inicio</b> que aparece arriba en todas las herramientas, o con <b>Inicio</b> en el menú de la izquierda.</p></details>
 <details><summary>¿Necesito internet?</summary>
 <p>No. Todo se hace en su computadora; los PDF no salen a ningún lado.</p></details>
 <details><summary>¿Hay que instalar Java?</summary>
@@ -298,6 +310,12 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
 <p>Porque ahí adentro están los PDF originales y se reemplazarían. Elija o cree una carpeta nueva.</p></details>
 <details><summary>¿Puedo personalizar hojas de varios PDF distintos?</summary>
 <p>Sí. Elija el PDF en la lista y personalice sus hojas; cada PDF guarda las suyas.</p></details>
+<details><summary>¿Cómo dejo la carátula sin leyendas?</summary>
+<p>En <b>5. Más opciones</b> ponga 1 en <b>Hojas sin leyendas al inicio</b>. La numeración empieza en 1 en la hoja siguiente.</p></details>
+<details><summary>Las leyendas quedan muy pegadas a la orilla.</summary>
+<p>Suba <b>Distancia de los lados</b> o <b>Distancia de arriba y abajo</b> en <b>5. Más opciones</b>. En la vista previa se ve el cambio al momento.</p></details>
+<details><summary>Cambié la letra y no cambió en las hojas personalizadas.</summary>
+<p>Ahora sí cambia: la letra general se aplica a todas las hojas, también a las personalizadas.</p></details>
 <details><summary>¿Puedo poner “Página 1 de 10” en vez de “1/10” abajo?</summary>
 <p>Sí: marque <b>Repetir la numeración abajo</b> y elija el formato, o “Personalizado…” y escriba lo que quiera con <code>{pagina}</code> y <code>{total}</code>.</p></details>
 
