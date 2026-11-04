@@ -26,10 +26,10 @@ jobs:
       - name: Instalar gettext
         run: sudo apt-get update && sudo apt-get install -y gettext fonts-dejavu-core
       - name: Compilar todo
-        run: mvn --batch-mode -DskipTests install 2>&1 | tee compilar.log
+        run: set -o pipefail; mvn --batch-mode -DskipTests install 2>&1 | tee compilar.log
       - name: Pruebas de Foliar e Indexar
         if: always()
-        run: xvfb-run mvn --batch-mode -Djava.awt.headless=true -pl pdfsam-tools/pdfsam-foliado test 2>&1 | tee pruebas.log
+        run: set -o pipefail; xvfb-run mvn --batch-mode -Djava.awt.headless=true -pl pdfsam-tools/pdfsam-foliado test 2>&1 | tee pruebas.log
       - name: Guardar resultados en la rama "resultados"
         if: always()
         run: |

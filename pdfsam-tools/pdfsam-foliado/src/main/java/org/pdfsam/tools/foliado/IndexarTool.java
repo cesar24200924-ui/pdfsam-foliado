@@ -28,7 +28,7 @@ public class IndexarTool implements Tool {
 
     private final ToolDescriptor descriptor = builder().category(ToolCategory.EDIT)
             .inputTypes(ToolInputOutputType.MULTIPLE_PDF, ToolInputOutputType.SINGLE_PDF).name("Indexar PDF")
-            .description("Pone leyendas en cada hoja de muchos PDF a la vez")
+            .description("Pone leyendas en cada hoja de muchos PDF a la vez (DPOT, parte del nombre del archivo con 1/10, pie de página y numeración).")
             .priority(ToolPriority.HIGH.getPriority()).build();
 
     private IndexarPanel panel;
@@ -53,7 +53,7 @@ public class IndexarTool implements Tool {
 
     @Override
     public Node graphic() {
-        var icon = new FontIcon(UniconsLine. DPOT, parte del nombre del archivo con 1/10, pie de página y numeración.:TAG_ALT);
+        var icon = new FontIcon(UniconsLine.TAG_ALT);
         icon.getStyleClass().addAll(this.descriptor().category().styleClass(), "tool-icon");
         icon.setAccessibleRole(AccessibleRole.IMAGE_VIEW);
         return icon;
