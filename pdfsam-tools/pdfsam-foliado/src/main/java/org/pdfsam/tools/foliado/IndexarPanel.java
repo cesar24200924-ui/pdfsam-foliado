@@ -330,19 +330,36 @@ class IndexarPanel extends BorderPane {
         vista.dibujo(this::dibujo);
         vista.raton(new VistaPrevia.Raton() {
             @Override
+            public void encima(double fx, double fy) {
+                Motor.Marco m = fx < 0 ? null : leyendaEn(fx, fy);
+                if (m != null) {
+                    // se ve que se puede agarrar: manito y recuadro azul
+                    vista.cursor(javafx.scene.Cursor.OPEN_HAND);
+                    marcar(m, 0, 0);
+                    vista.lblAyuda.setText("Mantenga apretado y arrastre para mover \"" + Motor.LEYENDAS[m.leyenda()]
+                            + "\" (las demás no se mueven).");
+                    sobre = true;
+                } else if (sobre) {
+                    vista.cursor(javafx.scene.Cursor.DEFAULT);
+                    vista.limpiarMarcas();
+                    rotular();
+                    sobre = false;
+                }
+            }
+
+            @Override
             public void clic(double fx, double fy) {
                 agarrada = leyendaEn(fx, fy);
+                if (agarrada != null) {
+                    vista.cursor(javafx.scene.Cursor.CLOSED_HAND);
+                    marcar(agarrada, 0, 0);
+                }
             }
 
             @Override
             public void arrastre(double fx, double fy, double dx, double dy) {
                 if (agarrada != null) {
-                    // el recuadro punteado muestra dónde quedará la leyenda agarrada
-                    float[] t = vista.tamanoHoja();
-                    Motor.Marco m = agarrada;
-                    double cx = (m.x0() + m.x1()) / 2 + dx, cy = (m.y0() + m.y1()) / 2 + dy;
-                    vista.marcaRecuadro(cx / t[0], cy / t[1], m.x1() - m.x0(), m.y1() - m.y0(),
-                            javafx.scene.paint.Color.web("#2b7de9"));
+                    marcar(agarrada, dx, dy); // el recuadro punteado muestra dónde quedará
                 } else if (editor.editando()) {
                     vista.marcaFlecha(dx, dy);
                 }
@@ -352,6 +369,8 @@ class IndexarPanel extends BorderPane {
             public void soltar(double fx, double fy, double dx, double dy) {
                 Motor.Marco m = agarrada;
                 agarrada = null;
+                sobre = false;
+                vista.cursor(javafx.scene.Cursor.DEFAULT);
                 if (m != null) {
                     if (Math.abs(dx) >= 1 || Math.abs(dy) >= 1) {
                         moverLeyenda(m.leyenda(), (float) dx, (float) dy);
@@ -393,7 +412,8 @@ class IndexarPanel extends BorderPane {
         }
         String marca = editor.reglas.containsKey(vista.indice()) ? "  ✎ personalizada" : "";
         vista.lblHoja.setText("Hoja " + (vista.indice() + 1) + " de " + vista.total() + marca);
-        vista.lblAyuda.setText("Vista previa (todavía no se guarda nada).  ·  " + Lote.nombreVisible(items.get(actual).relativa()));
+        vista.lblAyuda.setText("Vista previa (todavía no se guarda nada). Arrastre una leyenda con el ratón para "
+                + "moverla.  ·  " + Lote.nombreVisible(items.get(actual).relativa()));
     }
 
     // ------------------------------------------------------------ opciones
@@ -549,6 +569,25 @@ class IndexarPanel extends BorderPane {
             marcos = m;
             marcosHoja = i;
         };
+    }
+
+    private boolean sobre;
+
+    /** Recuadro azul punteado alrededor de una leyenda (corrido dx, dy puntos). */
+    private void marcar(Motor.Marco m, double dx, double dy) {
+        float[] t = vista.tamanoHoja();
+        double cx = (m.x0() + m.x1()) / 2 + dx, cy = (m.y0() + m.y1()) / 2 + dy;
+        vista.marcaRecuadro(cx / t[0], cy / t[1], m.x1() - m.x0(), m.y1() - m.y0(),
+                javafx.scene.paint.Color.web("#2b7de9"));
+    }
+
+    /** Para las pruebas. */
+    Motor.Marco agarradaParaPrueba() {
+        return agarrada;
+    }
+
+    List<Motor.Marco> marcosParaPrueba() {
+        return marcos;
     }
 
     /** La leyenda que está debajo del ratón (fx, fy = fracción de la hoja), o null. */

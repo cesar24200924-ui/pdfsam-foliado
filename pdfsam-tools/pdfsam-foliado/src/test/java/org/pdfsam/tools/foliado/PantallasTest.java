@@ -153,6 +153,47 @@ class PantallasTest {
         Thread.sleep(2500);
         foto(s, "pantalla_indexar.png");
         foto(s, "manual_indexar.png");
+
+        // agarrar la leyenda de arriba a la derecha con el ratón y arrastrarla (como lo haría una persona)
+        List<Motor.Marco> marcos = enFx(panel::marcosParaPrueba);
+        Motor.Marco der = marcos.stream().filter(m -> m.leyenda() == 2).findFirst().orElseThrow();
+        javafx.scene.image.ImageView img = enFx(() -> panelVista(panel).imagenParaPrueba());
+        float[] t = enFx(() -> panelVista(panel).tamanoHoja());
+        double w = enFx(() -> img.getBoundsInLocal().getWidth()), h = enFx(() -> img.getBoundsInLocal().getHeight());
+        double lx = (der.x0() + der.x1()) / 2 / t[0] * w, ly = (der.y0() + der.y1()) / 2 / t[1] * h;
+        enFx(() -> {
+            raton(img, javafx.scene.input.MouseEvent.MOUSE_MOVED, lx, ly, false);
+            return null;
+        });
+        assertTrue(enFx(() -> img.getCursor()) == javafx.scene.Cursor.OPEN_HAND, "al pasar encima sale la manito");
+        foto(s, "indexar_leyenda_encima.png");
+        enFx(() -> {
+            raton(img, javafx.scene.input.MouseEvent.MOUSE_PRESSED, lx, ly, true);
+            raton(img, javafx.scene.input.MouseEvent.MOUSE_DRAGGED, lx - 120, ly + 60, true);
+            return null;
+        });
+        Motor.Marco agarrada = enFx(panel::agarradaParaPrueba);
+        assertTrue(agarrada != null && agarrada.leyenda() == 2, "agarró la leyenda de arriba a la derecha");
+        foto(s, "indexar_leyenda_arrastrando.png");
+    }
+
+    static VistaPrevia panelVista(javafx.scene.Parent p) {
+        for (javafx.scene.Node n : p.lookupAll("*")) {
+            if (n instanceof VistaPrevia v) {
+                return v;
+            }
+        }
+        throw new AssertionError("sin vista previa");
+    }
+
+    /** Un evento del ratón en (x, y) de la imagen. */
+    static void raton(javafx.scene.Node n, javafx.event.EventType<javafx.scene.input.MouseEvent> tipo, double x,
+            double y, boolean apretado) {
+        var p = n.localToScene(x, y);
+        var sc = n.localToScreen(x, y);
+        javafx.event.Event.fireEvent(n, new javafx.scene.input.MouseEvent(tipo, p.getX(), p.getY(),
+                sc == null ? 0 : sc.getX(), sc == null ? 0 : sc.getY(), javafx.scene.input.MouseButton.PRIMARY, 1,
+                false, false, false, false, apretado, false, false, true, false, false, null));
     }
 
     @Test
