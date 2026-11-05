@@ -52,6 +52,10 @@ class VistaPrevia extends BorderPane {
         void arrastre(double fx, double fy, double dxPuntos, double dyPuntos);
 
         void soltar(double fx, double fy, double dxPuntos, double dyPuntos);
+
+        /** El ratón pasa por encima (sin apretar). fx = -1 cuando sale de la hoja. */
+        default void encima(double fx, double fy) {
+        }
     }
 
     private static final ExecutorService HILO = Executors.newSingleThreadExecutor(r -> {
@@ -131,6 +135,17 @@ class VistaPrevia extends BorderPane {
         imagen.setOnMousePressed(this::presionar);
         imagen.setOnMouseDragged(this::mover);
         imagen.setOnMouseReleased(this::soltar);
+        imagen.setOnMouseMoved(e -> {
+            double[] f = fraccion(e);
+            if (raton != null && f != null && !arrastrando) {
+                raton.encima(f[0], f[1]);
+            }
+        });
+        imagen.setOnMouseExited(e -> {
+            if (raton != null && !arrastrando) {
+                raton.encima(-1, -1);
+            }
+        });
 
         // arrastrar y soltar archivos o carpetas
         for (Node n : List.of(area, this)) {
@@ -357,6 +372,19 @@ class VistaPrevia extends BorderPane {
         r.setStrokeWidth(2);
         r.getStrokeDashArray().addAll(6.0, 3.0);
         marcas.getChildren().add(r);
+    }
+
+    void cursor(javafx.scene.Cursor c) {
+        imagen.setCursor(c);
+    }
+
+    void limpiarMarcas() {
+        marcas.getChildren().clear();
+    }
+
+    /** Para las pruebas: la imagen de la hoja. */
+    ImageView imagenParaPrueba() {
+        return imagen;
     }
 
     /** Flecha desde donde empezó el arrastre. */
