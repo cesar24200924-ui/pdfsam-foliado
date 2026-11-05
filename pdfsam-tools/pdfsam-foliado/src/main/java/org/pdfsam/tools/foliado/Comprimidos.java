@@ -136,16 +136,104 @@ final class Comprimidos {
     private static synchronized boolean motor() {
         if (motorListo == null) {
             try {
-                Path dir = Files.createTempDirectory("pdfsam_7z_");
-                dir.toFile().deleteOnExit();
-                SevenZip.initSevenZipFromPlatformJAR(dir.toFile());
+                cargarMotor();
                 motorListo = true;
             } catch (Throwable e) {
-                motorListo = false;
-                motorError = String.valueOf(e.getMessage());
+                // última oportunidad: que el motor busque solo (así funciona en las pruebas)
+                try {
+                    Path dir = Files.createTempDirectory("pdfsam_7z_");
+                    dir.toFile().deleteOnExit();
+                    SevenZip.initSevenZipFromPlatformJAR(dir.toFile());
+                    motorListo = true;
+                } catch (Throwable e2) {
+                    motorListo = false;
+                    motorError = String.valueOf(e.getMessage());
+                }
             }
         }
         return motorListo;
+    }
+
+    /** Un archivo que viene dentro del motor (sevenzipjbinding-all-platforms), buscado en todos lados. */
+    private static java.io.InputStream recurso(String nombre) {
+        var modulo = ModuleLayer.boot().findModule("sevenzipjbinding.all.platforms");
+        if (modulo.isEmpty() && Comprimidos.class.getModule().getLayer() != null) {
+            modulo = Comprimidos.class.getModule().getLayer().findModule("sevenzipjbinding.all.platforms");
+        }
+        if (modulo.isPresent()) {
+            try {
+                java.io.InputStream in = modulo.get().getResourceAsStream(nombre);
+                if (in != null) {
+                    return in;
+                }
+            } catch (IOException e) {
+                // abajo
+            }
+        }
+        ClassLoader cl = Comprimidos.class.getClassLoader();
+        java.io.InputStream in = cl == null ? null : cl.getResourceAsStream(nombre);
+        return in != null ? in : ClassLoader.getSystemResourceAsStream(nombre);
+    }
+
+    private static java.util.Properties propiedades(String nombre) throws IOException {
+        java.util.Properties p = new java.util.Properties();
+        try (java.io.InputStream in = recurso(nombre)) {
+            if (in == null) {
+                throw new IOException("Falta " + nombre);
+            }
+            p.load(in);
+        }
+        return p;
+    }
+
+    /**
+     * Saca el motor de 7-Zip que corresponde a esta computadora (Windows de 64 bits, etc.) a una carpeta temporal,
+     * lo carga y avisa al motor. Así funciona también en el programa armado (portable o instalado), donde el motor
+     * no encuentra solo sus archivos.
+     */
+    private static void cargarMotor() throws Exception {
+        String so = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
+        String arq = System.getProperty("os.arch", "").toLowerCase(Locale.ROOT);
+        String prefijo = so.contains("win") ? "Windows-" : so.contains("mac") ? "Mac-" : "Linux-";
+        List<String> arqs = new ArrayList<>(List.of(arq));
+        if (arq.equals("x86_64") || arq.equals("amd64")) {
+            arqs.addAll(List.of("amd64", "x86_64"));
+        } else if (arq.equals("x86") || arq.matches("i[3-6]86")) {
+            arqs.addAll(List.of("x86", "i386"));
+        }
+        String plataforma = null;
+        java.util.Properties todas = propiedades("sevenzipjbinding-platforms.properties");
+        for (String a : arqs) {
+            if (todas.containsValue(prefijo + a)) {
+                plataforma = prefijo + a;
+                break;
+            }
+        }
+        if (plataforma == null) {
+            throw new IOException("El motor de 7-Zip no trae versión para " + so + " " + arq);
+        }
+        java.util.Properties libs = propiedades(plataforma + "/sevenzipjbinding-lib.properties");
+        List<String> nombres = new ArrayList<>();
+        for (int i = 1; libs.getProperty("lib." + i + ".name") != null; i++) {
+            nombres.add(libs.getProperty("lib." + i + ".name"));
+        }
+        if (nombres.isEmpty()) {
+            throw new IOException("El motor de 7-Zip está incompleto");
+        }
+        Path dir = Files.createTempDirectory("pdfsam_7z_");
+        dir.toFile().deleteOnExit();
+        for (String n : nombres) {
+            Path destino = dir.resolve(n);
+            try (java.io.InputStream in = recurso(plataforma + "/" + n)) {
+                if (in == null) {
+                    throw new IOException("Falta " + plataforma + "/" + n);
+                }
+                Files.copy(in, destino);
+            }
+            destino.toFile().deleteOnExit();
+            System.load(destino.toAbsolutePath().toString());
+        }
+        SevenZip.initLoadedLibraries();
     }
 
     /**

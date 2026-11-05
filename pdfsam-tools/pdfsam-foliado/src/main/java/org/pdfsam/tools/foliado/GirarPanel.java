@@ -1057,6 +1057,7 @@ class GirarPanel extends BorderPane {
         });
         area.widthProperty().addListener((o, a, b) -> mostrar[0].run());
         area.heightProperty().addListener((o, a, b) -> mostrar[0].run());
+        Ui.estiloDialogo(sc.getRoot());
         s.setScene(sc);
         s.show();
         mostrar[0].run();
@@ -1171,6 +1172,7 @@ class GirarPanel extends BorderPane {
         if (w != null && w.getScene() != null) {
             sc.getStylesheets().addAll(w.getScene().getStylesheets());
         }
+        Ui.estiloDialogo(sc.getRoot());
         v.setScene(sc);
         v.show();
     }

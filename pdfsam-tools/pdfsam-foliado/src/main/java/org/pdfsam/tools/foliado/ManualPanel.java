@@ -118,6 +118,7 @@ class ManualPanel extends BorderPane {
         if (w != null && w.getScene() != null) {
             sc.getStylesheets().addAll(w.getScene().getStylesheets());
         }
+        Ui.estiloDialogo(sc.getRoot());
         s.setScene(sc);
         s.show();
         if (seccion != null) {

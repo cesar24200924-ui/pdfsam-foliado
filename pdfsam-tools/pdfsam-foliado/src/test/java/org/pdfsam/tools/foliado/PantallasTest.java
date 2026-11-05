@@ -177,6 +177,36 @@ class PantallasTest {
         foto(s, "indexar_leyenda_arrastrando.png");
     }
 
+    @Test
+    void avisoConTemaOscuro() throws Exception {
+        for (boolean oscuro : new boolean[] { true, false }) {
+            Scene s = enFx(() -> {
+                javafx.scene.control.ButtonType b1 = new javafx.scene.control.ButtonType("Solo en esta hoja",
+                        javafx.scene.control.ButtonBar.ButtonData.OK_DONE);
+                javafx.scene.control.ButtonType b2 = new javafx.scene.control.ButtonType("En todas las hojas",
+                        javafx.scene.control.ButtonBar.ButtonData.OTHER);
+                javafx.scene.control.Alert a = new javafx.scene.control.Alert(
+                        javafx.scene.control.Alert.AlertType.CONFIRMATION,
+                        "¿La muevo solo en esta hoja o en todas las hojas?", b1, b2,
+                        javafx.scene.control.ButtonType.CANCEL);
+                a.setHeaderText("Mover \"Arriba a la izquierda\"");
+                javafx.scene.control.DialogPane d = a.getDialogPane();
+                Ui.estiloDialogo(d);
+                javafx.scene.layout.StackPane caja = new javafx.scene.layout.StackPane(d);
+                try {
+                    Scene sc = oscuro ? escenaOscura(caja) : escena(caja);
+                    sc.getWindow().setWidth(620);
+                    sc.getWindow().setHeight(260);
+                    return sc;
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            Thread.sleep(800);
+            foto(s, oscuro ? "oscuro_aviso.png" : "claro_aviso.png");
+        }
+    }
+
     static VistaPrevia panelVista(javafx.scene.Parent p) {
         for (javafx.scene.Node n : p.lookupAll("*")) {
             if (n instanceof VistaPrevia v) {
