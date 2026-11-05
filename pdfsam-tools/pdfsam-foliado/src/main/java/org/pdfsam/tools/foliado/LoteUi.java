@@ -220,7 +220,9 @@ final class LoteUi {
                 L.limpiar();
                 return;
             }
-            trabajo = Lote.nombreLibre(carpeta.toPath().resolve(nombre));
+            // se arma en la carpeta temporal y al final se copia completa aquí (así OneDrive no estorba)
+            L.destinoCarpeta = Lote.nombreLibre(carpeta.toPath().resolve(nombre));
+            trabajo = L.temp.resolve("resultado");
         }
         if (alEmpezar != null) {
             alEmpezar.run();
