@@ -47,6 +47,18 @@ jobs:
           git archive --format=zip -o "entrega/PDFsam-Foliar-Indexar-codigo-fuente.zip" HEAD
           cd armar/PDFsam-Foliar-Indexar && 7z a -tzip "../../entrega/Manual-Foliar-Indexar-Girar.zip" Manual > /dev/null && cd ../..
           ls -la entrega
+      - name: Probar los comprimidos en el programa armado (igual que el portable)
+        shell: bash
+        run: |
+          mkdir prueba7z && cd prueba7z
+          mkdir -p Exp/Sub && echo hola > Exp/nota.txt && echo dos > Exp/Sub/dos.txt
+          7z a -pSAR2025 -mhe=on prueba.7z Exp > /dev/null
+          7z a -tzip prueba.zip Exp > /dev/null
+          7z a -ttar prueba.tar Exp > /dev/null && 7z a -tgzip prueba.tar.gz prueba.tar > /dev/null
+          A="../armar/PDFsam-Foliar-Indexar"
+          for f in "prueba.7z SAR2025" prueba.zip prueba.tar.gz; do
+            "$A/runtime/bin/java.exe" -p "$A/app/mods" -m org.pdfsam.tools.foliado/org.pdfsam.tools.foliado.Comprobar $f
+          done
       - name: Instalar WiX (para el instalador)
         shell: bash
         run: |

@@ -64,6 +64,7 @@ final class Ui {
         d.setResizable(true);
         d.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         d.getDialogPane().setMinWidth(420);
+        estiloDialogo(d.getDialogPane());
     }
 
     static void aviso(Node n, String texto) {
@@ -327,6 +328,7 @@ final class Ui {
         if (w != null && w.getScene() != null) {
             sc.getStylesheets().addAll(w.getScene().getStylesheets());
         }
+        Ui.estiloDialogo(sc.getRoot());
         s.setScene(sc);
         s.showAndWait();
     }
@@ -341,6 +343,17 @@ final class Ui {
     }
 
     /** Los colores de estas herramientas (se leen bien con el tema claro y con el oscuro). */
+    /** Botones que se leen bien en tema claro y oscuro (avisos, preguntas y ventanitas). */
+    static void estiloDialogo(javafx.scene.Parent p) {
+        var css = Ui.class.getResource("/org/pdfsam/tools/foliado/dialogos.css");
+        if (css != null && !p.getStylesheets().contains(css.toExternalForm())) {
+            p.getStylesheets().add(css.toExternalForm());
+        }
+        if (!p.getStyleClass().contains("foliado-dialogo")) {
+            p.getStyleClass().add("foliado-dialogo");
+        }
+    }
+
     static void estilo(javafx.scene.Parent p) {
         var css = Ui.class.getResource("/org/pdfsam/tools/foliado/foliado.css");
         if (css != null && !p.getStylesheets().contains(css.toExternalForm())) {
@@ -405,6 +418,7 @@ final class Ui {
         if (w != null && w.getScene() != null) {
             sc.getStylesheets().addAll(w.getScene().getStylesheets());
         }
+        Ui.estiloDialogo(sc.getRoot());
         s.setScene(sc);
         s.setOnCloseRequest(e -> {
             e.consume();

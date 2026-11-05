@@ -1,0 +1,40 @@
+/* Botones de avisos, preguntas y ventanitas: se leen bien con el tema claro y con el oscuro. */
+.foliado-dialogo .button {
+    -fx-background-color: #eef3fa;
+    -fx-text-fill: #1b1f24;
+    -fx-border-color: #9aa9bd;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 6 16 6 16;
+    -fx-font-weight: normal;
+    -fx-opacity: 1;
+}
+.foliado-dialogo .button:hover {
+    -fx-background-color: #d9e6f7;
+    -fx-text-fill: #1b1f24;
+}
+.foliado-dialogo .button:pressed {
+    -fx-background-color: #c3d6f1;
+}
+.foliado-dialogo .button:default {
+    -fx-background-color: #1f6fd1;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #165ab0;
+    -fx-font-weight: bold;
+}
+.foliado-dialogo .button:default:hover {
+    -fx-background-color: #1a5fb4;
+}
+.foliado-dialogo .button:focused {
+    -fx-border-color: #0b4fa8;
+    -fx-border-width: 2;
+}
+.foliado-dialogo .button:disabled {
+    -fx-opacity: 0.55;
+}
+.foliado-dialogo .button .ikonli-font-icon {
+    -fx-icon-color: #1b1f24;
+}
+.foliado-dialogo .button:default .ikonli-font-icon {
+    -fx-icon-color: #ffffff;
+}

@@ -164,6 +164,7 @@ final class LoteUi {
         if (w != null && w.getScene() != null) {
             sc.getStylesheets().addAll(w.getScene().getStylesheets());
         }
+        Ui.estiloDialogo(sc.getRoot());
         v.setScene(sc);
         v.show();
     }
