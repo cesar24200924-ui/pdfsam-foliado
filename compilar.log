@@ -1,0 +1,894 @@
+[INFO] Scanning for projects...
+[INFO] Loaded 24375 auto-discovered prefixes for remote repository central (prefixes-central.txt)
+[INFO] ------------------------------------------------------------------------
+[INFO] Detecting the operating system and CPU architecture
+[INFO] ------------------------------------------------------------------------
+[INFO] os.detected.name: linux
+[INFO] os.detected.arch: x64
+[INFO] os.detected.bitness: 64
+[INFO] os.detected.version: 7.0
+[INFO] os.detected.version.major: 7
+[INFO] os.detected.version.minor: 0
+[INFO] os.detected.release: ubuntu
+[INFO] os.detected.release.version: 24.04
+[INFO] os.detected.release.like.ubuntu: true
+[INFO] os.detected.release.like.debian: true
+[INFO] os.detected.classifier: linux-x64
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] PDFsam                                                             [pom]
+[INFO] PDFsam internationalization                                        [jar]
+[INFO] PDFsam model                                                       [jar]
+[INFO] PDFsam persistence                                                 [jar]
+[INFO] PDFsam themes                                                      [jar]
+[INFO] PDFsam test                                                        [jar]
+[INFO] PDFsam core                                                        [jar]
+[INFO] PDFsam JavaFx components                                           [jar]
+[INFO] PDFsam service                                                     [jar]
+[INFO] PDFsam merge tool                                                  [jar]
+[INFO] PDFsam simple split tool                                           [jar]
+[INFO] PDFsam split by size tool                                          [jar]
+[INFO] PDFsam split by bookmarks tool                                     [jar]
+[INFO] PDFsam alternate mix tool                                          [jar]
+[INFO] PDFsam rotate tool                                                 [jar]
+[INFO] PDFsam Foliar e Indexar                                            [jar]
+[INFO] PDFsam extract tool                                                [jar]
+[INFO] PDFsam backpages tool                                              [jar]
+[INFO] PDFsam GUI                                                         [jar]
+[INFO] PDFsam fonts                                                       [jar]
+[INFO] PDFsam Basic Edition application                                   [jar]
+[INFO] PDFsam docs                                                        [pom]
+[INFO] 
+[INFO] ----------------------< org.pdfsam:pdfsam-parent >----------------------
+[INFO] Building PDFsam 6.0.11-SNAPSHOT                                   [1/22]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ pdfsam-parent ---
+[INFO] 
+[INFO] --- install:3.2.0:install (default-install) @ pdfsam-parent ---
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pom.xml to /home/runner/.m2/repository/org/pdfsam/pdfsam-parent/6.0.11-SNAPSHOT/pdfsam-parent-6.0.11-SNAPSHOT.pom
+[INFO] 
+[INFO] -----------------------< org.pdfsam:pdfsam-i18n >-----------------------
+[INFO] Building PDFsam internationalization 6.0.11-SNAPSHOT              [2/22]
+[INFO]   from pdfsam-i18n/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] Loaded 64 auto-discovered prefixes for remote repository apache.snapshots (prefixes-apache.snapshots.txt)
+[INFO] Loaded 64 auto-discovered prefixes for remote repository pdfbox-snapshot (prefixes-pdfbox-snapshot.txt)
+[INFO] 
+[INFO] --- gettext:1.2.4:dist (gettext-dist) @ pdfsam-i18n ---
+[INFO] Processing uk.po
+[INFO] Processing bs.po
+[INFO] Processing sat.po
+[INFO] Processing it.po
+[INFO] Processing pt_BR.po
+[INFO] Processing eo.po
+[INFO] Processing nb.po
+[INFO] Processing sc.po
+[INFO] Processing co.po
+[INFO] Processing hu.po
+[INFO] Processing oc.po
+[INFO] Processing fr.po
+[INFO] Processing is.po
+[INFO] Processing fi.po
+[INFO] Processing ko.po
+[INFO] Processing ms.po
+[INFO] Processing sv.po
+[INFO] Processing ja.po
+[INFO] Processing kab.po
+[INFO] Processing en_GB.po
+[INFO] Processing th.po
+[INFO] Processing he.po
+[INFO] Processing id.po
+[INFO] Processing ckb.po
+[INFO] Processing ar.po
+[INFO] Processing da.po
+[INFO] Processing el.po
+[INFO] Processing ro.po
+[INFO] Processing af.po
+[INFO] Processing eu.po
+[INFO] Processing tr.po
+[INFO] Processing lt.po
+[INFO] Processing lv.po
+[INFO] Processing ast.po
+[INFO] Processing hy.po
+[INFO] Processing hr.po
+[INFO] Processing sk.po
+[INFO] Processing nl.po
+[INFO] Processing hi.po
+[INFO] Processing pt.po
+[INFO] Processing es.po
+[INFO] Processing cs.po
+[INFO] Processing de.po
+[INFO] Processing gl.po
+[INFO] Processing ca.po
+[INFO] Processing bg.po
+[INFO] Processing zh_TW.po
+[INFO] Processing pl.po
+[INFO] Processing zh_CN.po
+[INFO] Processing ru.po
+[INFO] Processing sr.po
+[INFO] Processing et.po
+[INFO] Processing lo.po
+[INFO] Processing sl.po
+[INFO] Creating resource bundle for source locale
+[INFO] Creating default resource bundle
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ pdfsam-i18n ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- antrun:3.2.0:run (rename-hebrew-properties) @ pdfsam-i18n ---
+[INFO] Executing tasks
+[INFO]      [move] Moving 1 file to /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-i18n/target/classes/org/pdfsam/i18n
+[INFO] Executed tasks
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ pdfsam-i18n ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 3 source files with javac [debug release 25 module-path] to target/classes
+[INFO] JDK-8318913 workaround: patched module-info.class requires version from [25] to [25] on 1 JDK modules [java.base]
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ pdfsam-i18n ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ pdfsam-i18n ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 3 source files with javac [debug release 25 module-path] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.6.0:test (default-test) @ pdfsam-i18n ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ pdfsam-i18n ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-i18n/target/pdfsam-i18n-6.0.11-SNAPSHOT.jar
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ pdfsam-i18n ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-i18n/target/pdfsam-i18n-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] --- install:3.2.0:install (default-install) @ pdfsam-i18n ---
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-i18n/pom.xml to /home/runner/.m2/repository/org/pdfsam/pdfsam-i18n/6.0.11-SNAPSHOT/pdfsam-i18n-6.0.11-SNAPSHOT.pom
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-i18n/target/pdfsam-i18n-6.0.11-SNAPSHOT.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-i18n/6.0.11-SNAPSHOT/pdfsam-i18n-6.0.11-SNAPSHOT.jar
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-i18n/target/pdfsam-i18n-6.0.11-SNAPSHOT-sources.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-i18n/6.0.11-SNAPSHOT/pdfsam-i18n-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] ----------------------< org.pdfsam:pdfsam-model >-----------------------
+[INFO] Building PDFsam model 6.0.11-SNAPSHOT                             [3/22]
+[INFO]   from pdfsam-model/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ pdfsam-model ---
+[INFO] Copying 2 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ pdfsam-model ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 72 source files with javac [debug release 25 module-path] to target/classes
+[INFO] JDK-8318913 workaround: patched module-info.class requires version from [25] to [25] on 1 JDK modules [java.base]
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ pdfsam-model ---
+[INFO] Copying 2 resources from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ pdfsam-model ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 33 source files with javac [debug release 25 module-path] to target/test-classes
+[WARNING] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-model/src/test/java/org/pdfsam/model/task/PdfRotationInputTest.java:[52,101] non-varargs call of varargs method with inexact argument type for last parameter;
+  cast to org.sejda.model.pdf.page.PagesSelection for a varargs call
+  cast to org.sejda.model.pdf.page.PagesSelection[] for a non-varargs call and to suppress this warning
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-model/src/test/java/org/pdfsam/model/ObservableAtomicReferenceTest.java: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-model/src/test/java/org/pdfsam/model/ObservableAtomicReferenceTest.java uses unchecked or unsafe operations.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-model/src/test/java/org/pdfsam/model/ObservableAtomicReferenceTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.6.0:test (default-test) @ pdfsam-model ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ pdfsam-model ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-model/target/pdfsam-model-6.0.11-SNAPSHOT.jar
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ pdfsam-model ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-model/target/pdfsam-model-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] --- install:3.2.0:install (default-install) @ pdfsam-model ---
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-model/pom.xml to /home/runner/.m2/repository/org/pdfsam/pdfsam-model/6.0.11-SNAPSHOT/pdfsam-model-6.0.11-SNAPSHOT.pom
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-model/target/pdfsam-model-6.0.11-SNAPSHOT.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-model/6.0.11-SNAPSHOT/pdfsam-model-6.0.11-SNAPSHOT.jar
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-model/target/pdfsam-model-6.0.11-SNAPSHOT-sources.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-model/6.0.11-SNAPSHOT/pdfsam-model-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] -------------------< org.pdfsam:pdfsam-persistence >--------------------
+[INFO] Building PDFsam persistence 6.0.11-SNAPSHOT                       [4/22]
+[INFO]   from pdfsam-persistence/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ pdfsam-persistence ---
+[INFO] skip non existing resourceDirectory /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-persistence/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ pdfsam-persistence ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 6 source files with javac [debug release 25 module-path] to target/classes
+[INFO] JDK-8318913 workaround: patched module-info.class requires version from [25] to [25] on 2 JDK modules [java.base, java.prefs]
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ pdfsam-persistence ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ pdfsam-persistence ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 3 source files with javac [debug release 25 module-path] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.6.0:test (default-test) @ pdfsam-persistence ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ pdfsam-persistence ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-persistence/target/pdfsam-persistence-6.0.11-SNAPSHOT.jar
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ pdfsam-persistence ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-persistence/target/pdfsam-persistence-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] --- install:3.2.0:install (default-install) @ pdfsam-persistence ---
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-persistence/pom.xml to /home/runner/.m2/repository/org/pdfsam/pdfsam-persistence/6.0.11-SNAPSHOT/pdfsam-persistence-6.0.11-SNAPSHOT.pom
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-persistence/target/pdfsam-persistence-6.0.11-SNAPSHOT.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-persistence/6.0.11-SNAPSHOT/pdfsam-persistence-6.0.11-SNAPSHOT.jar
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-persistence/target/pdfsam-persistence-6.0.11-SNAPSHOT-sources.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-persistence/6.0.11-SNAPSHOT/pdfsam-persistence-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] ----------------------< org.pdfsam:pdfsam-themes >----------------------
+[INFO] Building PDFsam themes 6.0.11-SNAPSHOT                            [5/22]
+[INFO]   from pdfsam-themes/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ pdfsam-themes ---
+[INFO] Copying 20 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ pdfsam-themes ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 8 source files with javac [debug release 25 module-path] to target/classes
+[INFO] JDK-8318913 workaround: patched module-info.class requires version from [25] to [25] on 1 JDK modules [java.base]
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ pdfsam-themes ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ pdfsam-themes ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.6.0:test (default-test) @ pdfsam-themes ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ pdfsam-themes ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-themes/target/pdfsam-themes-6.0.11-SNAPSHOT.jar
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ pdfsam-themes ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-themes/target/pdfsam-themes-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] --- install:3.2.0:install (default-install) @ pdfsam-themes ---
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-themes/pom.xml to /home/runner/.m2/repository/org/pdfsam/pdfsam-themes/6.0.11-SNAPSHOT/pdfsam-themes-6.0.11-SNAPSHOT.pom
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-themes/target/pdfsam-themes-6.0.11-SNAPSHOT.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-themes/6.0.11-SNAPSHOT/pdfsam-themes-6.0.11-SNAPSHOT.jar
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-themes/target/pdfsam-themes-6.0.11-SNAPSHOT-sources.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-themes/6.0.11-SNAPSHOT/pdfsam-themes-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] -----------------------< org.pdfsam:pdfsam-test >-----------------------
+[INFO] Building PDFsam test 6.0.11-SNAPSHOT                              [6/22]
+[INFO]   from pdfsam-test/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ pdfsam-test ---
+[INFO] skip non existing resourceDirectory /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-test/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ pdfsam-test ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 13 source files with javac [debug release 25 module-path] to target/classes
+[INFO] JDK-8318913 workaround: patched module-info.class requires version from [25] to [25] on 2 JDK modules [java.base, java.desktop]
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ pdfsam-test ---
+[INFO] skip non existing resourceDirectory /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-test/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ pdfsam-test ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.6.0:test (default-test) @ pdfsam-test ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ pdfsam-test ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-test/target/pdfsam-test-6.0.11-SNAPSHOT.jar
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ pdfsam-test ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-test/target/pdfsam-test-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] --- install:3.2.0:install (default-install) @ pdfsam-test ---
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-test/pom.xml to /home/runner/.m2/repository/org/pdfsam/pdfsam-test/6.0.11-SNAPSHOT/pdfsam-test-6.0.11-SNAPSHOT.pom
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-test/target/pdfsam-test-6.0.11-SNAPSHOT.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-test/6.0.11-SNAPSHOT/pdfsam-test-6.0.11-SNAPSHOT.jar
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-test/target/pdfsam-test-6.0.11-SNAPSHOT-sources.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-test/6.0.11-SNAPSHOT/pdfsam-test-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] -----------------------< org.pdfsam:pdfsam-core >-----------------------
+[INFO] Building PDFsam core 6.0.11-SNAPSHOT                              [7/22]
+[INFO]   from pdfsam-core/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ pdfsam-core ---
+[INFO] skip non existing resourceDirectory /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-core/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ pdfsam-core ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 38 source files with javac [debug release 25 module-path] to target/classes
+[INFO] JDK-8318913 workaround: patched module-info.class requires version from [25] to [25] on 2 JDK modules [java.base, java.xml]
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-core/src/main/java/org/pdfsam/core/support/validation/Validators.java: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-core/src/main/java/org/pdfsam/core/support/validation/Validators.java uses unchecked or unsafe operations.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-core/src/main/java/org/pdfsam/core/support/validation/Validators.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ pdfsam-core ---
+[INFO] Copying 2 resources from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ pdfsam-core ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 23 source files with javac [debug release 25 module-path] to target/test-classes
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-core/src/test/java/org/pdfsam/core/context/ApplicationContextTest.java: Some input files use or override a deprecated API.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-core/src/test/java/org/pdfsam/core/context/ApplicationContextTest.java: Recompile with -Xlint:deprecation for details.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-core/src/test/java/org/pdfsam/core/context/ApplicationPersistentSettingsTest.java: Some input files use unchecked or unsafe operations.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-core/src/test/java/org/pdfsam/core/context/ApplicationPersistentSettingsTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.6.0:test (default-test) @ pdfsam-core ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ pdfsam-core ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-core/target/pdfsam-core-6.0.11-SNAPSHOT.jar
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ pdfsam-core ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-core/target/pdfsam-core-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] --- install:3.2.0:install (default-install) @ pdfsam-core ---
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-core/pom.xml to /home/runner/.m2/repository/org/pdfsam/pdfsam-core/6.0.11-SNAPSHOT/pdfsam-core-6.0.11-SNAPSHOT.pom
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-core/target/pdfsam-core-6.0.11-SNAPSHOT.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-core/6.0.11-SNAPSHOT/pdfsam-core-6.0.11-SNAPSHOT.jar
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-core/target/pdfsam-core-6.0.11-SNAPSHOT-sources.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-core/6.0.11-SNAPSHOT/pdfsam-core-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] ------------------< org.pdfsam:pdfsam-ui-components >-------------------
+[INFO] Building PDFsam JavaFx components 6.0.11-SNAPSHOT                 [8/22]
+[INFO]   from pdfsam-ui-components/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ pdfsam-ui-components ---
+[INFO] skip non existing resourceDirectory /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-ui-components/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ pdfsam-ui-components ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 72 source files with javac [debug release 25 module-path] to target/classes
+[INFO] JDK-8318913 workaround: patched module-info.class requires version from [25] to [25] on 1 JDK modules [java.base]
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-ui-components/src/main/java/org/pdfsam/ui/components/io/BrowsableOutputDirectoryField.java: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-ui-components/src/main/java/org/pdfsam/ui/components/io/BrowsableOutputDirectoryField.java uses unchecked or unsafe operations.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-ui-components/src/main/java/org/pdfsam/ui/components/io/BrowsableOutputDirectoryField.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ pdfsam-ui-components ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ pdfsam-ui-components ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 57 source files with javac [debug release 25 module-path] to target/test-classes
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-ui-components/src/test/java/org/pdfsam/ui/components/commons/UrlButtonTest.java: Some input files use unchecked or unsafe operations.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-ui-components/src/test/java/org/pdfsam/ui/components/commons/UrlButtonTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.6.0:test (default-test) @ pdfsam-ui-components ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ pdfsam-ui-components ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-ui-components/target/pdfsam-ui-components-6.0.11-SNAPSHOT.jar
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ pdfsam-ui-components ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-ui-components/target/pdfsam-ui-components-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] --- install:3.2.0:install (default-install) @ pdfsam-ui-components ---
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-ui-components/pom.xml to /home/runner/.m2/repository/org/pdfsam/pdfsam-ui-components/6.0.11-SNAPSHOT/pdfsam-ui-components-6.0.11-SNAPSHOT.pom
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-ui-components/target/pdfsam-ui-components-6.0.11-SNAPSHOT.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-ui-components/6.0.11-SNAPSHOT/pdfsam-ui-components-6.0.11-SNAPSHOT.jar
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-ui-components/target/pdfsam-ui-components-6.0.11-SNAPSHOT-sources.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-ui-components/6.0.11-SNAPSHOT/pdfsam-ui-components-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] ---------------------< org.pdfsam:pdfsam-service >----------------------
+[INFO] Building PDFsam service 6.0.11-SNAPSHOT                           [9/22]
+[INFO]   from pdfsam-service/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ pdfsam-service ---
+[INFO] skip non existing resourceDirectory /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-service/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ pdfsam-service ---
+[WARNING] *************************************************************************************************************************************
+[WARNING] * Required filename-based automodules detected: [dec-0.1.2.jar]. Please don't publish this project to a public artifact repository! *
+[WARNING] *************************************************************************************************************************************
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 30 source files with javac [debug release 25 module-path] to target/classes
+[INFO] JDK-8318913 workaround: patched module-info.class requires version from [25] to [25] on 1 JDK modules [java.base]
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-service/src/main/java/org/pdfsam/service/news/DefaultNewsService.java: Some input files use or override a deprecated API.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-service/src/main/java/org/pdfsam/service/news/DefaultNewsService.java: Recompile with -Xlint:deprecation for details.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-service/src/main/java/org/pdfsam/service/update/DefaultUpdateService.java: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-service/src/main/java/org/pdfsam/service/update/DefaultUpdateService.java uses unchecked or unsafe operations.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-service/src/main/java/org/pdfsam/service/update/DefaultUpdateService.java: Recompile with -Xlint:unchecked for details.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-service/src/main/java/org/pdfsam/service/ui/WorkspaceController.java: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-service/src/main/java/org/pdfsam/service/ui/WorkspaceController.java uses preview features of Java SE 25.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-service/src/main/java/org/pdfsam/service/ui/WorkspaceController.java: Recompile with -Xlint:preview for details.
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ pdfsam-service ---
+[INFO] Copying 12 resources from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ pdfsam-service ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 21 source files with javac [debug release 25 module-path] to target/test-classes
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-service/src/test/java/org/pdfsam/service/news/DefaultNewsServiceTest.java: Some input files use or override a deprecated API.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-service/src/test/java/org/pdfsam/service/news/DefaultNewsServiceTest.java: Recompile with -Xlint:deprecation for details.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-service/src/test/java/org/pdfsam/service/news/NewsControllerTest.java: Some input files use unchecked or unsafe operations.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-service/src/test/java/org/pdfsam/service/news/NewsControllerTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.6.0:test (default-test) @ pdfsam-service ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ pdfsam-service ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-service/target/pdfsam-service-6.0.11-SNAPSHOT.jar
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ pdfsam-service ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-service/target/pdfsam-service-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] --- install:3.2.0:install (default-install) @ pdfsam-service ---
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-service/pom.xml to /home/runner/.m2/repository/org/pdfsam/pdfsam-service/6.0.11-SNAPSHOT/pdfsam-service-6.0.11-SNAPSHOT.pom
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-service/target/pdfsam-service-6.0.11-SNAPSHOT.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-service/6.0.11-SNAPSHOT/pdfsam-service-6.0.11-SNAPSHOT.jar
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-service/target/pdfsam-service-6.0.11-SNAPSHOT-sources.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-service/6.0.11-SNAPSHOT/pdfsam-service-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] ----------------------< org.pdfsam:pdfsam-merge >-----------------------
+[INFO] Building PDFsam merge tool 6.0.11-SNAPSHOT                       [10/22]
+[INFO]   from pdfsam-tools/pdfsam-merge/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ pdfsam-merge ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ pdfsam-merge ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 6 source files with javac [debug release 25 module-path] to target/classes
+[INFO] JDK-8318913 workaround: patched module-info.class requires version from [25] to [25] on 1 JDK modules [java.base]
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ pdfsam-merge ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ pdfsam-merge ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 4 source files with javac [debug release 25 module-path] to target/test-classes
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-merge/src/test/java/org/pdfsam/tools/merge/MergeOptionsPaneTest.java: Some input files use unchecked or unsafe operations.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-merge/src/test/java/org/pdfsam/tools/merge/MergeOptionsPaneTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.6.0:test (default-test) @ pdfsam-merge ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ pdfsam-merge ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-merge/target/pdfsam-merge-6.0.11-SNAPSHOT.jar
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ pdfsam-merge ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-merge/target/pdfsam-merge-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] --- install:3.2.0:install (default-install) @ pdfsam-merge ---
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-merge/pom.xml to /home/runner/.m2/repository/org/pdfsam/pdfsam-merge/6.0.11-SNAPSHOT/pdfsam-merge-6.0.11-SNAPSHOT.pom
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-merge/target/pdfsam-merge-6.0.11-SNAPSHOT.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-merge/6.0.11-SNAPSHOT/pdfsam-merge-6.0.11-SNAPSHOT.jar
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-merge/target/pdfsam-merge-6.0.11-SNAPSHOT-sources.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-merge/6.0.11-SNAPSHOT/pdfsam-merge-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] -------------------< org.pdfsam:pdfsam-simple-split >-------------------
+[INFO] Building PDFsam simple split tool 6.0.11-SNAPSHOT                [11/22]
+[INFO]   from pdfsam-tools/pdfsam-simple-split/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ pdfsam-simple-split ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ pdfsam-simple-split ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 8 source files with javac [debug release 25 module-path] to target/classes
+[INFO] JDK-8318913 workaround: patched module-info.class requires version from [25] to [25] on 1 JDK modules [java.base]
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ pdfsam-simple-split ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ pdfsam-simple-split ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 4 source files with javac [debug release 25 module-path] to target/test-classes
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-simple-split/src/test/java/org/pdfsam/tools/split/SplitAfterPredefinedSetOfPagesRadioButtonTest.java: Some input files use unchecked or unsafe operations.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-simple-split/src/test/java/org/pdfsam/tools/split/SplitAfterPredefinedSetOfPagesRadioButtonTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.6.0:test (default-test) @ pdfsam-simple-split ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ pdfsam-simple-split ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-simple-split/target/pdfsam-simple-split-6.0.11-SNAPSHOT.jar
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ pdfsam-simple-split ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-simple-split/target/pdfsam-simple-split-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] --- install:3.2.0:install (default-install) @ pdfsam-simple-split ---
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-simple-split/pom.xml to /home/runner/.m2/repository/org/pdfsam/pdfsam-simple-split/6.0.11-SNAPSHOT/pdfsam-simple-split-6.0.11-SNAPSHOT.pom
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-simple-split/target/pdfsam-simple-split-6.0.11-SNAPSHOT.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-simple-split/6.0.11-SNAPSHOT/pdfsam-simple-split-6.0.11-SNAPSHOT.jar
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-simple-split/target/pdfsam-simple-split-6.0.11-SNAPSHOT-sources.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-simple-split/6.0.11-SNAPSHOT/pdfsam-simple-split-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] ------------------< org.pdfsam:pdfsam-split-by-size >-------------------
+[INFO] Building PDFsam split by size tool 6.0.11-SNAPSHOT               [12/22]
+[INFO]   from pdfsam-tools/pdfsam-split-by-size/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ pdfsam-split-by-size ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ pdfsam-split-by-size ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 7 source files with javac [debug release 25 module-path] to target/classes
+[INFO] JDK-8318913 workaround: patched module-info.class requires version from [25] to [25] on 1 JDK modules [java.base]
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ pdfsam-split-by-size ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ pdfsam-split-by-size ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 5 source files with javac [debug release 25 module-path] to target/test-classes
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-split-by-size/src/test/java/org/pdfsam/tools/splitbysize/SplitOptionsPaneTest.java: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-split-by-size/src/test/java/org/pdfsam/tools/splitbysize/SplitOptionsPaneTest.java uses unchecked or unsafe operations.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-split-by-size/src/test/java/org/pdfsam/tools/splitbysize/SplitOptionsPaneTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.6.0:test (default-test) @ pdfsam-split-by-size ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ pdfsam-split-by-size ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-split-by-size/target/pdfsam-split-by-size-6.0.11-SNAPSHOT.jar
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ pdfsam-split-by-size ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-split-by-size/target/pdfsam-split-by-size-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] --- install:3.2.0:install (default-install) @ pdfsam-split-by-size ---
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-split-by-size/pom.xml to /home/runner/.m2/repository/org/pdfsam/pdfsam-split-by-size/6.0.11-SNAPSHOT/pdfsam-split-by-size-6.0.11-SNAPSHOT.pom
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-split-by-size/target/pdfsam-split-by-size-6.0.11-SNAPSHOT.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-split-by-size/6.0.11-SNAPSHOT/pdfsam-split-by-size-6.0.11-SNAPSHOT.jar
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-split-by-size/target/pdfsam-split-by-size-6.0.11-SNAPSHOT-sources.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-split-by-size/6.0.11-SNAPSHOT/pdfsam-split-by-size-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] ----------------< org.pdfsam:pdfsam-split-by-bookmarks >----------------
+[INFO] Building PDFsam split by bookmarks tool 6.0.11-SNAPSHOT          [13/22]
+[INFO]   from pdfsam-tools/pdfsam-split-by-bookmarks/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ pdfsam-split-by-bookmarks ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ pdfsam-split-by-bookmarks ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 6 source files with javac [debug release 25 module-path] to target/classes
+[INFO] JDK-8318913 workaround: patched module-info.class requires version from [25] to [25] on 1 JDK modules [java.base]
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ pdfsam-split-by-bookmarks ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ pdfsam-split-by-bookmarks ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 4 source files with javac [debug release 25 module-path] to target/test-classes
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-split-by-bookmarks/src/test/java/org/pdfsam/tools/splitbybookmarks/BookmarksLevelComboBoxTest.java: Some input files use unchecked or unsafe operations.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-split-by-bookmarks/src/test/java/org/pdfsam/tools/splitbybookmarks/BookmarksLevelComboBoxTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.6.0:test (default-test) @ pdfsam-split-by-bookmarks ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ pdfsam-split-by-bookmarks ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-split-by-bookmarks/target/pdfsam-split-by-bookmarks-6.0.11-SNAPSHOT.jar
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ pdfsam-split-by-bookmarks ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-split-by-bookmarks/target/pdfsam-split-by-bookmarks-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] --- install:3.2.0:install (default-install) @ pdfsam-split-by-bookmarks ---
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-split-by-bookmarks/pom.xml to /home/runner/.m2/repository/org/pdfsam/pdfsam-split-by-bookmarks/6.0.11-SNAPSHOT/pdfsam-split-by-bookmarks-6.0.11-SNAPSHOT.pom
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-split-by-bookmarks/target/pdfsam-split-by-bookmarks-6.0.11-SNAPSHOT.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-split-by-bookmarks/6.0.11-SNAPSHOT/pdfsam-split-by-bookmarks-6.0.11-SNAPSHOT.jar
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-split-by-bookmarks/target/pdfsam-split-by-bookmarks-6.0.11-SNAPSHOT-sources.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-split-by-bookmarks/6.0.11-SNAPSHOT/pdfsam-split-by-bookmarks-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] ------------------< org.pdfsam:pdfsam-alternate-mix >-------------------
+[INFO] Building PDFsam alternate mix tool 6.0.11-SNAPSHOT               [14/22]
+[INFO]   from pdfsam-tools/pdfsam-alternate-mix/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ pdfsam-alternate-mix ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ pdfsam-alternate-mix ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 5 source files with javac [debug release 25 module-path] to target/classes
+[INFO] JDK-8318913 workaround: patched module-info.class requires version from [25] to [25] on 1 JDK modules [java.base]
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ pdfsam-alternate-mix ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ pdfsam-alternate-mix ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 3 source files with javac [debug release 25 module-path] to target/test-classes
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-alternate-mix/src/test/java/org/pdfsam/tools/alternatemix/AlternateMixSelectionPaneTest.java: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-alternate-mix/src/test/java/org/pdfsam/tools/alternatemix/AlternateMixSelectionPaneTest.java uses unchecked or unsafe operations.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-alternate-mix/src/test/java/org/pdfsam/tools/alternatemix/AlternateMixSelectionPaneTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.6.0:test (default-test) @ pdfsam-alternate-mix ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ pdfsam-alternate-mix ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-alternate-mix/target/pdfsam-alternate-mix-6.0.11-SNAPSHOT.jar
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ pdfsam-alternate-mix ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-alternate-mix/target/pdfsam-alternate-mix-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] --- install:3.2.0:install (default-install) @ pdfsam-alternate-mix ---
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-alternate-mix/pom.xml to /home/runner/.m2/repository/org/pdfsam/pdfsam-alternate-mix/6.0.11-SNAPSHOT/pdfsam-alternate-mix-6.0.11-SNAPSHOT.pom
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-alternate-mix/target/pdfsam-alternate-mix-6.0.11-SNAPSHOT.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-alternate-mix/6.0.11-SNAPSHOT/pdfsam-alternate-mix-6.0.11-SNAPSHOT.jar
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-alternate-mix/target/pdfsam-alternate-mix-6.0.11-SNAPSHOT-sources.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-alternate-mix/6.0.11-SNAPSHOT/pdfsam-alternate-mix-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] ----------------------< org.pdfsam:pdfsam-rotate >----------------------
+[INFO] Building PDFsam rotate tool 6.0.11-SNAPSHOT                      [15/22]
+[INFO]   from pdfsam-tools/pdfsam-rotate/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ pdfsam-rotate ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ pdfsam-rotate ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 6 source files with javac [debug release 25 module-path] to target/classes
+[INFO] JDK-8318913 workaround: patched module-info.class requires version from [25] to [25] on 1 JDK modules [java.base]
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ pdfsam-rotate ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ pdfsam-rotate ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 4 source files with javac [debug release 25 module-path] to target/test-classes
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-rotate/src/test/java/org/pdfsam/tools/rotate/RotateOptionsPaneTest.java: Some input files use unchecked or unsafe operations.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-rotate/src/test/java/org/pdfsam/tools/rotate/RotateOptionsPaneTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.6.0:test (default-test) @ pdfsam-rotate ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ pdfsam-rotate ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-rotate/target/pdfsam-rotate-6.0.11-SNAPSHOT.jar
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ pdfsam-rotate ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-rotate/target/pdfsam-rotate-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] --- install:3.2.0:install (default-install) @ pdfsam-rotate ---
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-rotate/pom.xml to /home/runner/.m2/repository/org/pdfsam/pdfsam-rotate/6.0.11-SNAPSHOT/pdfsam-rotate-6.0.11-SNAPSHOT.pom
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-rotate/target/pdfsam-rotate-6.0.11-SNAPSHOT.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-rotate/6.0.11-SNAPSHOT/pdfsam-rotate-6.0.11-SNAPSHOT.jar
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-rotate/target/pdfsam-rotate-6.0.11-SNAPSHOT-sources.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-rotate/6.0.11-SNAPSHOT/pdfsam-rotate-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] ---------------------< org.pdfsam:pdfsam-foliado >----------------------
+[INFO] Building PDFsam Foliar e Indexar 6.0.11-SNAPSHOT                 [16/22]
+[INFO]   from pdfsam-tools/pdfsam-foliado/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ pdfsam-foliado ---
+[INFO] Copying 10 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ pdfsam-foliado ---
+[WARNING] ******************************************************************************************************************************************************************************************************
+[WARNING] * Required filename-based automodules detected: [sevenzipjbinding-16.02-2.01.jar, sevenzipjbinding-all-platforms-16.02-2.01.jar]. Please don't publish this project to a public artifact repository! *
+[WARNING] ******************************************************************************************************************************************************************************************************
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 24 source files with javac [debug release 25 module-path] to target/classes
+[INFO] JDK-8318913 workaround: patched module-info.class requires version from [25] to [25] on 3 JDK modules [java.base, java.desktop, java.xml]
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ pdfsam-foliado ---
+[INFO] skip non existing resourceDirectory /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-foliado/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ pdfsam-foliado ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 3 source files with javac [debug release 25 module-path] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.6.0:test (default-test) @ pdfsam-foliado ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ pdfsam-foliado ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-foliado/target/pdfsam-foliado-6.0.11-SNAPSHOT.jar
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ pdfsam-foliado ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-foliado/target/pdfsam-foliado-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] --- install:3.2.0:install (default-install) @ pdfsam-foliado ---
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-foliado/pom.xml to /home/runner/.m2/repository/org/pdfsam/pdfsam-foliado/6.0.11-SNAPSHOT/pdfsam-foliado-6.0.11-SNAPSHOT.pom
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-foliado/target/pdfsam-foliado-6.0.11-SNAPSHOT.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-foliado/6.0.11-SNAPSHOT/pdfsam-foliado-6.0.11-SNAPSHOT.jar
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-foliado/target/pdfsam-foliado-6.0.11-SNAPSHOT-sources.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-foliado/6.0.11-SNAPSHOT/pdfsam-foliado-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] ---------------------< org.pdfsam:pdfsam-extract >----------------------
+[INFO] Building PDFsam extract tool 6.0.11-SNAPSHOT                     [17/22]
+[INFO]   from pdfsam-tools/pdfsam-extract/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ pdfsam-extract ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ pdfsam-extract ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 6 source files with javac [debug release 25 module-path] to target/classes
+[INFO] JDK-8318913 workaround: patched module-info.class requires version from [25] to [25] on 1 JDK modules [java.base]
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ pdfsam-extract ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ pdfsam-extract ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 4 source files with javac [debug release 25 module-path] to target/test-classes
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-extract/src/test/java/org/pdfsam/tools/extract/ExtractOptionsPaneTest.java: Some input files use unchecked or unsafe operations.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-extract/src/test/java/org/pdfsam/tools/extract/ExtractOptionsPaneTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.6.0:test (default-test) @ pdfsam-extract ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ pdfsam-extract ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-extract/target/pdfsam-extract-6.0.11-SNAPSHOT.jar
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ pdfsam-extract ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-extract/target/pdfsam-extract-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] --- install:3.2.0:install (default-install) @ pdfsam-extract ---
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-extract/pom.xml to /home/runner/.m2/repository/org/pdfsam/pdfsam-extract/6.0.11-SNAPSHOT/pdfsam-extract-6.0.11-SNAPSHOT.pom
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-extract/target/pdfsam-extract-6.0.11-SNAPSHOT.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-extract/6.0.11-SNAPSHOT/pdfsam-extract-6.0.11-SNAPSHOT.jar
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-extract/target/pdfsam-extract-6.0.11-SNAPSHOT-sources.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-extract/6.0.11-SNAPSHOT/pdfsam-extract-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] --------------------< org.pdfsam:pdfsam-backpages >---------------------
+[INFO] Building PDFsam backpages tool 6.0.11-SNAPSHOT                   [18/22]
+[INFO]   from pdfsam-tools/pdfsam-backpages/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ pdfsam-backpages ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ pdfsam-backpages ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 5 source files with javac [debug release 25 module-path] to target/classes
+[INFO] JDK-8318913 workaround: patched module-info.class requires version from [25] to [25] on 1 JDK modules [java.base]
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ pdfsam-backpages ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ pdfsam-backpages ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 3 source files with javac [debug release 25 module-path] to target/test-classes
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-backpages/src/test/java/org/pdfsam/tools/backpages/AddBackpagesPaneTest.java: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-backpages/src/test/java/org/pdfsam/tools/backpages/AddBackpagesPaneTest.java uses unchecked or unsafe operations.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-backpages/src/test/java/org/pdfsam/tools/backpages/AddBackpagesPaneTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.6.0:test (default-test) @ pdfsam-backpages ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ pdfsam-backpages ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-backpages/target/pdfsam-backpages-6.0.11-SNAPSHOT.jar
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ pdfsam-backpages ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-backpages/target/pdfsam-backpages-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] --- install:3.2.0:install (default-install) @ pdfsam-backpages ---
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-backpages/pom.xml to /home/runner/.m2/repository/org/pdfsam/pdfsam-backpages/6.0.11-SNAPSHOT/pdfsam-backpages-6.0.11-SNAPSHOT.pom
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-backpages/target/pdfsam-backpages-6.0.11-SNAPSHOT.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-backpages/6.0.11-SNAPSHOT/pdfsam-backpages-6.0.11-SNAPSHOT.jar
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-tools/pdfsam-backpages/target/pdfsam-backpages-6.0.11-SNAPSHOT-sources.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-backpages/6.0.11-SNAPSHOT/pdfsam-backpages-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] -----------------------< org.pdfsam:pdfsam-gui >------------------------
+[INFO] Building PDFsam GUI 6.0.11-SNAPSHOT                              [19/22]
+[INFO]   from pdfsam-gui/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ pdfsam-gui ---
+[INFO] Copying 4 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ pdfsam-gui ---
+[WARNING] *************************************************************************************************************************************
+[WARNING] * Required filename-based automodules detected: [dec-0.1.2.jar]. Please don't publish this project to a public artifact repository! *
+[WARNING] *************************************************************************************************************************************
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 95 source files with javac [debug release 25 module-path] to target/classes
+[INFO] JDK-8318913 workaround: patched module-info.class requires version from [25] to [25] on 2 JDK modules [java.base, java.desktop]
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-gui/src/main/java/org/pdfsam/gui/PdfsamApp.java: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-gui/src/main/java/org/pdfsam/gui/PdfsamApp.java uses unchecked or unsafe operations.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-gui/src/main/java/org/pdfsam/gui/PdfsamApp.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ pdfsam-gui ---
+[INFO] Copying 2 resources from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ pdfsam-gui ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 58 source files with javac [debug release 25 module-path] to target/test-classes
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-gui/src/test/java/org/pdfsam/gui/AppContentControllerTest.java: Some input files use unchecked or unsafe operations.
+[INFO] /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-gui/src/test/java/org/pdfsam/gui/AppContentControllerTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.6.0:test (default-test) @ pdfsam-gui ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ pdfsam-gui ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-gui/target/pdfsam-gui-6.0.11-SNAPSHOT.jar
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ pdfsam-gui ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-gui/target/pdfsam-gui-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] --- install:3.2.0:install (default-install) @ pdfsam-gui ---
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-gui/pom.xml to /home/runner/.m2/repository/org/pdfsam/pdfsam-gui/6.0.11-SNAPSHOT/pdfsam-gui-6.0.11-SNAPSHOT.pom
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-gui/target/pdfsam-gui-6.0.11-SNAPSHOT.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-gui/6.0.11-SNAPSHOT/pdfsam-gui-6.0.11-SNAPSHOT.jar
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-gui/target/pdfsam-gui-6.0.11-SNAPSHOT-sources.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-gui/6.0.11-SNAPSHOT/pdfsam-gui-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] ----------------------< org.pdfsam:pdfsam-fonts >-----------------------
+[INFO] Building PDFsam fonts 6.0.11-SNAPSHOT                            [20/22]
+[INFO]   from pdfsam-fonts/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ pdfsam-fonts ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ pdfsam-fonts ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 3 source files with javac [debug release 25 module-path] to target/classes
+[INFO] JDK-8318913 workaround: patched module-info.class requires version from [25] to [25] on 1 JDK modules [java.base]
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ pdfsam-fonts ---
+[INFO] skip non existing resourceDirectory /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-fonts/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ pdfsam-fonts ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug release 25 module-path] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.6.0:test (default-test) @ pdfsam-fonts ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ pdfsam-fonts ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-fonts/target/pdfsam-fonts-6.0.11-SNAPSHOT.jar
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ pdfsam-fonts ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-fonts/target/pdfsam-fonts-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] --- install:3.2.0:install (default-install) @ pdfsam-fonts ---
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-fonts/pom.xml to /home/runner/.m2/repository/org/pdfsam/pdfsam-fonts/6.0.11-SNAPSHOT/pdfsam-fonts-6.0.11-SNAPSHOT.pom
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-fonts/target/pdfsam-fonts-6.0.11-SNAPSHOT.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-fonts/6.0.11-SNAPSHOT/pdfsam-fonts-6.0.11-SNAPSHOT.jar
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-fonts/target/pdfsam-fonts-6.0.11-SNAPSHOT-sources.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-fonts/6.0.11-SNAPSHOT/pdfsam-fonts-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] ----------------------< org.pdfsam:pdfsam-basic >-----------------------
+[INFO] Building PDFsam Basic Edition application 6.0.11-SNAPSHOT        [21/22]
+[INFO]   from pdfsam-basic/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ pdfsam-basic ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] Copying 10 resources from src/main/resources to target/classes
+[INFO] The encoding used to copy filtered properties files has not been set. This means that the same encoding will be used to copy filtered properties files as when copying other filtered resources. This might not be what you want! Run your build with --debug to see which files might be affected. Read more at https://maven.apache.org/plugins/maven-resources-plugin/examples/filtering-properties-files.html
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ pdfsam-basic ---
+[WARNING] *********************************************************************************************************************************************************************************************************************
+[WARNING] * Required filename-based automodules detected: [dec-0.1.2.jar, sevenzipjbinding-16.02-2.01.jar, sevenzipjbinding-all-platforms-16.02-2.01.jar]. Please don't publish this project to a public artifact repository! *
+[WARNING] *********************************************************************************************************************************************************************************************************************
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 4 source files with javac [debug release 25 module-path] to target/classes
+[INFO] JDK-8318913 workaround: patched module-info.class requires version from [25] to [25] on 1 JDK modules [java.base]
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ pdfsam-basic ---
+[INFO] Copying 2 resources from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ pdfsam-basic ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug release 25 module-path] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.6.0:test (default-test) @ pdfsam-basic ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.5.1:jar (default-jar) @ pdfsam-basic ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-basic/target/pdfsam-basic-6.0.11-SNAPSHOT.jar
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ pdfsam-basic ---
+[INFO] Building jar: /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-basic/target/pdfsam-basic-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] --- install:3.2.0:install (default-install) @ pdfsam-basic ---
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-basic/pom.xml to /home/runner/.m2/repository/org/pdfsam/pdfsam-basic/6.0.11-SNAPSHOT/pdfsam-basic-6.0.11-SNAPSHOT.pom
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-basic/target/pdfsam-basic-6.0.11-SNAPSHOT.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-basic/6.0.11-SNAPSHOT/pdfsam-basic-6.0.11-SNAPSHOT.jar
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-basic/target/pdfsam-basic-6.0.11-SNAPSHOT-sources.jar to /home/runner/.m2/repository/org/pdfsam/pdfsam-basic/6.0.11-SNAPSHOT/pdfsam-basic-6.0.11-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] -----------------------< org.pdfsam:pdfsam-docs >-----------------------
+[INFO] Building PDFsam docs 6.0.11-SNAPSHOT                             [22/22]
+[INFO]   from pdfsam-docs/pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- source:3.4.0:jar-no-fork (attach-sources) @ pdfsam-docs ---
+[INFO] 
+[INFO] --- install:3.2.0:install (default-install) @ pdfsam-docs ---
+[INFO] Installing /home/runner/work/pdfsam-foliado/pdfsam-foliado/pdfsam-docs/pom.xml to /home/runner/.m2/repository/org/pdfsam/pdfsam-docs/6.0.11-SNAPSHOT/pdfsam-docs-6.0.11-SNAPSHOT.pom
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for PDFsam 6.0.11-SNAPSHOT:
+[INFO] 
+[INFO] PDFsam ............................................. SUCCESS [  0.392 s]
+[INFO] PDFsam internationalization ........................ SUCCESS [  3.832 s]
+[INFO] PDFsam model ....................................... SUCCESS [  1.345 s]
+[INFO] PDFsam persistence ................................. SUCCESS [  0.441 s]
+[INFO] PDFsam themes ...................................... SUCCESS [  0.198 s]
+[INFO] PDFsam test ........................................ SUCCESS [  0.164 s]
+[INFO] PDFsam core ........................................ SUCCESS [  0.826 s]
+[INFO] PDFsam JavaFx components ........................... SUCCESS [  2.324 s]
+[INFO] PDFsam service ..................................... SUCCESS [  1.134 s]
+[INFO] PDFsam merge tool .................................. SUCCESS [  0.322 s]
+[INFO] PDFsam simple split tool ........................... SUCCESS [  0.426 s]
+[INFO] PDFsam split by size tool .......................... SUCCESS [  0.335 s]
+[INFO] PDFsam split by bookmarks tool ..................... SUCCESS [  0.290 s]
+[INFO] PDFsam alternate mix tool .......................... SUCCESS [  0.269 s]
+[INFO] PDFsam rotate tool ................................. SUCCESS [  0.325 s]
+[INFO] PDFsam Foliar e Indexar ............................ SUCCESS [  1.278 s]
+[INFO] PDFsam extract tool ................................ SUCCESS [  0.302 s]
+[INFO] PDFsam backpages tool .............................. SUCCESS [  0.268 s]
+[INFO] PDFsam GUI ......................................... SUCCESS [  1.099 s]
+[INFO] PDFsam fonts ....................................... SUCCESS [  2.233 s]
+[INFO] PDFsam Basic Edition application ................... SUCCESS [  1.164 s]
+[INFO] PDFsam docs ........................................ SUCCESS [  0.006 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  20.596 s
+[INFO] Finished at: 2026-11-05T14:24:52Z
+[INFO] ------------------------------------------------------------------------

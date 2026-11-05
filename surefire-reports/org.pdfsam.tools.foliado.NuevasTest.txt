@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: org.pdfsam.tools.foliado.NuevasTest
+-------------------------------------------------------------------------------
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 22.73 s -- in org.pdfsam.tools.foliado.NuevasTest
