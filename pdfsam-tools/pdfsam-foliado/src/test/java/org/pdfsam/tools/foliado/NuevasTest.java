@@ -37,6 +37,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Pruebas de: comprimidos (RAR, 7z...), leyendas que se mueven solas y texto editable en Adobe. */
 class NuevasTest {
+    @org.junit.jupiter.api.BeforeAll
+    static void carpeta() {
+        MotorTest.SALIDA.mkdirs();
+    }
 
     // ------------------------------------------------------------ nombres de comprimidos
     @Test
