@@ -354,6 +354,10 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
 <p>También se abre. Cada comprimido de adentro queda en el resultado como un ZIP con el mismo nombre.</p></details>
 <details><summary>Sale un aviso que dice “Can not find 7-Zip-JBinding platform property file”.</summary>
 <p>Pasaba en una versión anterior: el programa no encontraba su motor para abrir RAR y 7z. Ya está corregido; use la versión más nueva.</p></details>
+<details><summary>Al guardar sale un error con una ruta que termina en “__zip__”.</summary>
+<p>Pasaba en una versión anterior al guardar lo que venía de un comprimido en una carpeta de <b>OneDrive</b>: OneDrive se ponía a subir la carpeta de trabajo y la bloqueaba. Ya está corregido: ahora todo se arma en una carpeta escondida de Windows y a su carpeta solo llega el ZIP terminado. Si en su carpeta quedó una carpeta que termina en <code>__zip__</code>, bórrela: es de un intento anterior.</p></details>
+<details><summary>¿Puedo guardar en OneDrive?</summary>
+<p>Sí, puede guardar donde quiera: OneDrive, Documentos, Escritorio, una USB… Si OneDrive está ocupado justo en ese momento, el programa espera unos segundos y vuelve a intentar solo. Si aun así no puede, le avisa en palabras claras para que pruebe otra vez o elija otra carpeta.</p></details>
 <details><summary>Un comprimido no se pudo abrir.</summary>
 <p>Puede estar dañado o incompleto (por ejemplo, falta una de sus partes). Se copia tal cual y se avisa al final. Pruebe abrirlo en su computadora para ver si está bien.</p></details>
 
