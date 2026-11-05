@@ -226,15 +226,75 @@ final class Lote {
     }
 
     // ------------------------------------------------------------ finalizar
+    /** Si el resultado va como carpeta: dónde queda al final (se arma en la carpeta temporal y se copia aquí). */
+    Path destinoCarpeta;
+
+    /**
+     * Todo se arma en la carpeta temporal de Windows (que OneDrive no toca) y al final se copia ya terminado a donde
+     * eligió el usuario: el ZIP listo, o la carpeta completa.
+     */
     Path finalizar(File comoZipEn) throws IOException {
         cerrarZipsInternos(destinoTrabajo);
+        Path r;
         if (comoZipEn != null) {
-            Files.createDirectories(comoZipEn.getAbsoluteFile().getParentFile().toPath());
-            comprimirCarpeta(destinoTrabajo, comoZipEn.toPath());
+            Path listo = temp.resolve("listo.zip");
+            comprimirCarpeta(destinoTrabajo, listo);
+            copiarConReintentos(listo, comoZipEn.toPath());
+            r = comoZipEn.toPath();
+        } else if (destinoCarpeta != null) {
+            copiarCarpetaConReintentos(destinoTrabajo, destinoCarpeta);
+            r = destinoCarpeta;
+        } else {
+            r = destinoTrabajo;
         }
-        Path r = comoZipEn != null ? comoZipEn.toPath() : destinoTrabajo;
         limpiar();
         return r;
+    }
+
+    /**
+     * Copia un archivo terminado a su lugar final. Si OneDrive o Windows lo tiene ocupado un momento, espera y prueba
+     * otra vez (hasta 6 veces).
+     */
+    static void copiarConReintentos(Path origen, Path destino) throws IOException {
+        IOException ultimo = null;
+        for (int i = 0; i < 6; i++) {
+            try {
+                Path padre = destino.toAbsolutePath().getParent();
+                if (padre != null) {
+                    Files.createDirectories(padre);
+                }
+                Files.copy(origen, destino, StandardCopyOption.REPLACE_EXISTING);
+                return;
+            } catch (IOException e) {
+                ultimo = e;
+                try {
+                    Thread.sleep(1000L * (i + 1));
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        }
+        throw new IOException("No se pudo guardar \"" + destino.getFileName() + "\" en la carpeta \""
+                + destino.toAbsolutePath().getParent() + "\".\n\nPuede que OneDrive o Windows esté usando esa carpeta en "
+                + "este momento, o que no haya permiso para escribir ahí. Espere unos segundos y pruebe otra vez, o "
+                + "guarde en otra carpeta (por ejemplo el Escritorio).\n\nDetalle: " + Ui.textoCorto(ultimo), ultimo);
+    }
+
+    static void copiarCarpetaConReintentos(Path desde, Path hasta) throws IOException {
+        Files.createDirectories(hasta);
+        List<Path> todo;
+        try (Stream<Path> s = Files.walk(desde)) {
+            todo = s.sorted().toList();
+        }
+        for (Path p : todo) {
+            Path fin = hasta.resolve(desde.relativize(p).toString());
+            if (Files.isDirectory(p)) {
+                Files.createDirectories(fin);
+            } else {
+                copiarConReintentos(p, fin);
+            }
+        }
     }
 
     void limpiar() {

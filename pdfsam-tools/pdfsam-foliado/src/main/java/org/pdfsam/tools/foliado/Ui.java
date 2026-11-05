@@ -491,9 +491,39 @@ final class Ui {
         }
         if (e instanceof java.nio.file.AccessDeniedException || m.toLowerCase().contains("being used by another")
                 || m.toLowerCase().contains("access is denied")) {
-            return "No se pudo guardar: el archivo está abierto en otro programa o no hay permiso en esa carpeta.\n\n" + m;
+            return "No se pudo guardar: el archivo está abierto en otro programa (o OneDrive lo está usando) o no hay "
+                    + "permiso en esa carpeta. Espere unos segundos y pruebe otra vez, o guarde en otra carpeta.\n\n" + m;
+        }
+        if (e instanceof java.nio.file.FileSystemException f && !(e.getCause() instanceof IOException)
+                && m.equals(f.getFile())) {
+            // Windows solo dio la ruta: se explica qué pasó
+            return "No se pudo usar esta carpeta o archivo:\n" + m + "\n\n" + textoCorto(e)
+                    + "\n\nSi está en OneDrive, espere unos segundos y pruebe otra vez, o guarde en otra carpeta.";
         }
         return m;
+    }
+
+    /** Qué pasó, en pocas palabras (sin la ruta completa). */
+    static String textoCorto(Throwable e) {
+        if (e == null) {
+            return "";
+        }
+        if (e instanceof java.nio.file.NoSuchFileException) {
+            return "No se encontró.";
+        }
+        if (e instanceof java.nio.file.FileAlreadyExistsException) {
+            return "Ya existe algo con ese nombre.";
+        }
+        if (e instanceof java.nio.file.DirectoryNotEmptyException) {
+            return "La carpeta no está vacía.";
+        }
+        if (e instanceof java.nio.file.AccessDeniedException) {
+            return "Windows no dio permiso (puede estar abierto u ocupado por OneDrive).";
+        }
+        if (e instanceof java.nio.file.FileSystemException f && f.getReason() != null) {
+            return f.getReason();
+        }
+        return e.getClass().getSimpleName() + (e.getMessage() == null ? "" : ": " + e.getMessage());
     }
 
     // ------------------------------------------------------------ imágenes

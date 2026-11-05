@@ -172,6 +172,61 @@ class NuevasTest {
         assertTrue(n.contains("Expediente/Anexos/anexo uno.pdf"), n.toString());
     }
 
+    @Test
+    void comprimidoComoCarpetaSinRastrosEnElDestino() throws Exception {
+        File dir = Files.createTempDirectory("pcarp").toFile();
+        File exp = contenido(dir);
+        File zip = new File(dir, "Expediente.zip");
+        try (java.util.zip.ZipOutputStream z = new java.util.zip.ZipOutputStream(Files.newOutputStream(zip.toPath()))) {
+            for (File f : List.of(new File(exp, "acta.pdf"), new File(exp, "Anexos/anexo uno.pdf"),
+                    new File(exp, "nota.txt"))) {
+                z.putNextEntry(new ZipEntry(exp.toPath().relativize(f.toPath()).toString().replace('\\', '/')));
+                Files.copy(f.toPath(), z);
+                z.closeEntry();
+            }
+            // un ZIP dentro del ZIP
+            z.putNextEntry(new ZipEntry("Interno/otro.zip"));
+            java.io.ByteArrayOutputStream b = new java.io.ByteArrayOutputStream();
+            try (java.util.zip.ZipOutputStream z2 = new java.util.zip.ZipOutputStream(b)) {
+                z2.putNextEntry(new ZipEntry("tres.pdf"));
+                Files.copy(new File(exp, "acta.pdf").toPath(), z2);
+                z2.closeEntry();
+            }
+            z.write(b.toByteArray());
+            z.closeEntry();
+        }
+        File salidaCarpeta = new File(dir, "Salida");
+        File salidaZip = new File(dir, "Salida ZIP/Expediente_foliado.zip");
+        for (boolean comoZip : new boolean[] { false, true }) {
+            Lote L = new Lote(zip).preparar();
+            assertEquals(3, L.procesables.size(), L.procesables.toString());
+            if (!comoZip) {
+                L.destinoCarpeta = salidaCarpeta.toPath();
+            }
+            OpcionesFolio o = new OpcionesFolio();
+            L.ejecutar((e, s2, c) -> Motor.foliar(e, s2, c, o, null, null, null), L.temp.resolve("resultado"), null);
+            // mientras trabaja, en el destino no aparece nada a medias
+            assertFalse(salidaCarpeta.exists() && !comoZip);
+            L.finalizar(comoZip ? salidaZip : null);
+            assertFalse(L.temp.toFile().exists(), "se borró lo temporal");
+        }
+        assertTrue(new File(salidaCarpeta, "acta.pdf").isFile());
+        assertTrue(new File(salidaCarpeta, "Interno/otro.zip").isFile());
+        try (java.util.stream.Stream<java.nio.file.Path> s = Files.walk(dir.toPath())) {
+            assertTrue(s.noneMatch(x -> x.toString().contains(Lote.MARCA_ZIP)), "sin carpetas __zip__");
+        }
+        try (ZipFile z = new ZipFile(salidaZip)) {
+            assertNotNull(z.getEntry("Interno/otro.zip"));
+            assertNotNull(z.getEntry("Anexos/anexo uno.pdf"));
+        }
+        // copiar con reintentos a una carpeta que no se puede usar: mensaje claro
+        File archivoComoCarpeta = new File(dir, "noesunacarpeta");
+        Files.writeString(archivoComoCarpeta.toPath(), "x");
+        java.io.IOException e = assertThrows(java.io.IOException.class,
+                () -> Lote.copiarConReintentos(salidaZip.toPath(), archivoComoCarpeta.toPath().resolve("a.zip")));
+        assertTrue(e.getMessage().contains("OneDrive"), e.getMessage());
+    }
+
     // ------------------------------------------------------------ leyendas que se mueven solas
     private static Map<Integer, Motor.Marco> marcos(OpcionesIndexar o, ReglaHoja r) throws Exception {
         File dir = Files.createTempDirectory("pmar").toFile();

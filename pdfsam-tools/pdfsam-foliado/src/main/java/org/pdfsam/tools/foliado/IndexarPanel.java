@@ -816,6 +816,14 @@ class IndexarPanel extends BorderPane {
         for (Item it : copia) {
             reglas.add(EditorHojas.porHoja(editor.reglasDe(it.origen().getAbsolutePath())));
         }
+        // lo que viene de comprimidos se arma en la carpeta temporal de Windows (OneDrive no la toca) y al final
+        // solo se copia el ZIP terminado a la carpeta elegida
+        try {
+            trabajoZip = Files.createTempDirectory("pdfsam_indexar_");
+        } catch (IOException e) {
+            Ui.error(this, Ui.textoError(e));
+            return;
+        }
         Ui.enSegundoPlano(this, "Indexando", true, p -> {
             List<File> salidas = new ArrayList<>();
             List<String> fallidos = new ArrayList<>();
@@ -827,7 +835,7 @@ class IndexarPanel extends BorderPane {
                 }
                 Item it = copia.get(k);
                 String texto = "Archivo " + (k + 1) + " de " + n + ": " + it.origen().getName();
-                File salida = destino.resolve(it.relativa()).toFile();
+                File salida = salidaDe(it, destino).toFile();
                 int kk = k;
                 try {
                     Motor.indexar(it.origen(), salida, claves.get(it.origen()), it.origen().getName(), o, reglas.get(k),
@@ -860,7 +868,7 @@ class IndexarPanel extends BorderPane {
                 continue;
             }
             try {
-                File salida = destino.resolve(it.relativa()).toFile();
+                File salida = salidaDe(it, destino).toFile();
                 Motor.indexar(it.origen(), salida, c, it.origen().getName(), o, reglas.get(copia.indexOf(it)), null);
                 salidas.add(salida);
                 hojas += Motor.contarHojas(salida, null);
@@ -878,21 +886,33 @@ class IndexarPanel extends BorderPane {
             // los comprimidos: se arma el ZIP con lo indexado y todo lo demás que traían
             int hojasFin = hojas;
             Ui.enSegundoPlano(this, "Armando los ZIP", false, p -> {
-                for (Abierto a : usados) {
-                    p.poner(-1, a.archivo().getName());
-                    armarZip(destino, a);
+                try {
+                    for (Abierto a : usados) {
+                        p.poner(-1, a.archivo().getName());
+                        armarZip(destino, trabajoZip, a);
+                    }
+                } finally {
+                    Lote.borrar(trabajoZip);
                 }
                 return null;
             }, r -> resumen(salidas, fallidos, hojasFin, destino, true),
                     e -> Ui.error(this, Ui.textoError(e)));
             return;
         }
+        Lote.borrar(trabajoZip);
         resumen(salidas, fallidos, hojas, destino, false);
     }
 
     /** destino/…/Nombre_indexado.zip con lo indexado y, tal cual, todo lo demás que traía el comprimido. */
-    private static void armarZip(Path destino, Abierto a) throws IOException {
-        Path m = destino.resolve(a.marcada());
+    /** Dónde se guarda cada PDF: los de comprimidos, en la carpeta temporal; los demás, en la carpeta elegida. */
+    private Path salidaDe(Item it, Path destino) {
+        return it.relativa().contains(Lote.MARCA_ZIP) ? trabajoZip.resolve(it.relativa()) : destino.resolve(it.relativa());
+    }
+
+    private Path trabajoZip;
+
+    private static void armarZip(Path destino, Path trabajo, Abierto a) throws IOException {
+        Path m = trabajo.resolve(a.marcada());
         Lote L = a.lote();
         Files.createDirectories(m);
         for (String c : L.carpetas) {
@@ -907,12 +927,17 @@ class IndexarPanel extends BorderPane {
         Lote.cerrarZipsInternos(m);
         String n = m.getFileName().toString();
         String zip = n.substring(0, n.length() - Lote.MARCA_ZIP.length());
-        Path fin = m.resolveSibling(zip);
-        for (int i = 2; Files.exists(fin); i++) {
-            fin = m.resolveSibling(zip.substring(0, zip.length() - 4) + " (" + i + ").zip");
-        }
-        Lote.comprimirCarpeta(m, fin);
+        // el ZIP se arma en la carpeta temporal y se copia ya terminado a la carpeta elegida
+        Path listo = m.resolveSibling(zip + ".listo");
+        Lote.comprimirCarpeta(m, listo);
         Lote.borrar(m);
+        Path relativa = trabajo.relativize(m.resolveSibling(zip));
+        Path fin = destino.resolve(relativa.toString());
+        for (int i = 2; Files.exists(fin); i++) {
+            fin = fin.resolveSibling(zip.substring(0, zip.length() - 4) + " (" + i + ").zip");
+        }
+        Lote.copiarConReintentos(listo, fin);
+        Files.deleteIfExists(listo);
     }
 
     private void resumen(List<File> salidas, List<String> fallidos, int hojas, Path destino, boolean conZip) {
