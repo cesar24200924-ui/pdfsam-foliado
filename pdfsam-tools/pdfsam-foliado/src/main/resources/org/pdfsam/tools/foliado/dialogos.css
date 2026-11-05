@@ -20,7 +20,6 @@
     -fx-background-color: #1f6fd1;
     -fx-text-fill: #ffffff;
     -fx-border-color: #165ab0;
-    -fx-font-weight: bold;
 }
 .foliado-dialogo .button:default:hover {
     -fx-background-color: #1a5fb4;
