@@ -64,7 +64,35 @@ Corren solas al hacer `git push` a `main` (`.github/workflows/pruebas.yml`).
     ("Extraer aquí" al lado del archivo, con contraseña si tiene, trabajarlo como carpeta normal)
     todavía no está hecho — ver sección 4.
 
-## 4. Pendiente (sin empezar todavía)
+- **Mejora 3 — Texto editable en Adobe:** en `Editables.campo()` se agregan explícitamente
+  `/Type /Annot` y `/Subtype /Widget` al widget, y `/FT /Tx` al campo (antes el código confiaba
+  en que la librería SAMBox los pusiera solos y, según lo visto en el PDF real, no siempre pasaba).
+  `/F` (bit Imprimir), `/P` (página) y `/DA` (apariencia) ya se ponían. Prueba ampliada en
+  `NuevasTest.folioEditable()` para comprobar las 6 marcas. **Falta confirmar en Adobe de verdad**
+  (vista normal y "Rellenar y firmar") — no se puede probar desde aquí.
+
+- **Mejora 4 (Foliar y Girar) — varios PDF en un ZIP:** antes, al procesar una carpeta o
+  comprimido con Foliar o Girar, el resultado SIEMPRE salía como carpeta (nunca se preguntaba).
+  Ahora, si hay más de un PDF a procesar, siempre se pregunta "¿Cómo quiere el resultado?" con
+  tres botones: **Solo ZIP** (resaltado de fábrica), **ZIP y carpeta**, **Solo carpeta**. El
+  nombre sugerido se sigue pudiendo cambiar en el propio cuadro de "Guardar como" (no hizo falta
+  una pantalla nueva para eso). Técnico: `Ui.elegir3()` (diálogo de 3 botones), `Lote.finalizar()`
+  ahora puede entregar ZIP y carpeta a la vez (antes era uno u otro), `LoteUi.elegirDestino()`
+  pregunta siempre que `procesables.size() > 1` (antes solo cuando el ORIGEN ya era un .zip).
+  Prueba: `NuevasTest.finalizarZipYCarpetaALaVez()`.
+  - **Indexar NO quedó cubierto todavía.** Indexar guarda cada PDF suelto directo en la carpeta
+    que el usuario elige (ver `IndexarPanel.procesar()`/`terminar()`) y solo arma un ZIP aparte
+    para lo que vino de un comprimido (`armarZip()`, ya arreglado en la Mejora 1 parte 1). Darle
+    a Indexar las mismas 3 opciones (Solo ZIP/ZIP y carpeta/Solo carpeta) para TODOS sus archivos
+    requiere cambiar su guardado para que escriba primero a una carpeta temporal (como ya hace
+    `Lote`) y recién al final la convierta en ZIP y/o la copie — no es un cambio chico, queda
+    anotado en la sección 4 como pendiente.
+
+## 4. Pendiente
+
+### 4.0 Mejora 4 en Indexar
+Ver el detalle en la sección 3 — darle a Indexar las mismas 3 opciones de resultado que ya
+tienen Foliar y Girar.
 
 ### 4.1 Resto de la Mejora 1 — Comprimidos "Extraer aquí"
 Hoy, Foliar/Indexar/Girar abren el ZIP/RAR en una carpeta TEMPORAL que se borra al terminar
