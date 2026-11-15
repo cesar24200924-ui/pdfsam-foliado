@@ -107,6 +107,8 @@ final class Lote {
             Files.createDirectories(raiz);
             carpetaExtraida = raiz;
             abrir(origen.toPath(), raiz);
+            // (los comprimidos de ADENTRO se dejan todavía como carpeta "marcada": así se procesan
+            // igual que el resto; al final, en finalizar(), vuelven a verse como comprimidos normales)
         } else {
             raiz = origen.toPath();
             boolean hayZip;
@@ -315,6 +317,17 @@ final class Lote {
     }
 
     void limpiar() {
+        if (carpetaExtraida != null) {
+            // Mejora 1: la carpeta extraída al lado del archivo original queda (no se borra), pero sus
+            // comprimidos de ADENTRO se dejan como se verían normalmente ("otro.zip"), no con el
+            // nombre marcado que se usa mientras se procesa. Se llama aquí para cubrir tanto cuando
+            // termina bien (finalizar() llama limpiar() al final) como cuando se cancela antes de eso.
+            try {
+                cerrarZipsInternos(carpetaExtraida);
+            } catch (IOException e) {
+                // se queda marcada; no es grave, se puede cerrar a mano si hace falta
+            }
+        }
         borrar(temp);
     }
 
