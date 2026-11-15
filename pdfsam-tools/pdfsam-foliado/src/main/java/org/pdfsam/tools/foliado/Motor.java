@@ -702,6 +702,25 @@ public final class Motor {
         }
     }
 
+    /** Mejora 6: el tramo (de una leyenda) que cubre esta hoja, ya con su propio número y su
+     * propio total calculados ("Empezar en" + la posición dentro del tramo). */
+    private record EnTramo(Tramo tramo, long numero, long total) {
+    }
+
+    /** Mejora 6: busca, entre los tramos de UNA leyenda, el que cubre esta hoja (numeroGlobal =
+     * posición de la hoja entre las que se indexan, 1 = la primera). null si ninguno la cubre
+     * (esa leyenda se queda sin nada en esta hoja: "fuera de todo tramo, queda vacía"). */
+    private static EnTramo buscarTramo(List<Tramo> tramos, long numeroGlobal) {
+        for (Tramo t : tramos) {
+            if (numeroGlobal >= t.desde && numeroGlobal <= t.hasta) {
+                long numero = t.empezarEn + (numeroGlobal - t.desde);
+                long total = t.empezarEn + (long) (t.hasta - t.desde);
+                return new EnTramo(t, numero, total);
+            }
+        }
+        return null;
+    }
+
     public static void indexarHoja(PDDocument doc, PDPage p, long numero, long total, String nombreSinExt,
             OpcionesIndexar o, ReglaHoja cambios, Letras letras) throws IOException {
         indexarHoja(doc, p, numero, total, nombreSinExt, o, cambios, letras, null);
@@ -745,18 +764,37 @@ public final class Motor {
             mx[k] = dx + o.movX[k] + (cambios == null ? 0 : cambios.ldx[k]);
             my[k] = dy + o.movY[k] + (cambios == null ? 0 : cambios.ldy[k]);
         }
+        // Mejora 6: si una leyenda tiene tramos, busca el que cubre esta hoja (null = ninguno la
+        // cubre, esa leyenda no se dibuja); si no tiene tramos, sigue exactamente como siempre.
+        List<Tramo> trIzq = o.tramos.get(0), trAbajoIzq = o.tramos.get(1), trDer = o.tramos.get(2),
+                trLetras = o.tramos.get(3), trExtra = o.tramos.get(4);
+        EnTramo etIzq = trIzq.isEmpty() ? null : buscarTramo(trIzq, numero);
+        EnTramo etAbajoIzq = trAbajoIzq.isEmpty() ? null : buscarTramo(trAbajoIzq, numero);
+        EnTramo etDer = trDer.isEmpty() ? null : buscarTramo(trDer, numero);
+        EnTramo etLetras = trLetras.isEmpty() ? null : buscarTramo(trLetras, numero);
+        EnTramo etExtra = trExtra.isEmpty() ? null : buscarTramo(trExtra, numero);
         try (PDPageContentStream cs = lienzo(doc, p)) {
-            if (o.izqOn && !nulo(o.izqTexto).isBlank()) {
-                leyenda(cs, h, lateral + mx[0], yArriba + my[0], limpiar(letra, o.izqTexto.trim()), letra, tam, color,
-                        caja, 0, marcos);
+            if (o.izqOn && (trIzq.isEmpty() || etIzq != null)) {
+                String t = trIzq.isEmpty() ? (nulo(o.izqTexto).isBlank() ? null : o.izqTexto.trim())
+                        : (nulo(etIzq.tramo().texto()).trim() + " " + etIzq.numero()).trim();
+                if (t != null && !t.isEmpty()) {
+                    leyenda(cs, h, lateral + mx[0], yArriba + my[0], limpiar(letra, t), letra, tam, color, caja, 0,
+                            marcos);
+                }
             }
-            if (o.abajoIzqOn && !nulo(o.abajoIzqTexto).isBlank()) {
-                leyenda(cs, h, lateral + mx[1], yAbajo + my[1], limpiar(letra, o.abajoIzqTexto.trim()), letra, tam,
-                        color, caja, 1, marcos);
+            if (o.abajoIzqOn && (trAbajoIzq.isEmpty() || etAbajoIzq != null)) {
+                String t = trAbajoIzq.isEmpty() ? (nulo(o.abajoIzqTexto).isBlank() ? null : o.abajoIzqTexto.trim())
+                        : (nulo(etAbajoIzq.tramo().texto()).trim() + " " + etAbajoIzq.numero()).trim();
+                if (t != null && !t.isEmpty()) {
+                    leyenda(cs, h, lateral + mx[1], yAbajo + my[1], limpiar(letra, t), letra, tam, color, caja, 1,
+                            marcos);
+                }
             }
-            if (o.derOn) {
-                String parte = textoDerechoIndexar(nombreSinExt, o);
-                String num = o.derNumeros ? numero + "/" + total : "";
+            if (o.derOn && (trDer.isEmpty() || etDer != null)) {
+                String parte = trDer.isEmpty() ? textoDerechoIndexar(nombreSinExt, o) : nulo(etDer.tramo().texto()).trim();
+                long numDer = trDer.isEmpty() ? numero : etDer.numero();
+                long totalDer = trDer.isEmpty() ? total : etDer.total();
+                String num = o.derNumeros ? numDer + "/" + totalDer : "";
                 String t = ((parte.isEmpty() ? "" : parte) + (parte.isEmpty() || num.isEmpty() ? "" : " ") + num).trim();
                 if (!t.isEmpty()) {
                     t = limpiar(letra, t);
@@ -764,14 +802,18 @@ public final class Motor {
                             tam, color, caja, 2, marcos);
                 }
             }
-            if (o.letrasOn) {
+            if (o.letrasOn && (trLetras.isEmpty() || etLetras != null)) {
                 // el número de hoja en letras, justo debajo de la leyenda de arriba a la derecha
-                String t = limpiar(letra, (nulo(o.letrasTexto) + numeroALetras(numero)).trim());
+                String prefijo = trLetras.isEmpty() ? nulo(o.letrasTexto) : nulo(etLetras.tramo().texto());
+                long numLetras = trLetras.isEmpty() ? numero : etLetras.numero();
+                String t = limpiar(letra, (prefijo + numeroALetras(numLetras)).trim());
                 leyenda(cs, h, h.ancho - lateral - anchoTexto(letra, t, tam) + mx[3],
                         yArriba + tam * (caja ? 1.45f : 1.2f) + my[3], t, letra, tam, color, caja, 3, marcos);
             }
-            if (o.extraOn) {
-                String t = limpiar(letra, formatoNumeracion(o.extraFormato, numero, total));
+            if (o.extraOn && (trExtra.isEmpty() || etExtra != null)) {
+                long numExtra = trExtra.isEmpty() ? numero : etExtra.numero();
+                long totalExtra = trExtra.isEmpty() ? total : etExtra.total();
+                String t = limpiar(letra, formatoNumeracion(o.extraFormato, numExtra, totalExtra));
                 float x = "bottom_center".equals(o.extraPos) ?
                         (h.ancho - anchoTexto(letra, t, tam)) / 2 :
                         h.ancho - lateral - anchoTexto(letra, t, tam);

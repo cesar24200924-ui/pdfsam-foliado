@@ -425,4 +425,71 @@ class MotorTest {
         }
         imagenes(salida, "indexar_mas_opciones");
     }
+
+    /** Mejora 6: la leyenda de la derecha con dos tramos, cada uno con su texto y su propia
+     * numeración (que no sigue la del documento). */
+    @Test
+    void tramosEnLeyendaDerecha() throws Exception {
+        File dir = Files.createTempDirectory("pt").toFile();
+        File pdf = pdfDePrueba(dir, "a.pdf");
+        File salida = new File(dir, "s.pdf");
+        OpcionesIndexar o = new OpcionesIndexar();
+        o.izqOn = false; // para no mezclar con "DPOT" en las aserciones
+        Tramo t1 = new Tramo();
+        t1.desde = 1;
+        t1.hasta = 2;
+        t1.texto = "ANEXO";
+        t1.empezarEn = 1;
+        Tramo t2 = new Tramo();
+        t2.desde = 3;
+        t2.hasta = 5;
+        t2.texto = "CUERPO";
+        t2.empezarEn = 1;
+        o.tramos.get(2).add(t1); // índice 2 = "Arriba a la derecha" en Motor.LEYENDAS
+        o.tramos.get(2).add(t2);
+        Motor.indexar(pdf, salida, null, pdf.getName(), o, null, null);
+        try (PDDocument d = Motor.abrir(salida, null)) {
+            String[] esperado = { "ANEXO1/2", "ANEXO2/2", "CUERPO1/3", "CUERPO2/3", "CUERPO3/3" };
+            for (int k = 0; k < 5; k++) {
+                PDFTextStripper st = new PDFTextStripper();
+                st.setStartPage(k + 1);
+                st.setEndPage(k + 1);
+                String t = st.getText(d).replaceAll("\\s", "");
+                assertTrue(t.contains(esperado[k]), "hoja " + (k + 1) + ": " + t);
+            }
+        }
+        imagenes(salida, "tramos_der");
+    }
+
+    /** Mejora 6: hojas que no caen en ningún tramo de esa leyenda se quedan sin ella (de fábrica). */
+    @Test
+    void hojaFueraDeTodoTramoQuedaSinEsaLeyenda() throws Exception {
+        File dir = Files.createTempDirectory("ptv").toFile();
+        File pdf = pdfDePrueba(dir, "a.pdf");
+        File salida = new File(dir, "s.pdf");
+        OpcionesIndexar o = new OpcionesIndexar();
+        o.izqOn = false;
+        Tramo t = new Tramo();
+        t.desde = 2;
+        t.hasta = 4;
+        t.texto = "SOLO MEDIO";
+        t.empezarEn = 1;
+        o.tramos.get(2).add(t);
+        Motor.indexar(pdf, salida, null, pdf.getName(), o, null, null);
+        try (PDDocument d = Motor.abrir(salida, null)) {
+            String[] esperado = { null, "SOLOMEDIO1/3", "SOLOMEDIO2/3", "SOLOMEDIO3/3", null };
+            for (int k = 0; k < 5; k++) {
+                PDFTextStripper st = new PDFTextStripper();
+                st.setStartPage(k + 1);
+                st.setEndPage(k + 1);
+                String t = st.getText(d).replaceAll("\\s", "");
+                if (esperado[k] == null) {
+                    assertFalse(t.contains("SOLOMEDIO"), "hoja " + (k + 1) + " no debía tener la leyenda: " + t);
+                } else {
+                    assertTrue(t.contains(esperado[k]), "hoja " + (k + 1) + ": " + t);
+                }
+            }
+        }
+        imagenes(salida, "tramos_fuera_de_rango");
+    }
 }
