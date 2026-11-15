@@ -423,7 +423,7 @@ class NuevasTest {
         File acta = destino.resolve(soloActa).toFile();
         assertTrue(acta.isFile());
         assertTrue(MotorTest.texto(acta).contains("Folio"), "el marcado sí se procesó");
-        File anexo = destino.resolve("Anexos").toPath().resolve("anexo uno.pdf").toFile();
+        File anexo = destino.resolve("Anexos").resolve("anexo uno.pdf").toFile();
         assertTrue(anexo.isFile(), "el no marcado se copia igual");
         assertFalse(MotorTest.texto(anexo).contains("Folio"), "el no marcado NO se procesa, queda como el original");
         assertTrue(destino.resolve("nota.txt").toFile().isFile(), "lo que no es PDF también se copia");
