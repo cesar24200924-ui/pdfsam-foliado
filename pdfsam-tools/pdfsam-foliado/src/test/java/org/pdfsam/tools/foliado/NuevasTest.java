@@ -62,6 +62,37 @@ class NuevasTest {
         assertEquals("x", Comprimidos.base("x.tgz"));
     }
 
+    // ------------------------------------------------------------ Mejora 1 (resto): comprimidos "Extraer aquí"
+    @Test
+    void extraeComprimidoAlLadoDelArchivoYConNombreLibre() throws Exception {
+        File dir = Files.createTempDirectory("pext").toFile();
+        File exp = contenido(dir); // crea dir/Expediente con los PDF (la carpeta "original")
+        File zip = new File(dir, "Expediente.zip");
+        try (java.util.zip.ZipOutputStream z = new java.util.zip.ZipOutputStream(Files.newOutputStream(zip.toPath()))) {
+            for (File f : List.of(new File(exp, "acta.pdf"), new File(exp, "Anexos/anexo uno.pdf"))) {
+                z.putNextEntry(new ZipEntry(exp.toPath().relativize(f.toPath()).toString().replace('\\', '/')));
+                Files.copy(f.toPath(), z);
+                z.closeEntry();
+            }
+        }
+        Lote L = new Lote(zip).preparar();
+        // dir/Expediente YA existía (es la carpeta con la que se armó el ZIP): no se pisa, usa "(2)"
+        assertEquals(new File(dir, "Expediente (2)").toPath(), L.raiz, "usa 'Nombre (2)' si ya existe la carpeta");
+        assertEquals(L.raiz, L.carpetaExtraida);
+        assertTrue(new File(dir, "Expediente (2)/acta.pdf").isFile(), "se extrajo al lado del ZIP");
+        assertTrue(new File(dir, "Expediente/acta.pdf").isFile(), "la carpeta original NO se tocó");
+
+        File destino = new File(dir, "Salida");
+        L.destinoCarpeta = destino.toPath();
+        OpcionesFolio o = new OpcionesFolio();
+        L.ejecutar((e, s, c) -> Motor.foliar(e, s, c, o, null, null, null), L.temp.resolve("resultado"), null);
+        L.finalizar(null);
+        assertTrue(new File(destino, "acta.pdf").isFile());
+        // lo extraído queda ahí, como una carpeta normal: NO se borra al terminar
+        assertTrue(new File(dir, "Expediente (2)/acta.pdf").isFile(), "lo extraído no se borra al terminar");
+        assertFalse(L.temp.toFile().exists(), "solo se borra lo temporal de trabajo");
+    }
+
     // ------------------------------------------------------------ Mejora 4: varios PDF -> "ZIP y carpeta" a la vez
     @Test
     void finalizarZipYCarpetaALaVez() throws Exception {

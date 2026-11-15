@@ -36,8 +36,10 @@ import java.util.zip.ZipOutputStream;
  * Procesar muchos archivos de una vez: una carpeta con todas sus subcarpetas, o un comprimido (ZIP, RAR, 7z, TAR,
  * GZ... ver Comprimidos) que también puede traer otros comprimidos adentro. Así trabaja:
  * <ol>
- * <li>preparar(): arma la lista de archivos. Si es comprimido, lo abre en una carpeta temporal (los de adentro
- * también; si tienen contraseña, la pregunta).</li>
+ * <li>preparar(): arma la lista de archivos. Si es comprimido, lo extrae AL LADO del archivo original (como
+ * "Extraer aquí"; si ya existe esa carpeta, "Nombre (2)") y queda ahí como una carpeta normal, no se borra al
+ * terminar (los de adentro van a una carpeta temporal interna, esos sí se cierran de vuelta a ZIP; si tienen
+ * contraseña, la pregunta).</li>
  * <li>ejecutar(): procesa cada PDF y lo guarda en el destino con LA MISMA estructura de carpetas. Lo que no es PDF
  * se copia igual. Si un archivo falla, se copia el original y se anota. No se detiene.</li>
  * <li>reintentar(): al final, para los protegidos, con la contraseña que dé el usuario.</li>
@@ -92,9 +94,18 @@ final class Lote {
     }
 
     // ------------------------------------------------------------ preparar
+    /** Carpeta donde se extrajo el comprimido (Mejora 1: "Extraer aquí"), si el origen era un comprimido.
+     * Queda AL LADO del archivo original (no en una carpeta temporal), con el mismo nombre, y "(2)", "(3)"...
+     * si ya existe esa carpeta. No se borra al terminar: queda como una carpeta normal, para quien la quiera
+     * revisar o reusar después. */
+    Path carpetaExtraida;
+
     Lote preparar() throws IOException {
         if (esZip) {
-            raiz = temp.resolve("origen");
+            Path lado = origen.toPath().getParent().resolve(Comprimidos.base(origen.getName()));
+            raiz = nombreLibre(lado);
+            Files.createDirectories(raiz);
+            carpetaExtraida = raiz;
             abrir(origen.toPath(), raiz);
         } else {
             raiz = origen.toPath();
