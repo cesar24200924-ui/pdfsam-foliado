@@ -401,4 +401,32 @@ class NuevasTest {
             ImageIO.write(img, "png", new File(MotorTest.SALIDA, "indexar_editable_hoja2.png"));
         }
     }
+
+    /** Mejora 2: en la lista de PDF antes de guardar, el usuario puede quitar un archivo del
+     * procesado (se copia igual, sin cambios) sin tocar los demás. */
+    @Test
+    void aplicarSeleccionExcluyeUnArchivoDelProcesado() throws Exception {
+        File dir = Files.createTempDirectory("psel").toFile();
+        File exp = contenido(dir);
+        Lote L = new Lote(exp);
+        L.preparar();
+        assertEquals(2, L.procesables.size(), L.procesables.toString());
+        String soloActa = L.procesables.stream().filter(r -> r.endsWith("acta.pdf")).findFirst()
+                .orElseThrow(() -> new AssertionError("no está acta.pdf: " + L.procesables));
+        L.aplicarSeleccion(List.of(soloActa));
+        assertEquals(List.of(soloActa), L.procesables, "solo queda el que se marcó, en el orden elegido");
+
+        java.nio.file.Path destino = L.temp.resolve("resultado");
+        OpcionesFolio o = new OpcionesFolio();
+        L.ejecutar((e, s, c) -> Motor.foliar(e, s, c, o, null, null, null), destino, null);
+
+        File acta = destino.resolve(soloActa).toFile();
+        assertTrue(acta.isFile());
+        assertTrue(MotorTest.texto(acta).contains("Folio"), "el marcado sí se procesó");
+        File anexo = destino.resolve("Anexos").toPath().resolve("anexo uno.pdf").toFile();
+        assertTrue(anexo.isFile(), "el no marcado se copia igual");
+        assertFalse(MotorTest.texto(anexo).contains("Folio"), "el no marcado NO se procesa, queda como el original");
+        assertTrue(destino.resolve("nota.txt").toFile().isFile(), "lo que no es PDF también se copia");
+        L.limpiar();
+    }
 }
