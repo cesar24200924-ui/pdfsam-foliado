@@ -144,6 +144,15 @@ final class Lote {
         return this;
     }
 
+    /** Mejora 2: aplica lo que el usuario eligió en "PDF a procesar" (lista antes de guardar): el
+     * orden exacto (importa para la numeración seguida) y cuáles sí se procesan. Los que no estén
+     * en {@code nuevoOrden} quedan fuera de {@link #procesables} y por eso {@link #ejecutar} los
+     * copia igual, sin cambios (como ya hace con lo que no es PDF). */
+    void aplicarSeleccion(List<String> nuevoOrden) {
+        procesables.clear();
+        procesables.addAll(nuevoOrden);
+    }
+
     /** {carpeta: [a procesar, otros]} para la vista previa (los ZIP de adentro con su nombre normal). */
     Map<String, int[]> arbol() {
         Map<String, int[]> r = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);

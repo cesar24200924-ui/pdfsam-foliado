@@ -8,15 +8,22 @@
  */
 package org.pdfsam.tools.foliado;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -145,7 +152,7 @@ final class LoteUi {
 
         Button seguir = Ui.boton("Procesar", () -> {
             v.close();
-            elegirDestino(padre, L, op, sufijo, titulo, alEmpezar);
+            listaPdf(padre, L, op, sufijo, titulo, alEmpezar);
         });
         seguir.getStyleClass().addAll("footer-button", "run-button");
         seguir.setDefaultButton(true);
@@ -186,6 +193,147 @@ final class LoteUi {
         nodoPadre.getChildren().add(n);
         nodos.put(carpeta, n);
         return n;
+    }
+
+    /** Mejora 2: una fila de la lista de PDF antes de guardar (el archivo y si se incluye). */
+    private static final class Entrada {
+        final String relativo;
+        final SimpleBooleanProperty incluir = new SimpleBooleanProperty(true);
+
+        Entrada(String relativo) {
+            this.relativo = relativo;
+        }
+
+        String visible() {
+            return Lote.nombreVisible(relativo);
+        }
+    }
+
+    /** Mejora 2: antes de guardar, se ve la lista de PDF (uno por uno, no solo la carpeta) para
+     * poder quitar los que no se quieren procesar y, si importa el orden (p.ej. la numeración
+     * seguida de Foliar), cambiarlo con "Subir" y "Bajar". */
+    private static void listaPdf(Node padre, Lote L, Lote.Operacion op, String sufijo, String titulo,
+            Runnable alEmpezar) {
+        Stage v = new Stage();
+        v.initModality(Modality.WINDOW_MODAL);
+        Window w = Ui.ventana(padre);
+        if (w != null) {
+            v.initOwner(w);
+        }
+        v.setTitle("PDF a procesar");
+        Label t = new Label(titulo);
+        t.setStyle("-fx-font-size: 1.3em; -fx-font-weight: bold;");
+        Label ayuda = new Label(
+                "Quite la marca a los que NO quiere procesar (se copian igual, sin cambios). Si el orden "
+                        + "importa (por ejemplo, la numeración seguida), cámbielo con \"Subir\" y \"Bajar\".");
+        ayuda.setWrapText(true);
+
+        ObservableList<Entrada> datos = FXCollections.observableArrayList();
+        for (String rel : L.procesables) {
+            datos.add(new Entrada(rel));
+        }
+        ListView<Entrada> lista = new ListView<>(datos);
+        lista.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        lista.setPrefHeight(360);
+        VBox.setVgrow(lista, Priority.ALWAYS);
+        Label contador = new Label();
+        Runnable actualizarContador = () -> {
+            long n = datos.stream().filter(e -> e.incluir.get()).count();
+            contador.setText(n + " de " + datos.size() + " PDF marcados para procesar.");
+        };
+        lista.setCellFactory(lv -> new ListCell<>() {
+            private final CheckBox caja = new CheckBox();
+            private Entrada actual;
+
+            {
+                caja.selectedProperty().addListener((o, a, b) -> {
+                    if (actual != null) {
+                        actual.incluir.set(b);
+                        actualizarContador.run();
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(Entrada e, boolean vacio) {
+                super.updateItem(e, vacio);
+                actual = e;
+                if (vacio || e == null) {
+                    setGraphic(null);
+                    setText(null);
+                } else {
+                    caja.setText(e.visible());
+                    caja.setSelected(e.incluir.get());
+                    setGraphic(caja);
+                    setText(null);
+                }
+            }
+        });
+
+        Button subir = Ui.boton("Subir", () -> {
+            int i = lista.getSelectionModel().getSelectedIndex();
+            if (i > 0) {
+                Entrada e = datos.remove(i);
+                datos.add(i - 1, e);
+                lista.getSelectionModel().select(i - 1);
+            }
+        });
+        Button bajar = Ui.boton("Bajar", () -> {
+            int i = lista.getSelectionModel().getSelectedIndex();
+            if (i >= 0 && i < datos.size() - 1) {
+                Entrada e = datos.remove(i);
+                datos.add(i + 1, e);
+                lista.getSelectionModel().select(i + 1);
+            }
+        });
+        Button todos = Ui.boton("Marcar todos", () -> {
+            datos.forEach(e -> e.incluir.set(true));
+            lista.refresh();
+            actualizarContador.run();
+        });
+        Button ninguno = Ui.boton("Desmarcar todos", () -> {
+            datos.forEach(e -> e.incluir.set(false));
+            lista.refresh();
+            actualizarContador.run();
+        });
+        HBox orden = new HBox(8, subir, bajar, todos, ninguno);
+        actualizarContador.run();
+
+        Button seguir = Ui.boton("Continuar", () -> {
+            List<String> elegidos = new ArrayList<>();
+            for (Entrada e : datos) {
+                if (e.incluir.get()) {
+                    elegidos.add(e.relativo);
+                }
+            }
+            if (elegidos.isEmpty()) {
+                Ui.aviso(padre, "Marque por lo menos un PDF para procesar.");
+                return;
+            }
+            L.aplicarSeleccion(elegidos);
+            v.close();
+            elegirDestino(padre, L, op, sufijo, titulo, alEmpezar);
+        });
+        seguir.getStyleClass().addAll("footer-button", "run-button");
+        seguir.setDefaultButton(true);
+        Button cancelar = Ui.boton("Cancelar", () -> {
+            v.close();
+            L.limpiar();
+        });
+        v.setOnCloseRequest(e -> L.limpiar());
+        HBox botones = new HBox(8, cancelar, seguir);
+        botones.setAlignment(Pos.CENTER_RIGHT);
+        VBox caja = new VBox(10, t, ayuda, lista, contador, orden, botones);
+        caja.setPadding(new Insets(18));
+        caja.setPrefSize(640, 520);
+        caja.getStyleClass().addAll(Style.CONTAINER.css());
+        Scene sc = new Scene(caja);
+        if (w != null && w.getScene() != null) {
+            sc.getStylesheets().addAll(w.getScene().getStylesheets());
+        }
+        Ui.estiloDialogo(sc.getRoot());
+        v.setScene(sc);
+        v.show();
     }
 
     private static void elegirDestino(Node padre, Lote L, Lote.Operacion op, String sufijo, String titulo,
