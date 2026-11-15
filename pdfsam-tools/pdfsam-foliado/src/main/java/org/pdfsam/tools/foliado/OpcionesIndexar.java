@@ -9,6 +9,8 @@
 package org.pdfsam.tools.foliado;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 /** Las opciones de Indexar PDF (Indexador de PDFs v3). */
 public class OpcionesIndexar {
@@ -46,4 +48,15 @@ public class OpcionesIndexar {
      * Motor.LEYENDAS. */
     public float[] movX = new float[5];
     public float[] movY = new float[5];
+    /** Mejora 6: tramos de cada leyenda, en el mismo orden que Motor.LEYENDAS (movX/movY). Una
+     * lista vacía en una posición = esa leyenda no usa tramos (sigue como siempre). */
+    public List<List<Tramo>> tramos = tramosVacios();
+
+    private static List<List<Tramo>> tramosVacios() {
+        List<List<Tramo>> r = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            r.add(new ArrayList<>());
+        }
+        return r;
+    }
 }
