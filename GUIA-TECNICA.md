@@ -2,7 +2,30 @@
 
 Este archivo va dentro del código fuente a propósito: se actualiza en cada entrega, para que
 cualquier conversación nueva (con Claude o con quien sea) sepa de qué trata el programa, qué se
-hizo y qué falta, sin tener que repetir todo desde cero.
+hizo y qué falta, sin tener que repetir todo desde cero ni preguntarle nada al usuario que ya
+esté contestado aquí.
+
+## 0. Quién es el usuario y cómo trabajar con él (leer primero)
+
+- Auditor tributario en la SAR (Honduras), **no es programador**. No usar jerga técnica sin
+  explicarla; instrucciones simples, paso a paso.
+- Responder/avisar avances **siempre en español** (también los mensajes de "voy a hacer tal
+  cosa" mientras se trabaja), informal, puede escribir en mayúsculas.
+- Prefiere que se le pregunte antes de hacer algo si hay dudas de alcance (con opciones para
+  elegir). Si dice "no hagas nada" o "solo mirá", solo analizar y explicar, no tocar código.
+- Cambios **quirúrgicos**: nunca reescribir código que ya funciona sin necesidad.
+- Quiere código completo y listo para usar, no fragmentos a medio hacer.
+- **No reportarle avances intermedios si pidió juntar varias mejoras**: solo entregar cuando
+  TODO lo pedido esté listo y probado (a menos que él pregunte por el estado mientras tanto).
+- Entrega estándar: **dos ZIP juntos**, uno de PDFsam (rama `main`) y otro de Auditoría PDF
+  (rama `auditoria`), cada uno con 3 carpetas: `1 - Portable`, `2 - Instalador`,
+  `3 - Código fuente`. Si solo pide el código fuente, un solo ZIP (o uno por programa) con el
+  código, sin portable ni instalador.
+- Antes de avisar que algo está listo: revisar que no quede la palabra "Curiosity" en la
+  versión Auditoría PDF, revisar que los colores se vean bien en tema claro y oscuro, probar
+  todo lo que se pueda (ver sección 6) y decir con honestidad qué no se pudo probar.
+- Repositorio de trabajo actual: cuenta de GitHub `cesar24200924-ui` (la anterior,
+  `cesar242009-blip`, se quedó sin espacio; está invitada como colaboradora).
 
 ## 1. Qué es esto
 
@@ -43,6 +66,56 @@ Corren solas al hacer `git push` a `main` (`.github/workflows/pruebas.yml`).
    `auditoria`). Arman portable + instalador (jpackage + WiX) y suben el ZIP con todo al release.
 4. Entrega siempre en dos ZIP, cada uno con 3 carpetas: `1 - Portable`, `2 - Instalador`,
    `3 - Código fuente`.
+
+### 2.1 Comandos exactos (para no repetir los mismos errores)
+
+**Trampa de nombres repetidos:** además de las ramas `main` y `auditoria`, el repo tiene
+**etiquetas (tags)** llamadas `auditoria` y `portable` (son los anclajes de los releases). Git
+no distingue bien entre rama y tag con el mismo nombre:
+
+- `git fetch origin auditoria` puede traer el TAG en vez de la rama (deja `origin/auditoria`
+  apuntando a un commit viejo). Usar siempre la ruta completa:
+  `git fetch origin refs/heads/auditoria:refs/remotes/origin/auditoria --force`
+- `git push origin auditoria` falla con "src refspec auditoria matches more than one" si hay
+  tags locales con ese nombre. Antes de subir: `git tag -d auditoria portable` (borra solo las
+  etiquetas locales, no las del servidor) y subir con la ruta completa:
+  `git push origin refs/heads/auditoria:refs/heads/auditoria`
+
+**Pasos completos de una entrega nueva:**
+1. Hacer los cambios de código/pruebas en `main`, commit, `git push origin main`.
+2. Esperar `pruebas.yml` (se dispara solo con el push) y revisar con
+   `gh run view <id> --log` que diga "BUILD SUCCESS" y "Failures: 0, Errors: 0". No seguir si
+   falla — corregir y repetir este paso.
+3. `git fetch origin refs/heads/auditoria:refs/remotes/origin/auditoria --force`, luego
+   `git checkout auditoria` (o `git switch -c auditoria origin/auditoria` si no existe local).
+4. `git cherry-pick <commits de main>` uno por uno o en rango. Si choca el manual o la pantalla
+   "Acerca de" (son los únicos archivos distintos entre ramas), quedarse con la versión de
+   `auditoria` en esos archivos y reaplicar a mano solo los cambios de código de ese commit.
+5. `git tag -d auditoria portable` (si existen localmente) y
+   `git push origin refs/heads/auditoria:refs/heads/auditoria`.
+6. Lanzar los builds finales:
+   `gh api -X POST repos/cesar24200924-ui/pdfsam-foliado/actions/workflows/portable.yml/dispatches -f ref=main`
+   `gh api -X POST repos/cesar24200924-ui/pdfsam-foliado/actions/workflows/auditoria.yml/dispatches -f ref=auditoria`
+7. Esperar a que los dos terminen (`gh api repos/.../actions/runs/<id>` → `status`/`conclusion`
+   = `completed`/`success`). Tardan más que `pruebas.yml` (jpackage + WiX).
+8. Los archivos quedan en los Releases de GitHub con esos tags:
+   - Tag **`portable`** (de `main`, programa "PDFsam"): assets
+     `PDFsam-Foliar-Indexar-instalador.exe`, `PDFsam-Foliar-Indexar-portable.zip`,
+     `PDFsam-Foliar-Indexar-codigo-fuente.zip`, `PDFsam-Foliar-Indexar-TODO.zip` (los tres
+     anteriores juntos, ya organizados en `1 - Portable/`, `2 - Instalador/`,
+     `3 - Codigo fuente/`).
+   - Tag **`auditoria`** (de `auditoria`, programa "Auditoría PDF"): mismos 4 assets con el
+     nombre `Auditoria-PDF-...`.
+   Para bajarlos: pedir la URL del asset con
+   `gh api repos/cesar24200924-ui/pdfsam-foliado/releases/tags/<tag> --jq '.assets[]|.name+" "+.url'`
+   y descargar cada uno con
+   `curl -L -H "Accept: application/octet-stream" -H "Authorization: Bearer $(gh auth token)" <url> -o <archivo>`
+   (`gh release download` no funciona en este tipo de sesión — da error de GraphQL — por eso se
+   usa `gh api` + `curl` a la URL del asset).
+9. Si el usuario solo pidió el código fuente (sin portable ni instalador), no hace falta
+   lanzar `portable.yml`/`auditoria.yml`: basta con bajar el asset `*-codigo-fuente.zip` ya
+   armado del último release, o armar uno nuevo a mano con `git archive` sobre la rama que
+   corresponda si hubo cambios después del último build.
 
 ## 3. Hecho en esta entrega (2026-11-14)
 
@@ -135,6 +208,19 @@ Las marcas (`/Type /Annot`, `/Subtype /Widget`, `/FT /Tx`, etc.) ya están y las
 `NuevasTest.folioEditable()`, pero falta la confirmación real en Adobe (Acrobat o Reader), en
 vista normal y en "Rellenar y firmar" — no se puede probar desde este entorno (sin Windows ni
 Adobe instalado).
+
+### 4.6 Funciones nuevas pendientes (futuras, el usuario pidió guardarlas y avisa cuándo hacerlas)
+Decidido el 2026-11-14: pasar estas herramientas de su otro proyecto "Curiosity PDF" a
+Auditoría PDF (y valorar si también a PDFsam): **Comprimir** (bajar peso del PDF), **PDF a
+imagen**, **Imagen a PDF**, **Escanear fotos**, **Quitar links**, **Reparar y Propiedades**,
+**Recortar márgenes** y **Leer en voz alta (exportar a MP3)**. Además:
+- Agregar "Dividir por tamaño" de Curiosity (más exacto, con botones rápidos de MB y vista
+  previa por colores) como herramienta **nueva y separada**, sin tocar ni reemplazar el
+  "Dividir por tamaño" que ya trae PDFsam de fábrica — quedan los dos, cada uno en su pantalla.
+- Agregar "Comprimir hasta un peso" (ej. "que quede en 5 MB") como opción nueva dentro de
+  Comprimir, sin tocar las opciones baja/media/alta que ya existen.
+- Decidió **NO** agregar por ahora nada de "trabajo fiscal" (OCR, Separar por texto, Comparar,
+  Firmas) — queda fuera de esta versión.
 
 ## 5. Decisiones ya tomadas (para no volver a preguntar)
 - "Hasta el folio 20" → las hojas siguientes quedan SIN folio.
