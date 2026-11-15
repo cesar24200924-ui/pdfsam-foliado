@@ -10,6 +10,7 @@ package org.pdfsam.tools.foliado;
 
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
+import org.sejda.sambox.cos.COSName;
 import org.sejda.sambox.pdmodel.PDDocument;
 import org.sejda.sambox.pdmodel.interactive.annotation.PDAnnotationWidget;
 import org.sejda.sambox.pdmodel.interactive.form.PDAcroForm;
@@ -311,6 +312,15 @@ class NuevasTest {
                 valores.add(c.getValueAsString());
                 PDAnnotationWidget w = c.getWidgets().get(0);
                 assertNotNull(w.getAppearance());
+                // Mejora 3: marcas que Adobe necesita para dejar hacerle clic y cambiar el valor
+                assertEquals(COSName.WIDGET, w.getCOSObject().getCOSName(COSName.SUBTYPE),
+                        "la casilla debe tener /Subtype /Widget");
+                assertEquals(COSName.ANNOT, w.getCOSObject().getCOSName(COSName.TYPE),
+                        "la casilla debe tener /Type /Annot");
+                assertEquals(COSName.TX, c.getCOSObject().getCOSName(COSName.FT), "el campo debe ser /FT /Tx");
+                assertTrue(w.isPrinted(), "debe tener el bit Imprimir del /F (valor 4)");
+                assertNotNull(w.getPage(), "debe tener /P (la página)");
+                assertNotNull(c.getCOSObject().getString(COSName.DA), "debe tener /DA (la apariencia)");
             }
             assertEquals(List.of("Folio 001", "Folio 002", "Folio 003", "Folio 004", "Folio 005"), valores);
             for (int i = 0; i < 5; i++) {

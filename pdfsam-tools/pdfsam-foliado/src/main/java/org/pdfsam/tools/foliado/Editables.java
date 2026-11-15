@@ -173,11 +173,17 @@ final class Editables {
             campo.setDoNotSpellCheck(true);
             campo.getCOSObject().setString(COSName.V, texto);
             campo.getCOSObject().setString(COSName.DV, texto);
+            // de fábrica (que Adobe lo reconozca como casilla aunque la hoja venga de "Rellenar y firmar")
+            campo.getCOSObject().setItem(COSName.FT, COSName.TX);
 
             PDAnnotationWidget widget = campo.getWidgets().get(0);
             widget.setRectangle(new PDRectangle(minX, minY, maxX - minX, maxY - minY));
             widget.setPage(h.pagina);
-            widget.setPrinted(true);
+            widget.setPrinted(true); // pone el bit "Imprimir" en /F (valor 4)
+            // marcas de la casilla que Adobe exige para dejar hacerle clic y escribir encima del valor:
+            // /Subtype /Widget (qué tipo de anotación es) y /Type /Annot (que es una anotación, no solo un campo)
+            widget.getCOSObject().setItem(COSName.TYPE, COSName.ANNOT);
+            widget.getCOSObject().setItem(COSName.SUBTYPE, COSName.WIDGET);
             // que Adobe escriba derecho también en las hojas giradas
             PDAppearanceCharacteristicsDictionary mk = new PDAppearanceCharacteristicsDictionary(
                     new org.sejda.sambox.cos.COSDictionary());
