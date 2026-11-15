@@ -46,112 +46,111 @@ Corren solas al hacer `git push` a `main` (`.github/workflows/pruebas.yml`).
 
 ## 3. Hecho en esta entrega (2026-11-14)
 
-- **Mejora 1 (parte 1 de 2 — el error):** arreglado el error
-  `No se encontró …_indexado.zip.__zip__` en Indexar.
-  - **Causa:** al armar el ZIP final, `IndexarPanel.armarZip()` llama a
-    `Lote.cerrarZipsInternos(m)` pasándole como `carpeta` la MISMA carpeta de trabajo, que
-    también termina en `.__zip__` (para que el método sepa que es un comprimido). Pero
-    `cerrarZipsInternos` usaba `Files.walk(carpeta)`, que **incluye la carpeta de partida**, así
-    que la trataba como uno de los comprimidos internos a cerrar: la convertía en ZIP y la
-    borraba **antes de tiempo**. El código de `armarZip()` que seguía después ya no la encontraba.
-  - **Arreglo:** en `Lote.cerrarZipsInternos`, se excluye explícitamente la carpeta de partida
-    del filtro (`p -> !p.equals(carpeta)`), para que solo cierre las marcadas **de adentro**.
-    Un solo método tocado, una línea de cambio real.
-  - **Prueba agregada:** `NuevasTest.cerrarZipsInternosNoSeIncluyeASiMisma()` reproduce
-    exactamente el caso real (carpeta raíz `Expediente_indexado.zip.__zip__` con un comprimido
-    interno adentro) y comprueba que la raíz sobrevive y el interno sí se cierra.
-  - **Pendiente de la Mejora 1 (parte 2):** el rediseño de cómo ENTRAN los comprimidos
-    ("Extraer aquí" al lado del archivo, con contraseña si tiene, trabajarlo como carpeta normal)
-    todavía no está hecho — ver sección 4.
+Quedaron listas, probadas (CI verde en `main`, 47 pruebas) y con pantalla las 4 mejoras que
+faltaban: **Mejora 1 (resto)**, **Mejora 2**, **Mejora 5** y **Mejora 6**. (Mejoras 3 y 4 ya
+habían quedado listas en una entrega anterior — ver el historial de git para el detalle de esas
+dos si hace falta.)
 
-- **Mejora 3 — Texto editable en Adobe:** en `Editables.campo()` se agregan explícitamente
-  `/Type /Annot` y `/Subtype /Widget` al widget, y `/FT /Tx` al campo (antes el código confiaba
-  en que la librería SAMBox los pusiera solos y, según lo visto en el PDF real, no siempre pasaba).
-  `/F` (bit Imprimir), `/P` (página) y `/DA` (apariencia) ya se ponían. Prueba ampliada en
-  `NuevasTest.folioEditable()` para comprobar las 6 marcas. **Falta confirmar en Adobe de verdad**
-  (vista normal y "Rellenar y firmar") — no se puede probar desde aquí.
+- **Mejora 1 (resto) — Comprimidos "Extraer aquí":** `Lote.preparar()` ya no descomprime en una
+  carpeta temporal que se borra al final. Ahora, si el origen es un comprimido (ZIP/RAR/7z…), lo
+  extrae **al lado del archivo original**, con el mismo nombre (o "Nombre (2)", "(3)"... si ya
+  existe esa carpeta — ver `Lote.nombreLibre()`), y esa carpeta extraída **no se borra al
+  terminar**: queda ahí como una carpeta normal (campo nuevo `Lote.carpetaExtraida`). Los
+  comprimidos que venían DENTRO de ese comprimido (para que sus PDF también se procesen) se
+  dejan momentáneamente como carpeta "marcada" (`.__zip__`, el mismo truco de siempre) y
+  `Lote.limpiar()` los vuelve a cerrar a ZIP de verdad dentro de esa carpeta ya persistente, en
+  vez de dentro de la carpeta temporal (que antes se borraba junto con ellos). Pruebas:
+  `NuevasTest.extraeComprimidoAlLadoDelArchivoYConNombreLibre()`.
 
-- **Mejora 4 (Foliar y Girar) — varios PDF en un ZIP:** antes, al procesar una carpeta o
-  comprimido con Foliar o Girar, el resultado SIEMPRE salía como carpeta (nunca se preguntaba).
-  Ahora, si hay más de un PDF a procesar, siempre se pregunta "¿Cómo quiere el resultado?" con
-  tres botones: **Solo ZIP** (resaltado de fábrica), **ZIP y carpeta**, **Solo carpeta**. El
-  nombre sugerido se sigue pudiendo cambiar en el propio cuadro de "Guardar como" (no hizo falta
-  una pantalla nueva para eso). Técnico: `Ui.elegir3()` (diálogo de 3 botones), `Lote.finalizar()`
-  ahora puede entregar ZIP y carpeta a la vez (antes era uno u otro), `LoteUi.elegirDestino()`
-  pregunta siempre que `procesables.size() > 1` (antes solo cuando el ORIGEN ya era un .zip).
-  Prueba: `NuevasTest.finalizarZipYCarpetaALaVez()`.
-  - **Indexar NO quedó cubierto todavía.** Indexar guarda cada PDF suelto directo en la carpeta
-    que el usuario elige (ver `IndexarPanel.procesar()`/`terminar()`) y solo arma un ZIP aparte
-    para lo que vino de un comprimido (`armarZip()`, ya arreglado en la Mejora 1 parte 1). Darle
-    a Indexar las mismas 3 opciones (Solo ZIP/ZIP y carpeta/Solo carpeta) para TODOS sus archivos
-    requiere cambiar su guardado para que escriba primero a una carpeta temporal (como ya hace
-    `Lote`) y recién al final la convierta en ZIP y/o la copie — no es un cambio chico, queda
-    anotado en la sección 4 como pendiente.
+- **Mejora 2 — Lista de PDF antes de guardar (Foliar y Girar):** nuevo paso `LoteUi.listaPdf()`
+  entre la vista previa de carpetas y "¿dónde guardo?": muestra cada PDF de `Lote.procesables`
+  con una casilla (para quitarlo del procesado: se copia igual, sin cambios, como ya pasa con lo
+  que no es PDF) y botones **Subir**/**Bajar** para cambiar el orden (importa para la numeración
+  seguida de Foliar). `Lote.aplicarSeleccion(List<String>)` aplica lo elegido. Como pasa por
+  `LoteUi.procesar()`, esto cubre a la vez `FoliarPanel.lote()` y el lote de `GirarPanel`, sin
+  tocar cada pantalla por separado. Indexar sigue con su propio patrón de lista (`Item` +
+  `EditorHojas`), no le hizo falta este cambio. Prueba:
+  `NuevasTest.aplicarSeleccionExcluyeUnArchivoDelProcesado()`.
+
+- **Mejora 5 — Formato del folio a gusto ("el plantillador"):** clase nueva `Plantillador`
+  (pura, sin JavaFX): recibe un ejemplo de texto (p.ej. `"FOLIO 1 DE 50 [UNO DE CINCUENTA]"`) y
+  lo separa en prefijo, sufijo, cantidad de dígitos (ceros a la izquierda), si lleva el total y
+  con qué palabra, y si además lleva el número en letras — sin tocar `Motor` ni cómo se dibuja el
+  folio, solo traduce el ejemplo a las piezas que `OpcionesFolio` ya entendía. El número de
+  inicio NUNCA sale del ejemplo (eso sigue siendo "Empieza en"). El contenido entre corchetes
+  `[ ]` no se lee palabra por palabra: solo marca "aquí también en letras" (el texto en letras lo
+  arma `Motor` pegando el mismo prefijo del número con el número real en letras, así que no hace
+  falta — y no se puede — escribir un "total en letras" aparte). En `FoliarPanel` hay un campo
+  nuevo "¿O prefiere escribir un ejemplo?" con botón "Usar este ejemplo" (sección "2. Texto del
+  folio") que llama a `Plantillador` y llena las casillas de siempre. No quedó favoritos en
+  `Config` (no alcanzó en esta entrega; ver sección 4 si se quiere agregar después). Pruebas:
+  `PlantilladorTest` (12 casos) y `PantallasTest.foliarUsaEjemploDeFormato()` (con la pantalla de
+  verdad).
+
+- **Mejora 6 — Tramos por leyenda (Indexar):** clase nueva `Tramo` (desde, hasta, texto,
+  empezarEn) y campo nuevo `OpcionesIndexar.tramos`: una lista de tramos por cada una de las 5
+  leyendas (mismo orden que `Motor.LEYENDAS`/`movX`/`movY`). Mientras la lista de una leyenda esté
+  vacía, esa leyenda sigue funcionando EXACTAMENTE como siempre (su texto fijo en todas las
+  hojas) — es justo lo que comprueban las pruebas viejas, que no se tocaron y siguen pasando.
+  Si una leyenda SÍ tiene tramos, cada hoja usa el tramo cuyo rango la cubre (el rango se cuenta
+  entre las hojas que se van a indexar, 1 = la primera — no entre todas las hojas del PDF), con
+  el texto y la numeración propios de ESE tramo ("empezarEn" + la posición dentro del tramo, con
+  su propio total = hasta donde llegaría ese tramo). Las hojas que no caen en ningún tramo de esa
+  leyenda se quedan SIN ella (de fábrica, ver sección 5). Toda la lógica nueva está en
+  `Motor.indexarHoja()` (helper privado `buscarTramo()`), un bloque por cada una de las 5
+  leyendas. Pantalla nueva en `IndexarPanel`: botón "Tramos por leyenda…" (sección "5. Más
+  opciones") que abre una ventana para elegir la leyenda y agregar/cambiar/quitar sus tramos.
+  **No se guardan en `Config`** (se pierden al cerrar el programa; ver sección 4). Pruebas:
+  `MotorTest.tramosEnLeyendaDerecha()` y `MotorTest.hojaFueraDeTodoTramoQuedaSinEsaLeyenda()`.
 
 ## 4. Pendiente
 
-### 4.0 Mejora 4 en Indexar
-Ver el detalle en la sección 3 — darle a Indexar las mismas 3 opciones de resultado que ya
-tienen Foliar y Girar.
+### 4.1 Guardar tramos y favoritos del plantillador entre usos
+`OpcionesIndexar.tramos` (Mejora 6) y los posibles favoritos del "ejemplo" de Foliar (Mejora 5)
+no se guardan en `Config` todavía: cada vez que se abre el programa hay que armarlos de nuevo.
+`Config` hoy solo guarda valores simples (texto/número/sí-no) — para listas de objetos haría
+falta un formato propio (por ejemplo, una línea de texto por tramo con los 4 valores separados
+por algún símbolo que no choque, o guardar como JSON si se agrega una librería chica para eso).
 
-### 4.1 Resto de la Mejora 1 — Comprimidos "Extraer aquí"
-Hoy, Foliar/Indexar/Girar abren el ZIP/RAR en una carpeta TEMPORAL que se borra al terminar
-(ver `Lote.preparar()`, usa `Files.createTempDirectory`). Se pidió cambiar a: descomprimir
-AL LADO del archivo original (si ya existe esa carpeta, usar "Nombre (2)"), pedir contraseña si
-tiene, y trabajarla ahí como una carpeta cualquiera. Archivos a tocar: `Lote.preparar()`
-(dónde se descomprime) y el texto de la pregunta inicial en cada Panel (`recibir()`).
+### 4.2 Indexar con "lista de PDF antes de guardar" al estilo Mejora 2
+La Mejora 2 (sección 3) cubrió Foliar y Girar reusando `LoteUi`. Indexar NO pasa por `LoteUi`
+(tiene su propio patrón `Item`/`EditorHojas`, que ya deja ver y editar cada PDF uno por uno antes
+de guardar) — así que no le faltaba lo mismo, pero si se quiere el mismo control de
+incluir/excluir y reordenar que ahora tienen Foliar/Girar, habría que agregarlo a esa lista
+propia de Indexar.
 
-### 4.2 Mejora 2 — Lista de PDF antes de guardar (Foliar y Girar)
-Indexar YA tiene este patrón (clase interna `Item` + `EditorHojas`, lista con vista previa,
-clic para editar). Falta reusar ese mismo patrón en `FoliarPanel` y `GirarPanel` para cuando
-se mete un comprimido/carpeta con varios PDF: hoy `FoliarPanel.lote()` los folia de un tirón
-sin dejar ver ni editar cada uno.
+### 4.3 Mejora 4 en Indexar (gap ya conocido, de una entrega anterior)
+Indexar guarda cada PDF suelto directo en la carpeta que el usuario elige y solo arma un ZIP
+aparte para lo que vino de un comprimido. Darle a Indexar las mismas 3 opciones de resultado que
+ya tienen Foliar y Girar (Solo ZIP/ZIP y carpeta/Solo carpeta para TODOS sus archivos) requeriría
+cambiar su guardado para que escriba primero a una carpeta temporal, como ya hace `Lote`.
 
-### 4.3 Mejora 3 — "Texto editable en Adobe"
-Revisar `Editables.campo()`: agregar `/Subtype /Widget` y `/Type /Annot` al diccionario del
-campo, y revisar que tenga `/F 4` (visible), `/P` (página), `/FT /Tx` (tipo texto), `/DA`
-(apariencia) y que la fuente esté en `/DR` del AcroForm. Sin esto, Adobe no lo reconoce como
-casilla de formulario real y solo dibuja el texto, pero no deja hacerle clic para cambiarlo.
-Falta probar en Adobe de verdad (no se puede desde aquí) y en "Rellenar y firmar", no solo en
-vista normal.
-
-### 4.4 Mejora 4 — Varios PDF en un ZIP
-**Importante — esto NO es lo mismo que la Mejora 1.** Ya existe `Lote.finalizar(comoZipEn)`,
-que arma un ZIP cuando el ORIGEN fue un comprimido o una carpeta (ver prueba
-`NuevasTest` sección "carpeta o comprimido completo"). Lo que falta es para el caso de
-**varios PDF sueltos elegidos a mano** (no una carpeta ni un ZIP): hoy, si en `FoliarPanel`
-se arrastran 3 PDF sueltos, `recibir()` solo toma el PRIMERO (`rutas.stream().filter(...)
-.findFirst()`) y los otros dos se ignoran en silencio. Falta: detectar varios PDF sueltos,
-procesarlos todos, y preguntar "¿Solo ZIP o ZIP y carpeta?" (de fábrica: Solo ZIP), con nombre
-automático editable. Revisar también Indexar y Girar para el mismo caso.
-
-### 4.5 Mejora 5 — Formato del folio a gusto (el "plantillador")
-Nueva clase pequeña que reciba un ejemplo de texto (ej. "FOLIO 1 [UNO]"), lo separe en piezas
-usando `Motor.numeroALetras` para reconocer dónde está el número y dónde el número en letras,
-y arme con eso el texto de cada hoja. Se guarda en `Config` con lista de favoritos. El número de
-inicio NUNCA sale del ejemplo, solo de "Empezar en". Falta decidir en código cómo se marca cada
-pieza como "cuenta" o "texto fijo" en la pantalla.
-
-### 4.6 Mejora 6 — Desde/hasta y tramos por leyenda
-Cada leyenda (clase `OpcionesIndexar`, ver también `ReglaHoja`) necesita su propio rango de
-hojas y, dentro de eso, "tramos" (rangos con texto distinto y su propio "Empezar en"). Toca
-`OpcionesIndexar`, `ReglaHoja` y la parte de `Motor` que arma el texto final de cada leyenda.
-Es la mejora más grande de las 6.
-
-### 4.7 Amigabilidad (en paralelo con todas las anteriores)
+### 4.4 Amigabilidad (pendiente de entregas anteriores, sigue en pie)
 Botón "Personalizar ✎" con pasos numerados, mensajitos de ayuda al pasar el mouse, bienvenida
 de 3 pasos, "Volver a lo de fábrica", "¿Cómo se usa?" (abre el manual), errores en palabras
 sencillas, resumen antes de guardar, "Abrir el resultado"/"Abrir la carpeta".
 
+### 4.5 Mejora 3 — confirmar en Adobe de verdad
+Las marcas (`/Type /Annot`, `/Subtype /Widget`, `/FT /Tx`, etc.) ya están y las prueba
+`NuevasTest.folioEditable()`, pero falta la confirmación real en Adobe (Acrobat o Reader), en
+vista normal y en "Rellenar y firmar" — no se puede probar desde este entorno (sin Windows ni
+Adobe instalado).
+
 ## 5. Decisiones ya tomadas (para no volver a preguntar)
 - "Hasta el folio 20" → las hojas siguientes quedan SIN folio.
 - Varios PDF → de fábrica "Solo ZIP" (igual pregunta cada vez).
-- Hojas fuera de todo tramo → de fábrica quedan vacías.
-- Todo lo predeterminado de hoy debe seguir funcionando igual para quien no personalice nada.
+- Hojas fuera de todo tramo (Mejora 6) → de fábrica quedan vacías (sin esa leyenda).
+- El contenido escrito dentro de los corchetes `[ ]` del ejemplo de folio (Mejora 5) no se usa
+  palabra por palabra: solo marca "aquí también en letras"; el texto en letras siempre es el
+  mismo prefijo del número + el número real en letras (lo arma `Motor`, no el ejemplo).
+- "Desde"/"hasta" de un tramo (Mejora 6) se cuentan entre las hojas que SÍ se indexan, no entre
+  todas las hojas del PDF (coherente con cómo ya se cuenta "1/10" en la leyenda derecha).
+- Todo lo predeterminado de hoy debe seguir funcionando igual para quien no personalice nada
+  (es justo lo que comprueban las pruebas viejas, que no se tocaron).
 
 ## 6. Qué no se pudo probar desde aquí
-Esta entrega se armó sin acceso a Windows, Adobe, mouse real ni a los servidores de Java
-(Maven Central) desde el entorno donde se escribió el código — igual que en la máquina de
-trabajo, por eso todo se compila y prueba con GitHub Actions (`pruebas.yml`). El arreglo de esta
-entrega se verifica con la prueba automática agregada; falta la confirmación de que
-`pruebas.yml` pase en GitHub antes de pasarlo a `auditoria`.
+Esta entrega (como las anteriores) se armó sin acceso a Windows, Adobe, mouse real ni a los
+servidores de Java (Maven Central) desde el entorno donde se escribió el código — igual que en
+la máquina de trabajo, por eso todo se compila y prueba con GitHub Actions (`pruebas.yml`). Las
+47 pruebas automáticas (incluidas las nuevas de esta entrega) pasaron en GitHub antes de pasar
+los cambios a `auditoria` y armar los instaladores/portables finales.
