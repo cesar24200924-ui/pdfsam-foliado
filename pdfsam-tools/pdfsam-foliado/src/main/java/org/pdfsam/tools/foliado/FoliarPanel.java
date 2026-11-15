@@ -58,6 +58,8 @@ class FoliarPanel extends BorderPane {
     private final TextField palabraDe = Ui.campo(Config.texto("foliar.palabraDe", "de"));
     private final TextField sufijo = Ui.campo(Config.texto("foliar.sufijo", ""));
     private final Label asiQueda = new Label();
+    /** Mejora 5: escriba un ejemplo de cómo quiere el folio y se separa en las piezas de arriba. */
+    private final TextField ejemploFormato = Ui.campo("");
     private final CheckBox enLetras = new CheckBox("Poner el folio en letras (FOLIO UNO, FOLIO DOS…)");
     private final TextField textoLetras = Ui.campo(Config.texto("foliar.textoLetras", "FOLIO "));
     private final CheckBox conNumeros = new CheckBox("También el folio en números (arriba)");
@@ -142,10 +144,17 @@ class FoliarPanel extends BorderPane {
         asiQueda.setWrapText(true);
         asiQueda.getStyleClass().add("foliado-acento");
         asiQueda.setStyle("-fx-font-weight: bold;");
+        // Mejora 5: escriba un ejemplo y se arman solas las casillas de arriba.
+        Button usarEjemplo = Ui.boton("Usar este ejemplo", this::usarEjemploFormato);
+        VBox pEjemplo = Controles.bloque(Controles.titulo("¿O prefiere escribir un ejemplo?"), ejemploFormato,
+                usarEjemplo,
+                Controles.nota("Ej.: 'FOLIO 001 DE 120', 'Folio 1 [UNO]'. El número de inicio NUNCA sale de aquí, "
+                        + "siempre de \"Empieza en\"."));
         VBox pTexto = Controles.bloque(Controles.titulo("Texto antes del número"), prefijo,
                 Controles.nota("Ej.: 'Folio ', 'Pág. ', 'Fol. ' o vacío para solo el número"), g, conTotal, g2,
                 asiQueda, Controles.nota(
-                        "Todo el texto se puede cambiar: ej. 'FOLIO 001 DE 120', 'Pág. 001 / 120' o 'Fol. 001 - SAR'."));
+                        "Todo el texto se puede cambiar: ej. 'FOLIO 001 DE 120', 'Pág. 001 / 120' o 'Fol. 001 - SAR'."),
+                pEjemplo);
 
         // ---------- 3. en letras
         VBox sub = Controles.bloque(Controles.conEtiqueta("Texto antes del número en letras", textoLetras),
@@ -354,6 +363,27 @@ class FoliarPanel extends BorderPane {
         Config.guardar();
     }
 
+    /** Mejora 5: separa el ejemplo escrito y lo aplica a las casillas de arriba. */
+    private void usarEjemploFormato() {
+        Plantillador.Resultado r = Plantillador.analizar(ejemploFormato.getText());
+        if (!r.conNumero() && !r.enLetras()) {
+            Ui.aviso(this, "No encontré ningún número en ese ejemplo. Escriba algo como 'FOLIO 001 DE 120'.");
+            return;
+        }
+        if (r.conNumero()) {
+            prefijo.setText(r.prefijo());
+            sufijo.setText(r.sufijo());
+            digitos.getValueFactory().setValue(Math.max(1, Math.min(6, r.digitos())));
+            conTotal.setSelected(r.conTotal());
+            palabraDe.setText(r.palabraDe());
+        }
+        if (r.enLetras()) {
+            enLetras.setSelected(true);
+            textoLetras.setText(r.textoLetras());
+        }
+        refrescar();
+    }
+
     // ------------------------------------------------------------ vista previa
     private void refrescar() {
         try {
@@ -437,6 +467,12 @@ class FoliarPanel extends BorderPane {
         } catch (Exception e) {
             Ui.error(this, Ui.textoError(e));
         }
+    }
+
+    /** Solo para pruebas: escribe el ejemplo de formato (Mejora 5) y lo aplica. */
+    void ejemploParaPrueba(String texto) {
+        ejemploFormato.setText(texto);
+        usarEjemploFormato();
     }
 
     /** Solo para la prueba de pantallas: varias opciones marcadas y una hoja personalizándose. */
