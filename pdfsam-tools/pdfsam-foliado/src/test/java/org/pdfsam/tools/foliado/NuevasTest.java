@@ -61,6 +61,30 @@ class NuevasTest {
         assertEquals("x", Comprimidos.base("x.tgz"));
     }
 
+    // ------------------------------------------------------------ error "No se encontró …_indexado.zip.__zip__"
+    /** Reproduce el armado final de Indexar: la carpeta de trabajo ("Nombre.zip.__zip__") NO debe tratarse a
+     * sí misma como un comprimido interno a cerrar (eso la borraba antes de tiempo). Solo los de ADENTRO. */
+    @Test
+    void cerrarZipsInternosNoSeIncluyeASiMisma() throws Exception {
+        File dir = Files.createTempDirectory("czi").toFile();
+        File raiz = new File(dir, "Expediente_indexado.zip" + Lote.MARCA_ZIP);
+        raiz.mkdirs();
+        Files.writeString(new File(raiz, "uno.pdf").toPath(), "x");
+        File interno = new File(raiz, "Interno/otro.zip" + Lote.MARCA_ZIP);
+        interno.mkdirs();
+        Files.writeString(new File(interno, "dos.pdf").toPath(), "y");
+
+        Lote.cerrarZipsInternos(raiz.toPath());
+
+        assertTrue(raiz.isDirectory(), "la carpeta raíz sigue existiendo (no se borró a sí misma)");
+        assertTrue(new File(raiz, "uno.pdf").isFile());
+        assertFalse(interno.exists(), "la carpeta interna __zip__ sí se cerró");
+        assertTrue(new File(raiz, "Interno/otro.zip").isFile(), "quedó convertida en otro.zip");
+        try (ZipFile z = new ZipFile(new File(raiz, "Interno/otro.zip"))) {
+            assertNotNull(z.getEntry("dos.pdf"));
+        }
+    }
+
     // ------------------------------------------------------------ comprimidos de verdad (con 7z / rar si están)
     private static boolean hay(String programa) {
         try {
