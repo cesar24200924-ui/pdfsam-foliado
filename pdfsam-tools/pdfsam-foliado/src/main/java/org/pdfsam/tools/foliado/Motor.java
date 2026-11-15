@@ -776,7 +776,7 @@ public final class Motor {
         try (PDPageContentStream cs = lienzo(doc, p)) {
             if (o.izqOn && (trIzq.isEmpty() || etIzq != null)) {
                 String t = trIzq.isEmpty() ? (nulo(o.izqTexto).isBlank() ? null : o.izqTexto.trim())
-                        : (nulo(etIzq.tramo().texto()).trim() + " " + etIzq.numero()).trim();
+                        : (nulo(etIzq.tramo().texto).trim() + " " + etIzq.numero()).trim();
                 if (t != null && !t.isEmpty()) {
                     leyenda(cs, h, lateral + mx[0], yArriba + my[0], limpiar(letra, t), letra, tam, color, caja, 0,
                             marcos);
@@ -784,14 +784,14 @@ public final class Motor {
             }
             if (o.abajoIzqOn && (trAbajoIzq.isEmpty() || etAbajoIzq != null)) {
                 String t = trAbajoIzq.isEmpty() ? (nulo(o.abajoIzqTexto).isBlank() ? null : o.abajoIzqTexto.trim())
-                        : (nulo(etAbajoIzq.tramo().texto()).trim() + " " + etAbajoIzq.numero()).trim();
+                        : (nulo(etAbajoIzq.tramo().texto).trim() + " " + etAbajoIzq.numero()).trim();
                 if (t != null && !t.isEmpty()) {
                     leyenda(cs, h, lateral + mx[1], yAbajo + my[1], limpiar(letra, t), letra, tam, color, caja, 1,
                             marcos);
                 }
             }
             if (o.derOn && (trDer.isEmpty() || etDer != null)) {
-                String parte = trDer.isEmpty() ? textoDerechoIndexar(nombreSinExt, o) : nulo(etDer.tramo().texto()).trim();
+                String parte = trDer.isEmpty() ? textoDerechoIndexar(nombreSinExt, o) : nulo(etDer.tramo().texto).trim();
                 long numDer = trDer.isEmpty() ? numero : etDer.numero();
                 long totalDer = trDer.isEmpty() ? total : etDer.total();
                 String num = o.derNumeros ? numDer + "/" + totalDer : "";
@@ -804,7 +804,7 @@ public final class Motor {
             }
             if (o.letrasOn && (trLetras.isEmpty() || etLetras != null)) {
                 // el número de hoja en letras, justo debajo de la leyenda de arriba a la derecha
-                String prefijo = trLetras.isEmpty() ? nulo(o.letrasTexto) : nulo(etLetras.tramo().texto());
+                String prefijo = trLetras.isEmpty() ? nulo(o.letrasTexto) : nulo(etLetras.tramo().texto);
                 long numLetras = trLetras.isEmpty() ? numero : etLetras.numero();
                 String t = limpiar(letra, (prefijo + numeroALetras(numLetras)).trim());
                 leyenda(cs, h, h.ancho - lateral - anchoTexto(letra, t, tam) + mx[3],

@@ -122,6 +122,17 @@ class IndexarPanel extends BorderPane {
     private final Button btnIndexar;
     private final VistaPrevia vista;
     private final EditorHojas editor;
+    /** Mejora 6: tramos de cada leyenda (en el orden de Motor.LEYENDAS); se arman con el botón
+     * "Tramos por leyenda…" y se copian a OpcionesIndexar en opciones(). */
+    private final List<List<Tramo>> tramos = tramosVacios();
+
+    private static List<List<Tramo>> tramosVacios() {
+        List<List<Tramo>> r = new ArrayList<>();
+        for (int i = 0; i < Motor.LEYENDAS.length; i++) {
+            r.add(new ArrayList<>());
+        }
+        return r;
+    }
 
     IndexarPanel() {
         Ui.estilo(this);
@@ -272,6 +283,8 @@ class IndexarPanel extends BorderPane {
                 movY[k].getValueFactory().setValue(0);
             }
         });
+        Button tramosBtn = Ui.boton("Tramos por leyenda…", UniconsLine.LIST_UL, this::abrirTramos);
+        tramosBtn.setMaxWidth(Double.MAX_VALUE);
         VBox pMas = Controles.bloque(recuadro, editable, Controles.nota("Así, en Adobe (Acrobat o Reader) con \"Rellenar y firmar\" le da clic al texto y lo cambia. Se ve y se imprime igual."), g3, Controles.nota(
                 "Distancias en puntos (28 puntos ≈ 1 cm). Las hojas del inicio que se saltan no cuentan en la "
                         + "numeración: la primera hoja con leyendas es la 1."),
@@ -279,6 +292,10 @@ class IndexarPanel extends BorderPane {
                 Controles.nota("Esto mueve la leyenda en todas las hojas, sin mover las demás. También puede "
                         + "agarrar una leyenda con el ratón en la vista previa y arrastrarla: al soltarla le pregunta "
                         + "si es solo para esa hoja o para todas."),
+                Controles.titulo("Tramos (rangos con texto y numeración propios)"), tramosBtn,
+                Controles.nota("De fábrica cada leyenda sale igual en todas las hojas. Si una leyenda tiene tramos, "
+                        + "cada hoja usa el texto y el número del tramo que la cubre; las hojas que queden fuera de "
+                        + "todos los tramos de esa leyenda se quedan sin ella."),
                 Controles.titulo("Hojas a indexar"), hojas,
                 Controles.nota("Vacío = todas. Ej.: 3-50. Vale para todos los PDF de la lista."));
 
@@ -456,10 +473,127 @@ class IndexarPanel extends BorderPane {
         o.saltar = Controles.valor(saltar, 0);
         o.paginas = hojas.getText() == null ? "" : hojas.getText().trim();
         for (int k = 0; k < Motor.LEYENDAS.length; k++) {
+            o.tramos.get(k).clear();
+            for (Tramo t : tramos.get(k)) {
+                o.tramos.get(k).add(t.copia());
+            }
             o.movX[k] = Controles.valor(movX[k], 0);
             o.movY[k] = Controles.valor(movY[k], 0);
         }
         return o;
+    }
+
+    /** Mejora 6: pantalla para armar los tramos de cada leyenda (agregar, cambiar, quitar). Se
+     * guardan directamente en {@link #tramos}; al cerrar se refresca la vista previa. */
+    private void abrirTramos() {
+        javafx.stage.Stage v = new javafx.stage.Stage();
+        v.initModality(javafx.stage.Modality.WINDOW_MODAL);
+        javafx.stage.Window w = Ui.ventana(this);
+        if (w != null) {
+            v.initOwner(w);
+        }
+        v.setTitle("Tramos por leyenda");
+
+        ComboBox<String> leyendaCombo = new ComboBox<>();
+        leyendaCombo.getItems().addAll(Motor.LEYENDAS);
+        leyendaCombo.getSelectionModel().select(0);
+        leyendaCombo.setMaxWidth(Double.MAX_VALUE);
+
+        ListView<Tramo> lista = new ListView<>();
+        lista.setCellFactory(lv -> new javafx.scene.control.ListCell<>() {
+            @Override
+            protected void updateItem(Tramo t, boolean vacio) {
+                super.updateItem(t, vacio);
+                setText(vacio || t == null ? null
+                        : t.desde + "-" + t.hasta + ": \"" + t.texto + "\" (empieza en " + t.empezarEn + ")");
+            }
+        });
+        lista.setPrefHeight(220);
+
+        Spinner<Integer> desde = Controles.numero(1, 99999, 1, () -> {
+        });
+        Spinner<Integer> hasta = Controles.numero(1, 99999, 1, () -> {
+        });
+        TextField texto = Ui.campo("");
+        Spinner<Integer> empezarEn = Controles.numero(0, 99999, 1, () -> {
+        });
+
+        Runnable cargarLista = () -> {
+            int k = leyendaCombo.getSelectionModel().getSelectedIndex();
+            lista.setItems(javafx.collections.FXCollections.observableArrayList(tramos.get(Math.max(0, k))));
+        };
+        cargarLista.run();
+        leyendaCombo.getSelectionModel().selectedIndexProperty().addListener((o, a, b) -> cargarLista.run());
+        lista.getSelectionModel().selectedItemProperty().addListener((o, a, t) -> {
+            if (t != null) {
+                desde.getValueFactory().setValue(t.desde);
+                hasta.getValueFactory().setValue(t.hasta);
+                texto.setText(t.texto);
+                empezarEn.getValueFactory().setValue(t.empezarEn);
+            }
+        });
+
+        Button agregar = Ui.boton("Agregar", () -> {
+            int k = leyendaCombo.getSelectionModel().getSelectedIndex();
+            if (k < 0) {
+                return;
+            }
+            Tramo t = new Tramo();
+            t.desde = Controles.valor(desde, 1);
+            t.hasta = Math.max(t.desde, Controles.valor(hasta, 1));
+            t.texto = texto.getText() == null ? "" : texto.getText().trim();
+            t.empezarEn = Controles.valor(empezarEn, 1);
+            tramos.get(k).add(t);
+            cargarLista.run();
+            refrescar();
+        });
+        Button actualizar = Ui.boton("Actualizar el elegido", () -> {
+            Tramo t = lista.getSelectionModel().getSelectedItem();
+            if (t == null) {
+                return;
+            }
+            t.desde = Controles.valor(desde, 1);
+            t.hasta = Math.max(t.desde, Controles.valor(hasta, 1));
+            t.texto = texto.getText() == null ? "" : texto.getText().trim();
+            t.empezarEn = Controles.valor(empezarEn, 1);
+            lista.refresh();
+            refrescar();
+        });
+        Button quitar = Ui.boton("Quitar el elegido", () -> {
+            int k = leyendaCombo.getSelectionModel().getSelectedIndex();
+            Tramo t = lista.getSelectionModel().getSelectedItem();
+            if (k >= 0 && t != null) {
+                tramos.get(k).remove(t);
+                cargarLista.run();
+                refrescar();
+            }
+        });
+
+        HBox campos = new HBox(8, Controles.conEtiqueta("Desde", desde), Controles.conEtiqueta("Hasta", hasta),
+                Controles.conEtiqueta("Texto", texto), Controles.conEtiqueta("Empezar en", empezarEn));
+        HBox botones2 = new HBox(8, agregar, actualizar, quitar);
+        Button cerrar = Ui.boton("Cerrar", v::close);
+        cerrar.getStyleClass().addAll("footer-button", "run-button");
+        cerrar.setDefaultButton(true);
+        HBox abajo = new HBox(8, cerrar);
+        abajo.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
+
+        VBox caja = new VBox(10, Controles.conEtiqueta("Leyenda", leyendaCombo), lista, campos, botones2,
+                Controles.nota(
+                        "\"Desde\" y \"hasta\" se cuentan entre las hojas que SÍ se indexan (1 = la primera). Las "
+                                + "hojas que no caigan en ningún tramo de esta leyenda se quedan sin ella."),
+                abajo);
+        caja.setPadding(new Insets(18));
+        caja.setPrefSize(560, 480);
+        caja.getStyleClass().addAll(Style.CONTAINER.css());
+        javafx.scene.Scene sc = new javafx.scene.Scene(caja);
+        if (w != null && w.getScene() != null) {
+            sc.getStylesheets().addAll(w.getScene().getStylesheets());
+        }
+        Ui.estiloDialogo(sc.getRoot());
+        v.setScene(sc);
+        v.setOnHidden(e -> refrescar());
+        v.show();
     }
 
     private static OpcionesIndexar cargar() {
