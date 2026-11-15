@@ -235,16 +235,22 @@ final class Lote {
      */
     Path finalizar(File comoZipEn) throws IOException {
         cerrarZipsInternos(destinoTrabajo);
-        Path r;
+        Path r = null;
+        // Mejora 4: "ZIP y carpeta" pide los dos a la vez (comoZipEn Y destinoCarpeta); "Solo ZIP" o
+        // "Solo carpeta" solo traen uno de los dos.
         if (comoZipEn != null) {
             Path listo = temp.resolve("listo.zip");
             comprimirCarpeta(destinoTrabajo, listo);
             copiarConReintentos(listo, comoZipEn.toPath());
             r = comoZipEn.toPath();
-        } else if (destinoCarpeta != null) {
+        }
+        if (destinoCarpeta != null) {
             copiarCarpetaConReintentos(destinoTrabajo, destinoCarpeta);
-            r = destinoCarpeta;
-        } else {
+            if (r == null) {
+                r = destinoCarpeta;
+            }
+        }
+        if (r == null) {
             r = destinoTrabajo;
         }
         limpiar();

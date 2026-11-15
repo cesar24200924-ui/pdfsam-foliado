@@ -62,6 +62,28 @@ class NuevasTest {
         assertEquals("x", Comprimidos.base("x.tgz"));
     }
 
+    // ------------------------------------------------------------ Mejora 4: varios PDF -> "ZIP y carpeta" a la vez
+    @Test
+    void finalizarZipYCarpetaALaVez() throws Exception {
+        File dir = Files.createTempDirectory("pamb").toFile();
+        File exp = contenido(dir);
+        File carpeta = new File(dir, "Salida");
+        File zip = new File(dir, "Salida ZIP/Expediente_foliado.zip");
+        Lote L = new Lote(exp).preparar();
+        assertTrue(L.procesables.size() > 1, "más de un PDF, para que aplique la Mejora 4");
+        L.destinoCarpeta = carpeta.toPath();
+        OpcionesFolio o = new OpcionesFolio();
+        L.ejecutar((e, s2, c) -> Motor.foliar(e, s2, c, o, null, null, null), L.temp.resolve("resultado"), null);
+        L.finalizar(zip); // comoZipEn Y destinoCarpeta puestos: Mejora 4 ("ZIP y carpeta")
+        assertTrue(new File(carpeta, "acta.pdf").isFile(), "la carpeta sí se armó");
+        assertTrue(zip.isFile(), "el ZIP sí se armó");
+        try (ZipFile z = new ZipFile(zip)) {
+            assertNotNull(z.getEntry("acta.pdf"));
+            assertNotNull(z.getEntry("Anexos/anexo uno.pdf"));
+        }
+        assertFalse(L.temp.toFile().exists(), "se borró lo temporal");
+    }
+
     // ------------------------------------------------------------ error "No se encontró …_indexado.zip.__zip__"
     /** Reproduce el armado final de Indexar: la carpeta de trabajo ("Nombre.zip.__zip__") NO debe tratarse a
      * sí misma como un comprimido interno a cerrar (eso la borraba antes de tiempo). Solo los de ADENTRO. */

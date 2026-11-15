@@ -120,6 +120,31 @@ final class Ui {
         return r.get() == b1 ? 0 : 1;
     }
 
+    /** Tres botones con nombre propio: devuelve 0, 1, 2 o -1 (cancelar). "predeterminado" queda resaltado y es el
+     * que se activa con Enter (Mejora 4: de fábrica siempre "Solo ZIP", que es la opción 0). */
+    static int elegir3(Node n, String titulo, String texto, String opcion1, String opcion2, String opcion3,
+            int predeterminado) {
+        ButtonType b1 = new ButtonType(opcion1, ButtonBar.ButtonData.OTHER);
+        ButtonType b2 = new ButtonType(opcion2, ButtonBar.ButtonData.OTHER);
+        ButtonType b3 = new ButtonType(opcion3, ButtonBar.ButtonData.OTHER);
+        ButtonType cancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
+        Alert a = new Alert(Alert.AlertType.CONFIRMATION, texto, b1, b2, b3, cancelar);
+        preparar(a, n, titulo);
+        a.setHeaderText(titulo);
+        ButtonType[] botones = { b1, b2, b3 };
+        if (predeterminado >= 0 && predeterminado < botones.length) {
+            Object boton = a.getDialogPane().lookupButton(botones[predeterminado]);
+            if (boton instanceof Button bb) {
+                bb.setDefaultButton(true);
+            }
+        }
+        Optional<ButtonType> r = a.showAndWait();
+        if (r.isEmpty() || r.get() == cancelar) {
+            return -1;
+        }
+        return r.get() == b1 ? 0 : r.get() == b2 ? 1 : 2;
+    }
+
     static String pedirTexto(Node n, String texto, String titulo, String inicial) {
         TextInputDialog d = new TextInputDialog(inicial == null ? "" : inicial);
         preparar(d, n, titulo);

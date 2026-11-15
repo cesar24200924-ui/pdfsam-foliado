@@ -191,29 +191,37 @@ final class LoteUi {
     private static void elegirDestino(Node padre, Lote L, Lote.Operacion op, String sufijo, String titulo,
             Runnable alEmpezar) {
         String nombre = L.nombreOrigen() + "_" + sufijo;
-        String formato = "carpeta";
+        String formato;
         if (L.esZip && !"zip".equals(Comprimidos.extension(L.origen.getName()))) {
             formato = "zip"; // RAR, 7z...: el resultado va en ZIP (RAR no se puede crear con programas libres)
-        } else if (L.esZip) {
-            int r = Ui.elegir(padre, "¿Cómo quiere el resultado?",
-                    "Las carpetas y subcarpetas quedan igual en los dos casos.", "Como ZIP", "Como carpeta");
+        } else if (L.procesables.size() > 1) {
+            // Mejora 4: con más de un PDF, preguntar siempre cómo se quiere el resultado.
+            // De fábrica queda resaltado "Solo ZIP" (opción 0).
+            int r = Ui.elegir3(padre, "¿Cómo quiere el resultado?",
+                    "Se van a procesar " + L.procesables.size()
+                            + " PDF. Las carpetas y subcarpetas quedan igual en los tres casos.",
+                    "Solo ZIP", "ZIP y carpeta", "Solo carpeta", 0);
             if (r < 0) {
                 L.limpiar();
                 return;
             }
-            formato = r == 0 ? "zip" : "carpeta";
+            formato = r == 0 ? "zip" : r == 1 ? "ambos" : "carpeta";
+        } else {
+            // un solo PDF (o ninguno procesable): como siempre, en una carpeta
+            formato = "carpeta";
         }
         File destinoZip = null;
-        Path trabajo;
-        if ("zip".equals(formato)) {
+        Path trabajo = L.temp.resolve("resultado");
+        if ("zip".equals(formato) || "ambos".equals(formato)) {
+            // el nombre que sugiere el programa se puede cambiar en el propio cuadro de "Guardar como"
             destinoZip = Ui.guardarComo(padre, new File(L.origen.getParentFile(), nombre + ".zip"), "ZIP", ".zip",
                     "Guardar el ZIP como");
             if (destinoZip == null) {
                 L.limpiar();
                 return;
             }
-            trabajo = L.temp.resolve("resultado");
-        } else {
+        }
+        if ("carpeta".equals(formato) || "ambos".equals(formato)) {
             File carpeta = Ui.elegirCarpeta(padre, "¿Dónde guardo la carpeta con el resultado?",
                     L.origen.getParentFile());
             if (carpeta == null) {
@@ -222,7 +230,6 @@ final class LoteUi {
             }
             // se arma en la carpeta temporal y al final se copia completa aquí (así OneDrive no estorba)
             L.destinoCarpeta = Lote.nombreLibre(carpeta.toPath().resolve(nombre));
-            trabajo = L.temp.resolve("resultado");
         }
         if (alEmpezar != null) {
             alEmpezar.run();
