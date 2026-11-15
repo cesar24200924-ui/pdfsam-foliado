@@ -431,14 +431,17 @@ final class Lote {
         }
     }
 
-    /** Lo contrario: cada carpeta "x.zip.__zip__" vuelve a ser "x.zip" (de adentro hacia afuera). */
+    /** Lo contrario: cada carpeta "x.zip.__zip__" vuelve a ser "x.zip" (de adentro hacia afuera).
+     * Solo las de ADENTRO de {@code carpeta}: si {@code carpeta} misma termina en MARCA_ZIP (como pasa al
+     * armar el ZIP final de Indexar), no se incluye, o se cerraría y se borraría a sí misma antes de tiempo
+     * (ese era el error "No se encontró …_indexado.zip.__zip__"). */
     static void cerrarZipsInternos(Path carpeta) throws IOException {
         if (carpeta == null || !Files.isDirectory(carpeta)) {
             return;
         }
         List<Path> marcadas;
         try (Stream<Path> s = Files.walk(carpeta)) {
-            marcadas = new ArrayList<>(s.filter(Files::isDirectory)
+            marcadas = new ArrayList<>(s.filter(p -> !p.equals(carpeta)).filter(Files::isDirectory)
                     .filter(p -> p.getFileName().toString().endsWith(MARCA_ZIP)).toList());
         }
         marcadas.sort(Comparator.comparingInt(p -> -p.getNameCount()));
