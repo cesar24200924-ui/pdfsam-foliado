@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -340,5 +341,22 @@ class PantallasTest {
         });
         Thread.sleep(2500);
         foto(sg, "oscuro_girar.png");
+    }
+
+    /** Mejora 5: en la pantalla de verdad (JavaFX), escribir un ejemplo arma solas las casillas. */
+    @Test
+    void foliarUsaEjemploDeFormato() throws Exception {
+        FoliarPanel panel = enFx(FoliarPanel::new);
+        enFx(() -> {
+            panel.ejemploParaPrueba("FOLIO 1 DE 50 [UNO DE CINCUENTA]");
+            return null;
+        });
+        OpcionesFolio o = enFx(panel::opciones);
+        assertEquals("FOLIO ", o.prefijo);
+        assertEquals(1, o.digitos);
+        assertTrue(o.conTotal);
+        assertEquals("DE", o.palabraDe);
+        assertTrue(o.enLetras);
+        assertEquals("FOLIO ", o.textoLetras);
     }
 }

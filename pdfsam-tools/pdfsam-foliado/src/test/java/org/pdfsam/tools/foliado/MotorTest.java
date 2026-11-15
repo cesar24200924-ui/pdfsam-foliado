@@ -469,12 +469,12 @@ class MotorTest {
         File salida = new File(dir, "s.pdf");
         OpcionesIndexar o = new OpcionesIndexar();
         o.izqOn = false;
-        Tramo t = new Tramo();
-        t.desde = 2;
-        t.hasta = 4;
-        t.texto = "SOLO MEDIO";
-        t.empezarEn = 1;
-        o.tramos.get(2).add(t);
+        Tramo tramo = new Tramo();
+        tramo.desde = 2;
+        tramo.hasta = 4;
+        tramo.texto = "SOLO MEDIO";
+        tramo.empezarEn = 1;
+        o.tramos.get(2).add(tramo);
         Motor.indexar(pdf, salida, null, pdf.getName(), o, null, null);
         try (PDDocument d = Motor.abrir(salida, null)) {
             String[] esperado = { null, "SOLOMEDIO1/3", "SOLOMEDIO2/3", "SOLOMEDIO3/3", null };
