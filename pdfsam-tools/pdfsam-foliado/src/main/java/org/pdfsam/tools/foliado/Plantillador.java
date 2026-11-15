@@ -23,9 +23,10 @@ import java.util.regex.Pattern;
  * <p>
  * Reglas:
  * <ol>
- * <li>Si el ejemplo trae un tramo entre corchetes {@code [ ... ]}, eso es el número en letras:
- * se activa "en letras" y el texto antes del corchete (tal como se escribió, respetando
- * mayúsculas y minúsculas) queda como su prefijo.</li>
+ * <li>Si el ejemplo trae un tramo entre corchetes {@code [ ... ]}, eso es el número en letras: se
+ * activa "en letras" (lo que hay escrito dentro del corchete no se usa; solo marca que ahí va el
+ * número en letras). El prefijo en letras es el mismo prefijo del número (sin el número ni el
+ * total: eso lo arma {@link Motor} pegando el prefijo con el número en letras).</li>
  * <li>De lo que queda (sin el corchete), el primer tramo de dígitos seguidos es "el número": su
  * cantidad de dígitos es cuántos dígitos va a tener el folio (p.ej. "001" = 3 dígitos, con ceros
  * a la izquierda; "1" = 1 dígito, sin ceros). Lo que hay ANTES es el prefijo; lo que hay DESPUÉS,
@@ -55,21 +56,18 @@ final class Plantillador {
         }
         String texto = ejemplo;
         boolean enLetras = false;
-        String textoLetras = null;
         Matcher mc = CORCHETE.matcher(texto);
         if (mc.find()) {
             enLetras = true;
-            textoLetras = texto.substring(0, mc.start());
-            // por si el corchete no queda al final: lo de después se pega sin el corchete
+            // el contenido del corchete no se usa (el texto en letras lo arma Motor con el
+            // número real); el corchete solo marca "aquí quiero también el número en letras".
+            // Por si no queda al final: lo de después se pega sin el corchete.
             texto = (texto.substring(0, mc.start()) + " " + texto.substring(mc.end())).trim();
-            if (textoLetras.isEmpty()) {
-                textoLetras = ""; // corchete solo, sin texto antes: "[UNO]" -> prefijo vacío en letras
-            }
         }
         Matcher mn = NUMERO.matcher(texto);
         if (!mn.find()) {
             // no hay ningún número suelto: todo es texto fijo (prefijo), no se toca lo demás
-            return new Resultado(false, texto, "", 0, false, "de", enLetras, textoLetras);
+            return new Resultado(false, texto, "", 0, false, "de", enLetras, texto);
         }
         String prefijo = texto.substring(0, mn.start());
         int digitos = mn.group().length();
@@ -83,7 +81,9 @@ final class Plantillador {
             palabraDe = mt.group(1).trim();
             sufijo = mt.group(2);
         }
-        return new Resultado(true, prefijo, sufijo, digitos, conTotal, palabraDe, enLetras, textoLetras);
+        // el texto en letras usa el mismo prefijo que el número (sin el número ni el total: Motor
+        // solo sabe pegar "prefijo en letras" + número en letras, no arma un total en letras).
+        return new Resultado(true, prefijo, sufijo, digitos, conTotal, palabraDe, enLetras, prefijo);
     }
 
     /** Aplica lo que se entendió a unas opciones (solo lo detectado; lo demás queda como estaba). */
