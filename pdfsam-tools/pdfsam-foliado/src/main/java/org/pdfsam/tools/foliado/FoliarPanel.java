@@ -331,6 +331,16 @@ class FoliarPanel extends BorderPane {
         }
     }
 
+    /** Solo para las pruebas: dispara el botón "Arreglar en Girar". */
+    void arreglarEnGirarParaPrueba() {
+        arreglarEnGirar();
+    }
+
+    /** Solo para las pruebas: el PDF que hay ahora cargado (null si ninguno). */
+    File archivoParaPrueba() {
+        return archivo;
+    }
+
     private boolean personalizando() {
         return editor.editando() && editor.grupo.contains(vista.indice());
     }

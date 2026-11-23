@@ -412,4 +412,75 @@ class PantallasTest {
         assertEquals(antes - 1, (int) enFx(panel::cuantasHojasEnPantalla), "se recordó lo que se le hizo");
         assertTrue(enFx(panel::tieneCambiosEnPantalla));
     }
+
+    /** Enlace Indexar -> Girar -> Indexar: "Arreglar en Girar" manda la lista de Indexar a Girar (que queda
+     * vacío antes de recibirla), y "Ir a Indexar" manda de vuelta lo ya arreglado, reemplazando lo que Indexar
+     * tuviera cargado. */
+    @Test
+    void enlaceIndexarConGirar() throws Exception {
+        File dir = Files.createTempDirectory("penlace1").toFile();
+        File pdf = MotorTest.pdfDePrueba(dir, "acta.pdf");
+        IndexarPanel indexar = enFx(IndexarPanel::new);
+        GirarPanel girar = enFx(GirarPanel::new);
+        enFx(() -> escena(indexar));
+        enFx(() -> escena(girar));
+        enFx(() -> {
+            indexar.recibir(List.of(pdf));
+            return null;
+        });
+        Thread.sleep(1000);
+        assertEquals(0, (int) enFx(girar::cuantosEnLista), "Girar arranca vacío");
+
+        enFx(() -> {
+            indexar.arreglarEnGirarParaPrueba();
+            return null;
+        });
+        Thread.sleep(1500);
+        assertEquals(1, (int) enFx(girar::cuantosEnLista), "Indexar mandó su PDF a Girar");
+        assertEquals("acta.pdf", enFx(girar::nombreEnPantalla));
+
+        int antes = enFx(girar::cuantasHojasEnPantalla);
+        enFx(() -> {
+            girar.quitarPrimeraParaPrueba();
+            return null;
+        });
+        assertEquals(antes - 1, (int) enFx(girar::cuantasHojasEnPantalla), "la hoja se quitó en Girar");
+
+        enFx(() -> {
+            girar.enviarAParaPrueba(IndexarTool.TOOL_ID);
+            return null;
+        });
+        Thread.sleep(2000);
+        List<File> vueltos = enFx(indexar::archivosParaPrueba);
+        assertEquals(1, vueltos.size(), "Indexar quedó solo con lo que mandó Girar");
+        assertEquals(antes - 1, Motor.contarHojas(vueltos.get(0), null), "el PDF que volvió ya tiene la hoja quitada");
+    }
+
+    /** Girar abierto directo (sin pasar por Foliar) también puede mandar a Foliar: el botón "Ir a Foliar" no
+     * depende de cómo se haya llegado a Girar. Con más de un PDF, Foliar solo abre el primero. */
+    @Test
+    void enlaceGirarDirectoConFoliar() throws Exception {
+        File dir = Files.createTempDirectory("penlace2").toFile();
+        File uno = MotorTest.pdfDePrueba(dir, "uno.pdf");
+        File dos = MotorTest.pdfDePrueba(dir, "dos.pdf");
+        GirarPanel girar = enFx(GirarPanel::new);
+        FoliarPanel foliar = enFx(FoliarPanel::new);
+        enFx(() -> escena(girar));
+        enFx(() -> escena(foliar));
+        // Girar se abre directo (nunca vino de Foliar ni de Indexar)
+        enFx(() -> {
+            girar.recibir(List.of(uno, dos));
+            return null;
+        });
+        Thread.sleep(1500);
+        assertEquals(2, (int) enFx(girar::cuantosEnLista));
+
+        enFx(() -> {
+            girar.enviarAParaPrueba(FoliarTool.TOOL_ID);
+            return null;
+        });
+        Thread.sleep(2000);
+        File enFoliar = enFx(foliar::archivoParaPrueba);
+        assertEquals("uno.pdf", enFoliar.getName(), "Foliar abrió el primero de los dos que llegaron");
+    }
 }

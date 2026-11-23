@@ -1660,6 +1660,12 @@ class GirarPanel extends BorderPane {
         }
     }
 
+    /** Solo para las pruebas: dispara el botón "Ir a Indexar" / "Ir a Foliar" (toolId = IndexarTool.TOOL_ID o
+     * FoliarTool.TOOL_ID). */
+    void enviarAParaPrueba(String toolId) {
+        enviarA(toolId);
+    }
+
     /** Solo para las pruebas: cuántos PDF hay en la lista. */
     int cuantosEnLista() {
         return items.size();
