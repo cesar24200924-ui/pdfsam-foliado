@@ -1571,7 +1571,6 @@ class GirarPanel extends BorderPane {
      * "Ir a Indexar" / "Ir a Foliar"). Cada PDF se arma en una carpeta temporal con sus hojas tal como quedaron
      * (igual que al guardar); los que no se tocaron se copian tal cual. */
     private void enviarA(String toolId) {
-        ultimoDiagnosticoEnvio = "enviarA llamado, items.isEmpty()=" + items.isEmpty();
         if (items.isEmpty()) {
             return;
         }
@@ -1587,15 +1586,12 @@ class GirarPanel extends BorderPane {
         try {
             trabajo = Files.createTempDirectory("pdfsam_girar_envio_");
         } catch (IOException e) {
-            ultimoDiagnosticoEnvio = "Files.createTempDirectory lanzó: " + e;
             Ui.error(this, Ui.textoError(e));
             return;
         }
-        ultimoDiagnosticoEnvio = "a punto de llamar Ui.enSegundoPlano, copia.size()=" + copia.size();
         Map<File, String> c = new HashMap<>(claves);
         Set<String> usados = new HashSet<>();
         Ui.enSegundoPlano(this, "Preparando para enviar", true, p -> {
-            ultimoDiagnosticoEnvio = "trabajo.hacer() comenzó";
             List<File> salidas = new ArrayList<>();
             List<String> fallidos = new ArrayList<>();
             int n = copia.size();
@@ -1622,26 +1618,13 @@ class GirarPanel extends BorderPane {
                     fallidos.add(Lote.nombreVisible(it.relativa()) + ": " + Ui.textoError(e));
                 }
             }
-            ultimoDiagnosticoEnvio = "trabajo.hacer() terminó el for, salidas=" + salidas.size() + " fallidos="
-                    + fallidos.size();
             p.poner(1, "");
             return new Object[] { salidas, fallidos };
-        }, res -> terminarEnvio((Object[]) res, toolId), e -> {
-            ultimoDiagnosticoEnvio = "Ui.enSegundoPlano fallo() con: " + e;
-            Ui.error(this, Ui.textoError(e));
-        });
+        }, res -> terminarEnvio((Object[]) res, toolId), e -> Ui.error(this, Ui.textoError(e)));
     }
 
     /** Solo para las pruebas: lo que falló (si algo falló) al preparar el último envío a otra pantalla. */
     private volatile List<String> ultimosFallosEnvio = List.of();
-
-    /** Solo para las pruebas: diagnóstico de la última llamada a terminarEnvio (salidas, fallidos, si se mandó
-     * el broadcast, y el error si el broadcast falló). */
-    private volatile String ultimoDiagnosticoEnvio = "(nunca se llamó terminarEnvio)";
-
-    String ultimoDiagnosticoEnvioParaPrueba() {
-        return ultimoDiagnosticoEnvio;
-    }
 
     @SuppressWarnings("unchecked")
     private void terminarEnvio(Object[] res, String toolId) {
@@ -1649,20 +1632,13 @@ class GirarPanel extends BorderPane {
         List<String> fallidos = (List<String>) res[1];
         ultimosFallosEnvio = fallidos;
         if (salidas.isEmpty()) {
-            ultimoDiagnosticoEnvio = "salidas vacío, fallidos=" + fallidos;
             if (!fallidos.isEmpty()) {
                 Ui.aviso(this, "No se pudo preparar ningún PDF para enviar:\n\n" + String.join("\n",
                         fallidos.subList(0, Math.min(10, fallidos.size()))));
             }
             return;
         }
-        try {
-            eventStudio().broadcast(new EnviarAHerramientaRequest(toolId, salidas));
-            ultimoDiagnosticoEnvio = "broadcast EnviarAHerramientaRequest OK, salidas=" + salidas;
-        } catch (Exception e) {
-            ultimoDiagnosticoEnvio = "broadcast EnviarAHerramientaRequest LANZÓ: " + e + " salidas=" + salidas;
-            throw e;
-        }
+        eventStudio().broadcast(new EnviarAHerramientaRequest(toolId, salidas));
         eventStudio().broadcast(new SetActiveContentItemRequest(toolId));
         if (!fallidos.isEmpty()) {
             Ui.aviso(this, "Algunos PDF no se pudieron preparar para enviar:\n\n" + String.join("\n",

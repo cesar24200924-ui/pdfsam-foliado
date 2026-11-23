@@ -28,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.pdfsam.eventstudio.StaticStudio.eventStudio;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Abre las dos pantallas con un PDF y guarda una foto para revisarlas a ojo. */
@@ -485,19 +484,6 @@ class PantallasTest {
         enFx(() -> escena(girar));
         enFx(() -> escena(foliar));
 
-        // Autoprueba: ¿el registro de escucha de Foliar funciona aislado, sin pasar por Girar?
-        enFx(() -> {
-            eventStudio().broadcast(new EnviarAHerramientaRequest(FoliarTool.TOOL_ID, List.of(uno)));
-            return null;
-        });
-        File autoprueba = esperar(foliar::archivoParaPrueba, java.util.Objects::nonNull, 4000);
-        assertNotNull(autoprueba, "Autoprueba: Foliar no recibió ni un broadcast directo (sin Girar). "
-                + "eventos llegados (total,paraFoliar): " + java.util.Arrays.toString(enFx(foliar::vecesLlegoParaPrueba)));
-        enFx(() -> {
-            foliar.limpiarParaPrueba();
-            return null;
-        });
-
         // Girar se abre directo (nunca vino de Foliar ni de Indexar)
         enFx(() -> {
             girar.recibir(List.of(uno, dos));
@@ -512,10 +498,7 @@ class PantallasTest {
         });
         File enFoliar = esperar(foliar::archivoParaPrueba, java.util.Objects::nonNull, 8000);
         assertNotNull(enFoliar, "Foliar debía recibir el primer PDF que mandó Girar. Fallos: "
-                + enFx(girar::ultimosFallosEnvioParaPrueba)
-                + " | eventos llegados (total,paraFoliar): " + java.util.Arrays.toString(enFx(foliar::vecesLlegoParaPrueba))
-                + " | ultimoErrorRecibir: " + enFx(foliar::ultimoErrorRecibirParaPrueba)
-                + " | diagnosticoEnvio: " + enFx(girar::ultimoDiagnosticoEnvioParaPrueba));
+                + enFx(girar::ultimosFallosEnvioParaPrueba));
         assertEquals("uno.pdf", enFoliar.getName(), "Foliar abrió el primero de los dos que llegaron");
     }
 }
