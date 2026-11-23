@@ -14,6 +14,11 @@ import org.pdfsam.tools.foliado.ManualTool;
 
 module org.pdfsam.tools.foliado {
     exports org.pdfsam.tools.foliado;
+    // para que el enlace Girar/Indexar/Foliar (@EventListener en GirarPanel, IndexarPanel y FoliarPanel,
+    // clases package-private) pueda registrarse y recibir avisos en el programa ya armado como módulo; sin
+    // esto, las pruebas (que corren sin el sistema de módulos) no lo notan, pero las tres pantallas se quedan
+    // en blanco al abrirlas en el programa real.
+    opens org.pdfsam.tools.foliado to org.pdfsam.eventstudio;
 
     requires org.pdfsam.ui.components;
     requires transitive org.pdfsam.model;
