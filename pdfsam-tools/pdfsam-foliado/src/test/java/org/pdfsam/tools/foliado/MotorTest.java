@@ -270,23 +270,61 @@ class MotorTest {
 
     /** La causa real: "Abajo a la izquierda" (u otra) movida con el ratón (o con un valor guardado de otra hoja)
      * queda bien en una hoja alta (vertical), pero el mismo movimiento, en puntos, puede sacarla de una hoja más
-     * baja (horizontal) y dejarla invisible. Misma leyenda, mismo movimiento grande, hoja vertical Y horizontal. */
+     * baja (horizontal) y dejarla invisible. Con un movimiento tan grande puede terminar en cualquier parte de la
+     * hoja (hasta cerca de arriba): lo que importa es que NO desaparezca, sin importar dónde quede. */
     @Test
     void leyendaMovidaDeMasNoDesaparece() throws Exception {
-        OpcionesIndexar o = new OpcionesIndexar();
-        o.izqOn = true;
-        o.izqTexto = "ARRIBA";
-        o.derOn = false;
-        o.abajoIzqOn = true;
-        o.abajoIzqTexto = "ABAJO";
-        o.tamano = 30;
-        o.movY[1] = -650; // como si se hubiera arrastrado mucho hacia arriba en una hoja vertical (792 de alto)
-        verLeyendasVisibles(o, 0, "movida_vertical");
-        verLeyendasVisibles(o, 90, "movida_horizontal");
+        noDesaparecePorMoverla(0, "movida_vertical");
+        noDesaparecePorMoverla(90, "movida_horizontal");
+    }
+
+    /** Arma una hoja carta (612x792) con el giro dado y compara los píxeles oscuros con "Abajo a la izquierda"
+     * movida -650 (como arrastrada mucho con el ratón) contra los mismos con esa leyenda apagada: si la
+     * diferencia es chica, es que no se dibujó en ningún lado de la hoja (sin importar en qué parte habría
+     * quedado). */
+    private void noDesaparecePorMoverla(int giro, String nombre) throws Exception {
+        OpcionesIndexar con = new OpcionesIndexar();
+        con.izqOn = true;
+        con.izqTexto = "ARRIBA";
+        con.derOn = false;
+        con.abajoIzqOn = true;
+        con.abajoIzqTexto = "ABAJO";
+        con.tamano = 30;
+        con.movY[1] = -650; // como si se hubiera arrastrado mucho hacia arriba en una hoja vertical (792 de alto)
+        OpcionesIndexar sinAbajo = new OpcionesIndexar();
+        sinAbajo.izqOn = true;
+        sinAbajo.izqTexto = "ARRIBA";
+        sinAbajo.derOn = false;
+        sinAbajo.abajoIzqOn = false;
+        sinAbajo.tamano = 30;
+        int conAmbas = pixelesOscuros(con, giro, nombre);
+        int soloArriba = pixelesOscuros(sinAbajo, giro, nombre + "_solo_arriba");
+        assertTrue(conAmbas > soloArriba + 10, "\"ABAJO\" no se ve en ninguna parte de la hoja (" + nombre + "): "
+                + conAmbas + " px con las dos leyendas, " + soloArriba + " px solo con ARRIBA");
+    }
+
+    /** Arma una hoja carta (612x792) con el giro dado, le pone las leyendas de 'o' y cuenta los píxeles no
+     * blancos de toda la imagen (guardándola para revisarla a ojo). */
+    private int pixelesOscuros(OpcionesIndexar o, int giro, String nombre) throws Exception {
+        File dir = Files.createTempDirectory("plh").toFile();
+        File pdf = new File(dir, "a.pdf");
+        try (PDDocument d = new PDDocument()) {
+            PDPage p = new PDPage(new PDRectangle(612f, 792f));
+            p.setRotation(giro);
+            d.addPage(p);
+            d.writeTo(pdf);
+        }
+        try (Motor.Previa p = new Motor.Previa(pdf, null)) {
+            BufferedImage b = p.imagen(0, 800,
+                    (doc, hoja, letras) -> Motor.indexarHoja(doc, hoja, 1, 1, "a", o, null, letras));
+            ImageIO.write(b, "png", new File(SALIDA, "leyendas_" + nombre + ".png"));
+            return contarOscuros(b, 0, b.getHeight());
+        }
     }
 
     /** Arma una hoja carta (612x792) con el giro dado, le pone las leyendas de 'o' y verifica que ARRIBA y ABAJO
-     * sigan viéndose (no quedan fuera de la hoja), guardando la imagen para revisarla a ojo. */
+     * sigan viéndose cada una en su franja (no quedan fuera de la hoja), guardando la imagen para revisarla a
+     * ojo. Para el caso de fábrica, sin ningún movimiento aplicado. */
     private void verLeyendasVisibles(OpcionesIndexar o, int giro, String nombre) throws Exception {
         File dir = Files.createTempDirectory("plh").toFile();
         File pdf = new File(dir, "a.pdf");
