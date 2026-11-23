@@ -124,6 +124,31 @@ pdfsam-tools/pdfsam-foliado/src/main/java/org/pdfsam/tools/foliado/
 | `ManualPanel` | El manual dentro del programa; lee el mismo HTML que viene en el portable. |
 | `VistaPrevia`, `Controles`, `Ui`, `LetrasInstaladas` | Piezas de pantalla y utilidades. |
 | `Comprobar` | Revisión del programa ya armado: abre un comprimido y dice cuántos archivos trae. |
+| `EnviarAHerramientaRequest` | Evento (record) para el enlace entre Girar, Indexar y Foliar: lleva el `destino` (TOOL_ID) y la lista de archivos. Ver "Enlace entre Girar, Indexar y Foliar" más abajo. |
+
+### Enlace entre Girar, Indexar y Foliar
+
+Los botones **"Arreglar en Girar"** (en Foliar e Indexar) e **"Ir a Indexar"** / **"Ir a Foliar"** (en Girar)
+usan el bus de eventos que ya trae PDFsam, sin tocar nada de la lógica propia de cada herramienta:
+
+- `org.pdfsam.eventstudio.StaticStudio.eventStudio()` — bus estático de pub/sub de PDFsam.
+- Cada panel (`GirarPanel`, `IndexarPanel`, `FoliarPanel`) tiene un método `@EventListener public void
+  onEnviarAHerramienta(EnviarAHerramientaRequest r)`, registrado al final del constructor con
+  `eventStudio().addAnnotatedListeners(this)`.
+- Al tocar el botón se manda `eventStudio().broadcast(new EnviarAHerramientaRequest(TOOL_ID_destino,
+  listaDeArchivos))` y después `eventStudio().broadcast(new SetActiveContentItemRequest(TOOL_ID_destino))`
+  (este último ya existía en PDFsam, cambia la pantalla activa).
+- Cada panel, al escuchar el evento, primero limpia su lista actual (sin avisar) y después agrega lo que
+  llegó — igual que si el usuario lo hubiera agregado a mano.
+- Girar manda sus archivos **ya armados** (con las hojas tal como quedaron: giradas, quitadas, insertadas…)
+  a una carpeta temporal, igual que al guardar; los que no se tocaron se copian tal cual.
+- **Ojo con los diálogos modales (`Ui.aviso`, `Ui.error`, `Ui.pregunta`) dentro de un `@EventListener` que se
+  dispara desde el callback de `Ui.enSegundoPlano` de OTRO panel:** si el diálogo se muestra de forma
+  sincrónica ahí mismo (`showAndWait()`), bloquea el hilo de JavaFX **antes** de que el panel que mandó el
+  evento termine su propio `terminarEnvio()`/broadcast, y en las pruebas automáticas (sin nadie que cierre el
+  diálogo) todo el enlace se queda pegado para siempre sin ningún error visible. La solución: mostrar esos
+  avisos con `Platform.runLater(...)`, para que se vean DESPUÉS de que el evento ya terminó de procesarse
+  (ver el aviso de "Foliar trabaja un PDF a la vez" en `FoliarPanel.onEnviarAHerramienta`).
 
 ### Cómo se registra una herramienta nueva
 
@@ -275,10 +300,63 @@ Si solo pide el código fuente, un solo ZIP (o uno por programa) con el código,
   - El giro masivo de una carpeta o comprimido **se queda** como atajo aparte.
   - Insertar hojas de otro PDF se hace con un **botón propio**, "Insertar hojas aquí".
   - Las miniaturas se cargan **solo del PDF elegido** (no todas a la vez).
+- **Enlace entre Girar, Indexar y Foliar** (decidido el 23/11/2026):
+  - Foliar e Indexar mandan a Girar **toda su lista/archivo actual** (no solo el que se está viendo).
+  - Los tres botones son simétricos: "Arreglar en Girar" está en Foliar Y en Indexar; "Ir a Indexar" e "Ir a
+    Foliar" están ambos en Girar.
+  - Al mandar archivos a otra pantalla, **se borra lo que ya hubiera ahí, sin avisar** ("se borra sin avisar"
+    fue la opción recomendada y la que eligió el usuario).
+  - El folio/las leyendas de Foliar e Indexar se vuelven a aplicar **solas, al guardar** (no se guardan ya
+    puestas en el PDF que vuelve de Girar).
+  - Los botones "Ir a Indexar"/"Ir a Foliar" de Girar están **siempre disponibles**, sin importar si se
+    entró a Girar desde el menú o desde otra pantalla.
+  - Las tres herramientas **deben seguir funcionando de forma completamente independiente**: el enlace es
+    un atajo opcional, nunca una dependencia obligatoria entre ellas.
 
 ---
 
 ## 9. Historial de mejoras
+
+### Entrega del 2026-11-23 — Enlace entre Girar, Indexar y Foliar
+
+**El pedido:** al trabajar en Indexar o en Foliar y notar una hoja mal girada o en blanco, el usuario tenía
+que salir, abrir Girar por separado, guardar y volver a meter los archivos a mano. Pidió botones que
+conectaran las tres pantallas sin perder lo que llevaba hecho.
+
+**Diseño acordado con el usuario** (confirmado antes de programar, con un diagrama y después una pregunta de
+selección múltiple): ver los puntos en la sección 8, "Enlace entre Girar, Indexar y Foliar".
+
+**Lo que se hizo** (sin tocar la lógica propia de ninguna de las tres herramientas — solo se agregaron
+botones, eventos y métodos nuevos):
+
+- `EnviarAHerramientaRequest` (record nuevo): evento con el `destino` (TOOL_ID) y la lista de archivos.
+- En `GirarPanel`: botones **"Ir a Indexar"** e **"Ir a Foliar"** (al lado de Guardar), método `enviarA`
+  (arma cada PDF en una carpeta temporal, igual que al guardar, y manda la lista) y
+  `onEnviarAHerramienta` (recibe desde Foliar/Indexar, limpia su lista y agrega lo que llegó).
+- En `IndexarPanel` y en `FoliarPanel`: botón **"Arreglar en Girar"** y `onEnviarAHerramienta` (recibe desde
+  Girar). Foliar, como solo trabaja un PDF a la vez, abre el primero de la lista que llega y avisa si venían
+  más.
+- **El panel de la lista de Girar se movió al lado izquierdo** de la pantalla (pedido explícito del usuario).
+- Los tres paneles se registran con `eventStudio().addAnnotatedListeners(this)` al final del constructor.
+
+**El bug que costó encontrar — diálogo modal bloqueando el enlace:** el aviso de Foliar ("trabaja un PDF a la
+vez…") se mostraba con `Ui.aviso` (`showAndWait()`) **de forma sincrónica**, dentro del mismo
+`onEnviarAHerramienta` que Girar estaba esperando para terminar su propio `broadcast`. Eso bloqueaba el hilo
+de JavaFX a medio camino: en las pruebas (sin nadie para cerrar el diálogo) el envío con 2 PDF nunca
+terminaba, sin ningún error ni excepción visible — parecía que el evento nunca llegaba. Se encontró agregando
+contadores y mensajes de diagnóstico temporales en cada paso de la cadena (se quitaron después de encontrar
+la causa). **La corrección:** ese aviso ahora se muestra con `Platform.runLater(...)`, después de que el
+envío ya terminó. De paso, se hizo más robusto `Ui.enSegundoPlano`: si cerrar la ventanita de "progreso"
+fallara, ya no se pierde el aviso de que el trabajo terminó o falló (antes se habría tragado en silencio,
+igual que pasó con este bug).
+
+**Pruebas nuevas:** `PantallasTest.enlaceIndexarConGirar()` (round-trip completo Indexar → Girar → Indexar,
+con una hoja quitada en Girar) y `PantallasTest.enlaceGirarDirectoConFoliar()` (Girar con 2 PDF nunca
+tocados → Foliar, que solo abre el primero). Las dos corrieron **3 veces seguidas en CI sin fallar** antes
+de darse por buenas (el bug era intermitente al principio).
+
+**Manual:** nueva sección 8, "Enlazar Girar con Foliar e Indexar", con nota en los pasos de guardar de
+Foliar e Indexar, y 7 preguntas frecuentes nuevas.
 
 ### Entrega del 2026-11-23 — Girar con lista de archivos
 
@@ -388,7 +466,7 @@ Están en `pdfsam-tools/pdfsam-foliado/src/test/java/org/pdfsam/tools/foliado/`:
 | `PantallasTest` | las pantallas de verdad (JavaFX), con fotos; corre con `xvfb` |
 | `PlantilladorTest` | el traductor de ejemplos de folio |
 
-**49 pruebas** en total. Corren solas al hacer `push` a `main`.
+**51 pruebas** en total. Corren solas al hacer `push` a `main`.
 
 ### Lo que NO se puede probar desde el entorno de desarrollo
 
@@ -452,3 +530,16 @@ portable, instalador, código fuente y un ZIP con todo junto.
 **¿El usuario quiere que le explique lo técnico?**
 Quiere saber **qué** se hizo y **qué cuidados** hay, en español sencillo. Los detalles de clases y métodos
 van en este archivo, no en el chat.
+
+**Un evento entre pantallas (`@EventListener`/`eventStudio()`) no llega y no hay ningún error en el log. ¿Qué
+reviso primero?**
+Busque un diálogo modal (`Ui.aviso`, `Ui.error`, `Ui.pregunta`) que se esté mostrando de forma sincrónica
+(`showAndWait()`) **dentro** del método que escucha el evento, sobre todo si ese método a su vez fue
+disparado desde el callback de `Ui.enSegundoPlano` de OTRO panel. El diálogo bloquea el hilo de JavaFX antes
+de que el que mandó el evento termine, y en las pruebas automáticas (sin nadie que lo cierre) todo se queda
+pegado sin ninguna excepción visible — ver la entrega del 23/11/2026, "Enlace entre Girar, Indexar y Foliar".
+Para confirmarlo rápido sin adivinar: agregue un contador/campo de diagnóstico de solo-para-pruebas en cada
+paso de la cadena (evento recibido → función que procesa → justo antes y después del broadcast) y mire en
+cuál de esos pasos se quedó la última vez — no hace falta ver el código de la librería de eventos para
+encontrarlo así. La corrección es mostrar esos diálogos con `Platform.runLater(...)` en vez de mostrarlos
+directo.
