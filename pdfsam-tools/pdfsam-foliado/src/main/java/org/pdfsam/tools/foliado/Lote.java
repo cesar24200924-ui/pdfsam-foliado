@@ -94,10 +94,11 @@ final class Lote {
     }
 
     // ------------------------------------------------------------ preparar
-    /** Carpeta donde se extrajo el comprimido (Mejora 1: "Extraer aquí"), si el origen era un comprimido.
-     * Queda AL LADO del archivo original (no en una carpeta temporal), con el mismo nombre, y "(2)", "(3)"...
-     * si ya existe esa carpeta. No se borra al terminar: queda como una carpeta normal, para quien la quiera
-     * revisar o reusar después. */
+    /** Carpeta donde se extrajo el comprimido, si el origen era un comprimido. Se crea AL LADO del archivo
+     * original (no en una carpeta temporal), con el mismo nombre, y "(2)", "(3)"... si ya existe esa carpeta.
+     * Es solo de trabajo: se borra ella sola cuando {@link #limpiar()} se ejecuta (al terminar bien, al
+     * cancelar, o al descartar la lista), para que nunca quede una copia descomprimida suelta junto al
+     * comprimido original. */
     Path carpetaExtraida;
 
     Lote preparar() throws IOException {
@@ -327,15 +328,11 @@ final class Lote {
 
     void limpiar() {
         if (carpetaExtraida != null) {
-            // Mejora 1: la carpeta extraída al lado del archivo original queda (no se borra), pero sus
-            // comprimidos de ADENTRO se dejan como se verían normalmente ("otro.zip"), no con el
-            // nombre marcado que se usa mientras se procesa. Se llama aquí para cubrir tanto cuando
-            // termina bien (finalizar() llama limpiar() al final) como cuando se cancela antes de eso.
-            try {
-                cerrarZipsInternos(carpetaExtraida);
-            } catch (IOException e) {
-                // se queda marcada; no es grave, se puede cerrar a mano si hace falta
-            }
+            // La carpeta extraída al lado del archivo original es solo de trabajo: nunca debe quedar
+            // junto al comprimido original, ni cuando termina bien (finalizar() llama limpiar() al
+            // final) ni cuando se cancela o se descarta la lista antes de guardar.
+            borrar(carpetaExtraida);
+            carpetaExtraida = null;
         }
         borrar(temp);
     }
@@ -505,6 +502,30 @@ final class Lote {
         }
         copiarConReintentos(listo, fin);
         Files.deleteIfExists(listo);
+    }
+
+    /** Mejora: con 2+ PDF sueltos (sin comprimido) se preguntó si el resultado va en ZIP, en carpeta, o en
+     * los dos. Si se pidió ZIP, lo arma a partir de lo que ya se escribió en {@code trabajoSueltos} y lo copia
+     * a {@code destino} (con nombre libre, "Sueltos... (2).zip" si ya existe); si se pidió "ambos", además
+     * copia la carpeta tal cual. Con "Solo carpeta" (o sin preguntar, 0 o 1 sueltos) no hace nada: ya se
+     * escribió directo en destino. */
+    static void finalizarSueltos(Path destino, String formatoSueltos, Path trabajoSueltos, String sufijo)
+            throws IOException {
+        if (trabajoSueltos == null || "carpeta".equals(formatoSueltos)) {
+            return;
+        }
+        Path listo = trabajoSueltos.resolveSibling("sueltos" + sufijo + ".listo");
+        comprimirCarpeta(trabajoSueltos, listo);
+        String base = "Sueltos" + sufijo;
+        Path fin = destino.resolve(base + ".zip");
+        for (int i = 2; Files.exists(fin); i++) {
+            fin = destino.resolve(base + " (" + i + ").zip");
+        }
+        copiarConReintentos(listo, fin);
+        Files.deleteIfExists(listo);
+        if ("ambos".equals(formatoSueltos)) {
+            copiarCarpetaConReintentos(trabajoSueltos, destino);
+        }
     }
 
     /** Lo contrario: cada carpeta "x.zip.__zip__" vuelve a ser "x.zip" (de adentro hacia afuera).

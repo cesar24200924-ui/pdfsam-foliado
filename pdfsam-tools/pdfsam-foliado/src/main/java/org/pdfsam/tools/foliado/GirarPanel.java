@@ -242,11 +242,13 @@ class GirarPanel extends BorderPane {
                 + "se copian igualitos. Los originales nunca se cambian."));
         btnGuardar = guardar;
 
-        btnIrIndexar = Ui.boton("Ir a Indexar", UniconsLine.TAG_ALT, () -> enviarA(IndexarTool.TOOL_ID));
+        btnIrIndexar = Ui.boton("Ir a Indexar", UniconsLine.TAG_ALT,
+                () -> confirmarYEnviarA(IndexarTool.TOOL_ID, "Indexar"));
         btnIrIndexar.setTooltip(new Tooltip("Manda esta lista (ya arreglada) a Indexar, para ponerle las "
                 + "leyendas. Lo que ya hubiera en Indexar se borra y queda solo esta lista. Funciona aunque no "
                 + "haya entrado a Girar desde Indexar."));
-        btnIrFoliar = Ui.boton("Ir a Foliar", UniconsLine.FILE_EDIT_ALT, () -> enviarA(FoliarTool.TOOL_ID));
+        btnIrFoliar = Ui.boton("Ir a Foliar", UniconsLine.FILE_EDIT_ALT,
+                () -> confirmarYEnviarA(FoliarTool.TOOL_ID, "Foliar"));
         btnIrFoliar.setTooltip(new Tooltip("Manda esta lista (ya arreglada) a Foliar. Si hay más de un PDF, "
                 + "Foliar solo abre el primero (trabaja uno a la vez); los demás se pueden mandar después de "
                 + "uno en uno. Lo que ya hubiera en Foliar se borra. Funciona aunque no haya entrado a Girar "
@@ -1431,30 +1433,62 @@ class GirarPanel extends BorderPane {
             return;
         }
         Path destino = carpeta.getAbsoluteFile().toPath().normalize();
-        // nunca encima de los originales: la carpeta de salida no puede contener ningún original
-        List<File> originales = new ArrayList<>();
-        for (Item it : copia) {
-            originales.add(it.origen());
+        // Mejora: con 2 o más PDF sueltos (sin comprimido) que SÍ van a escribirse, preguntar siempre cómo se
+        // quiere el resultado.
+        long cuantosSueltos = copia.size();
+        for (int k = 0; k < copia.size(); k++) {
+            if (copia.get(k).relativa().contains(Lote.MARCA_ZIP)) {
+                cuantosSueltos--;
+            }
         }
-        for (Abierto a : abiertos) {
-            originales.add(a.archivo());
+        String formatoSueltos = "carpeta";
+        if (cuantosSueltos > 1) {
+            int r = Ui.elegir3(this, "¿Cómo quiere el resultado?",
+                    "Se van a girar " + cuantosSueltos + " PDF sueltos (sin venir de un comprimido). Las "
+                            + "carpetas y subcarpetas quedan igual en los tres casos.",
+                    "Solo ZIP", "ZIP y carpeta", "Solo carpeta", 0);
+            if (r == -1) {
+                return;
+            }
+            formatoSueltos = r == 0 ? "zip" : r == 1 ? "ambos" : "carpeta";
         }
-        for (File f : originales) {
-            if (f.getAbsoluteFile().toPath().normalize().startsWith(destino)) {
-                Ui.aviso(this, "Esa carpeta tiene adentro los PDF originales y se reemplazarían. Elija otra carpeta "
-                        + "de salida (por ejemplo, una carpeta nueva).");
+        // Los que vienen de un comprimido van a un ZIP nuevo (otro nombre, con "_girado"), así que esa carpeta
+        // puede ser la misma donde está el comprimido original sin ningún riesgo. Un PDF suelto sin cambios
+        // también es seguro (no se vuelve a escribir). Con "Solo ZIP" tampoco hay riesgo (no se escribe en
+        // destino). Solo hay riesgo real con un PDF suelto CON cambios que SÍ va a escribirse en destino y cuya
+        // salida caería exactamente sobre el archivo original.
+        boolean sueltosVanADestino = !"zip".equals(formatoSueltos);
+        if (sueltosVanADestino) {
+            List<String> conflictos = new ArrayList<>();
+            for (int k = 0; k < copia.size(); k++) {
+                Item it = copia.get(k);
+                if (it.relativa().contains(Lote.MARCA_ZIP) || trabajos.get(k) == null) {
+                    continue;
+                }
+                if (destino.resolve(it.relativa()).normalize().equals(it.origen().getAbsoluteFile().toPath().normalize())) {
+                    conflictos.add(it.origen().getName());
+                }
+            }
+            if (!conflictos.isEmpty()) {
+                Ui.aviso(this, "Estos PDF quedarían sobre el original porque no vienen de un comprimido, tienen "
+                        + "cambios y la carpeta elegida es la misma donde ya están: " + String.join(", ", conflictos)
+                        + ". Elija otra carpeta, cambie el nombre del original, o escoja \"Solo ZIP\".");
                 return;
             }
         }
         // lo que vino de comprimidos se arma en la carpeta temporal de Windows (OneDrive no la toca) y al final
-        // solo se copia el ZIP terminado a la carpeta elegida
+        // solo se copia el ZIP terminado a la carpeta elegida; lo mismo para los sueltos si se pidió ZIP
         try {
             trabajoZip = Files.createTempDirectory("pdfsam_girar_");
+            trabajoSueltos = "carpeta".equals(formatoSueltos) ? null
+                    : Files.createTempDirectory("pdfsam_girar_sueltos_");
         } catch (IOException e) {
             Ui.error(this, Ui.textoError(e));
             return;
         }
         Path trabajo = trabajoZip;
+        Path trabajoSueltosFinal = trabajoSueltos;
+        String formatoFinal = formatoSueltos;
         Map<File, String> c = new HashMap<>(claves);
         Ui.enSegundoPlano(this, "Girando", true, p -> {
             List<File> salidas = new ArrayList<>();
@@ -1466,7 +1500,7 @@ class GirarPanel extends BorderPane {
                 }
                 Item it = copia.get(k);
                 String texto = "Archivo " + (k + 1) + " de " + n + ": " + it.origen().getName();
-                File salida = salidaDe(it, destino, trabajo).toFile();
+                File salida = salidaDe(it, destino, trabajo, trabajoSueltosFinal).toFile();
                 int kk = k;
                 try {
                     List<Motor.HojaArmada> hs = trabajos.get(k);
@@ -1484,20 +1518,29 @@ class GirarPanel extends BorderPane {
             }
             p.poner(1, "");
             return new Object[] { salidas, fallidos };
-        }, res -> terminarGuardado((Object[]) res, destino), e -> {
+        }, res -> terminarGuardado((Object[]) res, destino, formatoFinal), e -> {
             Lote.borrar(trabajo);
+            Lote.borrar(trabajoSueltosFinal);
             Ui.error(this, Ui.textoError(e));
         });
     }
 
-    /** Dónde se guarda cada PDF: los de comprimidos, en la carpeta temporal; los demás, en la carpeta elegida. */
-    private static Path salidaDe(Item it, Path destino, Path trabajo) {
-        return it.relativa().contains(Lote.MARCA_ZIP) ? trabajo.resolve(it.relativa())
-                : destino.resolve(it.relativa());
+    /** Dónde se guarda cada PDF: los de comprimidos, en la carpeta temporal; los sueltos con ZIP pedido,
+     * también en una temporal; el resto, directo en la carpeta elegida. */
+    private static Path salidaDe(Item it, Path destino, Path trabajo, Path trabajoSueltos) {
+        if (it.relativa().contains(Lote.MARCA_ZIP)) {
+            return trabajo.resolve(it.relativa());
+        }
+        if (trabajoSueltos != null) {
+            return trabajoSueltos.resolve(it.relativa());
+        }
+        return destino.resolve(it.relativa());
     }
 
+    private Path trabajoSueltos;
+
     @SuppressWarnings("unchecked")
-    private void terminarGuardado(Object[] res, Path destino) {
+    private void terminarGuardado(Object[] res, Path destino, String formatoSueltos) {
         List<File> salidas = (List<File>) res[0];
         List<String> fallidos = (List<String>) res[1];
         List<Abierto> usados = new ArrayList<>();
@@ -1507,22 +1550,24 @@ class GirarPanel extends BorderPane {
             }
         }
         Path trabajo = trabajoZip;
-        if (!usados.isEmpty()) {
-            Ui.enSegundoPlano(this, "Armando los ZIP", false, p -> {
-                try {
-                    for (Abierto a : usados) {
-                        p.poner(-1, a.archivo().getName());
-                        Lote.armarZipDeSalida(destino, trabajo, a.lote(), a.marcada());
-                    }
-                } finally {
-                    Lote.borrar(trabajo);
+        Path sueltos = trabajoSueltos;
+        Ui.enSegundoPlano(this, usados.isEmpty() ? "Terminando" : "Armando los ZIP", false, p -> {
+            try {
+                for (Abierto a : usados) {
+                    p.poner(-1, a.archivo().getName());
+                    Lote.armarZipDeSalida(destino, trabajo, a.lote(), a.marcada());
                 }
-                return null;
-            }, r -> resumenGuardado(salidas, fallidos, destino, true), e -> Ui.error(this, Ui.textoError(e)));
-            return;
-        }
-        Lote.borrar(trabajo);
-        resumenGuardado(salidas, fallidos, destino, false);
+                Lote.finalizarSueltos(destino, formatoSueltos, sueltos, "_girado");
+            } finally {
+                Lote.borrar(trabajo);
+                Lote.borrar(sueltos);
+                // ya se leyó todo lo que hacía falta de la carpeta extraída: no debe quedar suelta
+                for (Abierto a : usados) {
+                    a.lote().limpiar();
+                }
+            }
+            return null;
+        }, r -> resumenGuardado(salidas, fallidos, destino, !usados.isEmpty()), e -> Ui.error(this, Ui.textoError(e)));
     }
 
     private void resumenGuardado(List<File> salidas, List<String> fallidos, Path destino, boolean conZip) {
@@ -1574,6 +1619,24 @@ class GirarPanel extends BorderPane {
     }
 
     // ------------------------------------------------------------ enlace con Indexar y Foliar
+    /** Botones "Ir a Indexar" / "Ir a Foliar": siempre pregunta si lleva los archivos actuales a la otra
+     * pantalla o si prefiere ir con la pantalla vacía (antes decidía en silencio, y a veces parecía que el
+     * botón "no respondía" porque en realidad sí cambiaba de pantalla, pero sin avisar nada). */
+    private void confirmarYEnviarA(String toolId, String nombreDestino) {
+        int r = Ui.elegir(this, "Ir a " + nombreDestino,
+                "¿Lleva los PDF que tiene abiertos aquí a " + nombreDestino + ", o prefiere ir con la pantalla "
+                        + "vacía?",
+                "Llevar los archivos", "Ir en blanco");
+        if (r == -1) {
+            return;
+        }
+        if (r == 0) {
+            enviarA(toolId);
+        } else {
+            eventStudio().broadcast(new SetActiveContentItemRequest(toolId));
+        }
+    }
+
     /** Manda la lista actual (ya con lo girado/arreglado) a Indexar o Foliar y cambia a esa pantalla (botones
      * "Ir a Indexar" / "Ir a Foliar"). Cada PDF se arma en una carpeta temporal con sus hojas tal como quedaron
      * (igual que al guardar); los que no se tocaron se copian tal cual. */

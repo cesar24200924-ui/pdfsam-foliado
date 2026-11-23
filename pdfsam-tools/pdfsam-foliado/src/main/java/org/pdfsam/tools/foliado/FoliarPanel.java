@@ -226,7 +226,7 @@ class FoliarPanel extends BorderPane {
         btnFoliar.getStyleClass().addAll("footer-button", "run-button");
         btnFoliar.setMaxWidth(Double.MAX_VALUE);
         btnFoliar.setDisable(true);
-        btnArreglarGirar = Ui.boton("Arreglar en Girar", UniconsLine.ROTATE_360, this::arreglarEnGirar);
+        btnArreglarGirar = Ui.boton("Arreglar en Girar", UniconsLine.ROTATE_360, this::confirmarYArreglarEnGirar);
         btnArreglarGirar.setMaxWidth(Double.MAX_VALUE);
         btnArreglarGirar.disableProperty().bind(btnFoliar.disableProperty());
         btnArreglarGirar.setTooltip(new Tooltip("Manda este PDF a Girar, para girar hojas, quitar una en blanco "
@@ -303,6 +303,26 @@ class FoliarPanel extends BorderPane {
     }
 
     // ------------------------------------------------------------ enlace con Girar
+    /** Botón "Arreglar en Girar": siempre pregunta si lleva el PDF actual a Girar o si prefiere ir con la
+     * pantalla vacía (antes decidía en silencio). */
+    private void confirmarYArreglarEnGirar() {
+        if (archivo == null) {
+            eventStudio().broadcast(new SetActiveContentItemRequest(GirarTool.TOOL_ID));
+            return;
+        }
+        int r = Ui.elegir(this, "Ir a Girar",
+                "¿Lleva el PDF que tiene abierto aquí a Girar, o prefiere ir con la pantalla vacía?",
+                "Llevar el archivo", "Ir en blanco");
+        if (r == -1) {
+            return;
+        }
+        if (r == 0) {
+            arreglarEnGirar();
+        } else {
+            eventStudio().broadcast(new SetActiveContentItemRequest(GirarTool.TOOL_ID));
+        }
+    }
+
     /** Manda el PDF actual a Girar y cambia a esa pantalla (botón "Arreglar en Girar"). */
     private void arreglarEnGirar() {
         if (archivo == null) {
