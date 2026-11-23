@@ -39,6 +39,7 @@ Los PDF originales <b>nunca</b> se modifican: el resultado siempre se guarda apa
   <li><a href="#personalizar">Personalizar hojas (solo algunas hojas)</a></li>
   <li><a href="#letras">Letras, colores y números en letras</a></li>
   <li><a href="#girar">Girar — viendo las hojas en miniatura</a></li>
+  <li><a href="#enlace">Enlazar Girar con Foliar e Indexar</a></li>
   <li><a href="#comprimidos">Comprimidos: ZIP, RAR, 7z y más</a></li>
   <li><a href="#mover">Mover cada leyenda de Indexar por separado</a></li>
   <li><a href="#editable">Texto editable en Adobe (Rellenar y firmar)</a></li>
@@ -110,6 +111,7 @@ Si el PDF tiene contraseña, el programa se la pide.</div>
 
 <h3>Paso 9 — Guardar</h3>
 <div class="paso">Toque <b>Foliar y guardar</b> (abajo a la izquierda, siempre visible). Elija dónde guardar; el nombre que sugiere es el original con <code>_foliado</code> al final. Al terminar puede tocar <b>Abrir el PDF</b> o <b>Abrir la carpeta</b>.</div>
+<p>Si antes de guardar nota que la hoja salió girada o en blanco, no hace falta salir de Foliar: toque <b>Arreglar en Girar</b> (al lado de <b>Foliar y guardar</b>). Ver <a href="#enlace">Enlazar Girar con Foliar e Indexar</a>.</p>
 
 <h2 id="lote">3. Foliar una carpeta o un comprimido (ZIP, RAR, 7z…) completo</h2>
 <p>Sirve para foliar muchos PDF de una vez, por ejemplo un expediente con subcarpetas.</p>
@@ -174,6 +176,7 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
 <h3>Paso 6 — Guardar</h3>
 <div class="paso">Toque <b>Indexar y guardar</b> y elija la carpeta de salida. Se crea <b>la misma estructura de subcarpetas con los mismos nombres</b>. No se puede elegir la carpeta donde están los originales (así nunca se reemplazan): use una carpeta nueva.</div>
 <p>Las opciones de Indexar (y de Foliar) se recuerdan para la próxima vez.</p>
+<p>Si algún PDF de la lista salió girado o con una hoja en blanco, no hace falta salir de Indexar: toque <b>Arreglar en Girar</b> (al lado de <b>Indexar y guardar</b>). Ver <a href="#enlace">Enlazar Girar con Foliar e Indexar</a>.</p>
 
 <h2 id="personalizar">5. Personalizar hojas (solo algunas hojas)</h2>
 <p>Lo general se aplica a todas las hojas. Con <b>Personalizar hojas</b> cambia solo algunas, por ejemplo una hoja donde el folio tapa una firma.</p>
@@ -276,7 +279,33 @@ También puede <b>arrastrar</b> los PDF, la carpeta o el comprimido a la pantall
 <div class="paso">Si no necesita revisarlos uno por uno y solo quiere girar <b>todo</b> parejo, toque el botón <b>Girar una carpeta o comprimido</b> de arriba, elija <b>A la derecha</b>, <b>A la izquierda</b> o <b>Voltear (180°)</b> y toque <b>Girar</b>. Se giran <b>todas las hojas de todos los PDF</b>, igual que al foliar una carpeta: vista previa del árbol, misma estructura de subcarpetas, comprimidos dentro de comprimidos, lo que no es PDF se copia igual y al final se avisa de los PDF con contraseña.</div>
 <p>La diferencia: con el <b>atajo</b> no ve las hojas y todo se gira igual; con la <b>lista</b> (Paso 1) ve cada PDF y le hace lo que quiera a cada uno.</p>
 
-<h2 id="comprimidos">8. Comprimidos: ZIP, RAR, 7z y más</h2>
+<h2 id="enlace">8. Enlazar Girar con Foliar e Indexar</h2>
+<p>Foliar, Indexar y Girar están enlazados, para no tener que salir de uno, abrir otro por separado y volver a meter los archivos a mano.</p>
+
+<h3>De Foliar o Indexar hacia Girar</h3>
+<div class="paso">En Foliar o en Indexar, al lado del botón de guardar, hay un botón <b>Arreglar en Girar</b>. Al tocarlo:
+<ul>
+  <li>Se manda <b>toda la lista</b> de archivos que tenga en ese momento (en Foliar, el único PDF que tenga abierto; en Indexar, todos los de la lista).</li>
+  <li>La pantalla cambia sola a <b>Girar</b>, y esos archivos quedan ahí para revisarlos, girarlos, quitar hojas en blanco, etc.</li>
+  <li><b>Lo que ya hubiera en Girar se borra</b>, sin preguntar, y Girar queda mostrando solo lo que acaba de llegar.</li>
+</ul></div>
+
+<h3>De Girar hacia Foliar o hacia Indexar</h3>
+<div class="paso">En Girar, al lado del botón de guardar, hay dos botones: <b>Ir a Indexar</b> e <b>Ir a Foliar</b>. Al tocar uno de ellos:
+<ul>
+  <li>Se manda <b>toda la lista</b> de Girar, ya con lo que le haya hecho a cada PDF (hojas giradas, quitadas, en otro orden…). Los que no tocó se mandan igualitos.</li>
+  <li>La pantalla cambia sola a Indexar o a Foliar.</li>
+  <li><b>Lo que ya hubiera en esa pantalla se borra</b>, sin preguntar, y queda mostrando solo lo que acaba de llegar de Girar.</li>
+  <li>Foliar solo trabaja con <b>un PDF a la vez</b>: si Girar tenía varios, Foliar abre el primero y avisa que mande los demás después, de uno en uno.</li>
+  <li>Estos dos botones <b>siempre están disponibles</b> en Girar, sin importar cómo haya llegado ahí: entrando directo desde el menú, o viniendo de Foliar o de Indexar con <b>Arreglar en Girar</b>.</li>
+</ul></div>
+
+<h3>¿Y el folio o las leyendas que ya había puesto?</h3>
+<p>Cuando un PDF vuelve de Girar a Foliar o a Indexar, llega <b>tal como estaba antes de ponerle folio o leyendas</b> (Girar no los toca). El folio o las leyendas se vuelven a poner solos, con las mismas opciones que tenía configuradas, en el momento en que toque <b>Foliar y guardar</b> o <b>Indexar y guardar</b>. No hace falta configurar nada otra vez.</p>
+
+<p><b>En resumen:</b> cada una de las tres herramientas sigue funcionando sola, exactamente igual que antes, si nunca toca estos botones. El enlace es solo un atajo para cuando está trabajando en una y necesita algo de otra sin perder lo que lleva hecho.</p>
+
+<h2 id="comprimidos">9. Comprimidos: ZIP, RAR, 7z y más</h2>
 <p>Foliar, Indexar y Girar abren casi cualquier archivo comprimido: <b>ZIP, RAR</b> (también los nuevos RAR5 y los que vienen en partes), <b>7z</b> (también en partes .001, .002…), <b>TAR, TAR.GZ / TGZ, GZ, BZ2, XZ, LZMA, Z, CAB, ISO, ARJ, LZH, CPIO, RPM, DEB, WIM, XAR</b>.</p>
 <div class="paso"><b>Paso 1.</b> En Foliar toque el botón de carpeta → <b>Elegir comprimido (ZIP, RAR, 7z...)</b>. En Indexar y en Girar toque <b>Agregar ZIP / RAR / 7z</b> (en Girar, si lo que quiere es girarlo todo de un solo golpe sin revisarlo, use el botón <b>Girar una carpeta o comprimido</b>). También puede arrastrar el archivo.</div>
 <div class="paso"><b>Paso 2.</b> Si el comprimido tiene <b>contraseña</b>, sale un cuadrito para escribirla. Si la escribe mal, dice <i>“La contraseña no es correcta. Pruebe otra vez.”</i> y la vuelve a pedir. Si no la sabe, toque <b>Cancelar</b>: ese comprimido se copia tal cual, sin abrirlo, y se avisa al final.</div>
@@ -285,7 +314,7 @@ También puede <b>arrastrar</b> los PDF, la carpeta o el comprimido a la pantall
 <div class="ojo"><b>¿Por qué sale en ZIP y no en RAR?</b> El formato RAR es de la empresa de WinRAR y solo se puede crear con su programa, que es de pago. Abrirlos sí está permitido. El ZIP lo abre cualquier computadora sin instalar nada.</div>
 <p>Si un comprimido viene en partes (<code>Expediente.part1.rar</code>, <code>Expediente.part2.rar</code>… o <code>Expediente.7z.001</code>, <code>.002</code>…), elija <b>la primera parte</b> y deje todas las partes juntas en la misma carpeta.</p>
 
-<h2 id="mover">9. Mover cada leyenda de Indexar por separado</h2>
+<h2 id="mover">10. Mover cada leyenda de Indexar por separado</h2>
 <p>Las leyendas de Indexar son cinco: <b>Arriba a la izquierda</b>, <b>Abajo a la izquierda</b>, <b>Arriba a la derecha</b>, <b>Número en letras</b> y <b>Numeración de abajo</b>. Cada una se puede correr sola, sin que se muevan las demás. Hay dos formas:</p>
 <h3>Forma 1 — Arrastrándola con el ratón</h3>
 <div class="paso"><b>Paso 1.</b> En la vista previa, ponga el ratón encima de la leyenda que quiere mover (por ejemplo la de arriba a la derecha). El puntero se vuelve una <b>manito</b>, aparece un <b>recuadro azul</b> alrededor de la leyenda y arriba dice <i>“Mantenga apretado y arrastre para mover…”</i>.</div>
@@ -300,7 +329,7 @@ También puede <b>arrastrar</b> los PDF, la carpeta o el comprimido a la pantall
 28 puntos ≈ 1 cm. La vista previa cambia al momento. <b>Poner todas en su lugar</b> deja todo en 0.</div>
 <p>Si está en <b>Personalizar hojas</b> y arrastra fuera de una leyenda, se mueven todas juntas como antes.</p>
 
-<h2 id="editable">10. Texto editable en Adobe (Rellenar y firmar)</h2>
+<h2 id="editable">11. Texto editable en Adobe (Rellenar y firmar)</h2>
 <p>Normalmente el folio y las leyendas quedan <b>fijos</b> en la hoja: nadie los puede cambiar. Si marca <b>Texto editable en Adobe (Rellenar y firmar)</b>, quedan como <b>casillas que ya traen el texto escrito</b>: se ven y se imprimen igual, pero en Adobe se pueden corregir.</p>
 <div class="paso"><b>Paso 1.</b> En Foliar (<b>7. Más opciones</b>) o en Indexar (<b>5. Más opciones</b>) marque <b>Texto editable en Adobe (Rellenar y firmar)</b>.</div>
 <div class="paso"><b>Paso 2.</b> Guarde como siempre (también funciona con carpetas y comprimidos).</div>
@@ -312,7 +341,7 @@ También puede <b>arrastrar</b> los PDF, la carpeta o el comprimido a la pantall
   <li>Girar no pone texto, por eso esta opción solo está en Foliar e Indexar.</li>
 </ul>
 
-<h2 id="faq">11. Preguntas frecuentes</h2>
+<h2 id="faq">12. Preguntas frecuentes</h2>
 
 <h3>Generales</h3>
 <details><summary>¿Se modifica mi PDF original?</summary>
@@ -459,6 +488,22 @@ También puede <b>arrastrar</b> los PDF, la carpeta o el comprimido a la pantall
 <p>No, tiene que quedar con al menos una.</p></details>
 <details><summary>Quiero girar todas las hojas de 30 PDF.</summary>
 <p>Póngalos en una carpeta y use <b>Girar una carpeta o ZIP</b>.</p></details>
+
+<h3>Enlazar Girar con Foliar e Indexar</h3>
+<details><summary>Estoy en Indexar y una hoja salió girada. ¿Tengo que empezar de nuevo en Girar?</summary>
+<p>No. Toque <b>Arreglar en Girar</b> (al lado de <b>Indexar y guardar</b>): manda ahí toda la lista que tenía en Indexar, la pantalla cambia sola a Girar y puede arreglar la hoja viéndola en miniatura.</p></details>
+<details><summary>Después de arreglar las hojas en Girar, ¿cómo regreso a Indexar o a Foliar?</summary>
+<p>Toque <b>Ir a Indexar</b> o <b>Ir a Foliar</b>, al lado del botón de guardar de Girar. Manda toda la lista de Girar, ya arreglada, y cambia la pantalla sola.</p></details>
+<details><summary>¿Pierdo lo que ya tenía en Indexar o en Foliar si toco "Arreglar en Girar"?</summary>
+<p>Se reemplaza por lo que manda. Si ya guardó ese trabajo antes de tocar el botón, no se pierde nada: el PDF guardado queda donde lo guardó; solo cambia lo que estaba <b>abierto en la pantalla</b> en ese momento.</p></details>
+<details><summary>¿Tengo que haber entrado a Girar desde Indexar o Foliar para poder usar "Ir a Indexar" / "Ir a Foliar"?</summary>
+<p>No. Esos dos botones siempre están disponibles en Girar, haya entrado desde el menú directamente o desde otra pantalla.</p></details>
+<details><summary>Mandé 3 PDF de Girar hacia Foliar. ¿Por qué solo abrió uno?</summary>
+<p>Foliar solo puede tener <b>un PDF abierto a la vez</b>. Abre el primero de la lista y avisa que mande los otros después, uno por uno, con el mismo botón <b>Ir a Foliar</b> en Girar.</p></details>
+<details><summary>El PDF que volvió de Girar a Indexar o Foliar, ¿ya tiene el folio o las leyendas que había configurado?</summary>
+<p>Todavía no: vuelve tal como estaba antes de ponérselas (Girar no toca folios ni leyendas). Se le ponen solas, con las mismas opciones configuradas, al tocar <b>Foliar y guardar</b> o <b>Indexar y guardar</b>.</p></details>
+<details><summary>¿Girar, Indexar y Foliar siguen funcionando cada uno por su cuenta?</summary>
+<p>Sí, exactamente igual que antes. Los botones de enlace son solo un atajo opcional: si no los toca, cada herramienta funciona sola, sin depender de las otras.</p></details>
 
 <h3>Letras y colores</h3>
 <details><summary>No encuentro una letra que tengo instalada.</summary>
