@@ -438,10 +438,22 @@ class IndexarPanel extends BorderPane {
             return;
         }
         List<File> actuales = new ArrayList<>();
+        Map<File, String> relativas = new java.util.HashMap<>();
         for (Item it : items) {
             actuales.add(it.origen());
+            if (it.relativa().contains(Lote.MARCA_ZIP)) {
+                relativas.put(it.origen(), it.relativa());
+            }
         }
-        eventStudio().broadcast(new EnviarAHerramientaRequest(GirarTool.TOOL_ID, actuales));
+        // los que venían de un comprimido abierto acá: para que Girar arme igual un solo comprimido de salida
+        // con la misma estructura, en vez de dejarlos sueltos, si se guarda directo desde allá
+        List<EnviarAHerramientaRequest.Origen> origenes = new ArrayList<>();
+        for (Abierto a : abiertos) {
+            if (items.stream().anyMatch(it -> it.relativa().startsWith(a.marcada() + "/"))) {
+                origenes.add(new EnviarAHerramientaRequest.Origen(a.archivo(), a.lote(), a.marcada()));
+            }
+        }
+        eventStudio().broadcast(new EnviarAHerramientaRequest(GirarTool.TOOL_ID, actuales, relativas, origenes));
         eventStudio().broadcast(new SetActiveContentItemRequest(GirarTool.TOOL_ID));
     }
 
