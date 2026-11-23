@@ -368,9 +368,10 @@ class PantallasTest {
         File dir = Files.createTempDirectory("pglista").toFile();
         File sub = new File(dir, "Expediente");
         assertTrue(sub.mkdirs());
-        MotorTest.pdfDePrueba(sub, "uno.pdf");
-        MotorTest.pdfDePrueba(sub, "dos.pdf");
-        MotorTest.pdfDePrueba(sub, "tres.pdf");
+        // nombres numerados: la lista queda en orden alfabético, igual que el árbol de carpetas
+        MotorTest.pdfDePrueba(sub, "01 primero.pdf");
+        MotorTest.pdfDePrueba(sub, "02 segundo.pdf");
+        MotorTest.pdfDePrueba(sub, "03 tercero.pdf");
         GirarPanel panel = enFx(GirarPanel::new);
         enFx(() -> escena(panel));
         enFx(() -> {
@@ -379,7 +380,7 @@ class PantallasTest {
         });
         Thread.sleep(1500);
         assertEquals(3, (int) enFx(panel::cuantosEnLista), "los 3 PDF de la carpeta van a la lista");
-        assertEquals("uno.pdf", enFx(panel::nombreEnPantalla), "se muestra el primero de la lista");
+        assertEquals("01 primero.pdf", enFx(panel::nombreEnPantalla), "se muestra el primero de la lista");
         assertFalse(enFx(panel::tieneCambiosEnPantalla), "recién abierto, sin cambios");
 
         int antes = enFx(panel::cuantasHojasEnPantalla);
@@ -397,7 +398,7 @@ class PantallasTest {
             return null;
         });
         Thread.sleep(800);
-        assertEquals("dos.pdf", enFx(panel::nombreEnPantalla));
+        assertEquals("02 segundo.pdf", enFx(panel::nombreEnPantalla));
         assertEquals(antes, (int) enFx(panel::cuantasHojasEnPantalla), "el segundo está completo");
         assertFalse(enFx(panel::tieneCambiosEnPantalla), "el segundo está sin tocar");
 
@@ -407,7 +408,7 @@ class PantallasTest {
             return null;
         });
         Thread.sleep(800);
-        assertEquals("uno.pdf", enFx(panel::nombreEnPantalla));
+        assertEquals("01 primero.pdf", enFx(panel::nombreEnPantalla));
         assertEquals(antes - 1, (int) enFx(panel::cuantasHojasEnPantalla), "se recordó lo que se le hizo");
         assertTrue(enFx(panel::tieneCambiosEnPantalla));
     }
