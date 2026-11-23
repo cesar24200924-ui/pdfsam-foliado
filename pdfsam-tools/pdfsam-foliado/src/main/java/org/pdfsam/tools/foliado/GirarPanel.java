@@ -1591,6 +1591,16 @@ class GirarPanel extends BorderPane {
         }
         Map<File, String> c = new HashMap<>(claves);
         Set<String> usados = new HashSet<>();
+        Map<File, String> relativas = new HashMap<>();
+        // los que venían de un comprimido abierto acá: para que la pantalla de destino arme igual un solo
+        // comprimido de salida con la misma estructura, en vez de dejarlos sueltos (sin esto, "Ir a Indexar" con
+        // un PDF que vino de un RAR dejaba los PDF indexados sueltos en la carpeta elegida)
+        List<EnviarAHerramientaRequest.Origen> origenes = new ArrayList<>();
+        for (Abierto a : abiertos) {
+            if (copia.stream().anyMatch(it -> it.relativa().startsWith(a.marcada() + "/"))) {
+                origenes.add(new EnviarAHerramientaRequest.Origen(a.archivo(), a.lote(), a.marcada()));
+            }
+        }
         Ui.enSegundoPlano(this, "Preparando para enviar", true, p -> {
             List<File> salidas = new ArrayList<>();
             List<String> fallidos = new ArrayList<>();
@@ -1601,8 +1611,20 @@ class GirarPanel extends BorderPane {
                 }
                 Item it = copia.get(k);
                 String texto = "Archivo " + (k + 1) + " de " + n + ": " + it.origen().getName();
-                String nombre = nombreUnico(usados, new File(Lote.nombreVisible(it.relativa())).getName());
-                File salida = trabajo.resolve(nombre).toFile();
+                boolean deComprimido = it.relativa().contains(Lote.MARCA_ZIP);
+                File salida;
+                if (deComprimido) {
+                    // se conserva la misma ruta de adentro del comprimido (no solo el nombre), para que la
+                    // pantalla de destino sepa reconstruir la misma estructura de carpetas al guardar
+                    salida = trabajo.resolve(it.relativa()).toFile();
+                    File carpeta = salida.getParentFile();
+                    if (carpeta != null) {
+                        carpeta.mkdirs();
+                    }
+                } else {
+                    String nombre = nombreUnico(usados, new File(Lote.nombreVisible(it.relativa())).getName());
+                    salida = trabajo.resolve(nombre).toFile();
+                }
                 int kk = k;
                 try {
                     List<Motor.HojaArmada> hs = trabajos.get(k);
@@ -1614,20 +1636,24 @@ class GirarPanel extends BorderPane {
                                 (h, t) -> p.poner((kk + (t == 0 ? 1 : (double) h / t)) / n, texto));
                     }
                     salidas.add(salida);
+                    if (deComprimido) {
+                        relativas.put(salida, it.relativa());
+                    }
                 } catch (Exception e) {
                     fallidos.add(Lote.nombreVisible(it.relativa()) + ": " + Ui.textoError(e));
                 }
             }
             p.poner(1, "");
             return new Object[] { salidas, fallidos };
-        }, res -> terminarEnvio((Object[]) res, toolId), e -> Ui.error(this, Ui.textoError(e)));
+        }, res -> terminarEnvio((Object[]) res, toolId, relativas, origenes), e -> Ui.error(this, Ui.textoError(e)));
     }
 
     /** Solo para las pruebas: lo que falló (si algo falló) al preparar el último envío a otra pantalla. */
     private volatile List<String> ultimosFallosEnvio = List.of();
 
     @SuppressWarnings("unchecked")
-    private void terminarEnvio(Object[] res, String toolId) {
+    private void terminarEnvio(Object[] res, String toolId, Map<File, String> relativas,
+            List<EnviarAHerramientaRequest.Origen> origenes) {
         List<File> salidas = (List<File>) res[0];
         List<String> fallidos = (List<String>) res[1];
         ultimosFallosEnvio = fallidos;
@@ -1638,7 +1664,7 @@ class GirarPanel extends BorderPane {
             }
             return;
         }
-        eventStudio().broadcast(new EnviarAHerramientaRequest(toolId, salidas));
+        eventStudio().broadcast(new EnviarAHerramientaRequest(toolId, salidas, relativas, origenes));
         eventStudio().broadcast(new SetActiveContentItemRequest(toolId));
         if (!fallidos.isEmpty()) {
             Ui.aviso(this, "Algunos PDF no se pudieron preparar para enviar:\n\n" + String.join("\n",
