@@ -547,4 +547,47 @@ class PantallasTest {
         assertTrue(relativas.stream().allMatch(r -> r.contains("_indexado.zip" + Lote.MARCA_ZIP + "/Enero/")),
                 "cada PDF debía quedar marcado como venido de un ZIP, dentro de 'Enero': " + relativas);
     }
+
+    /** Lo mismo que {@link #enlaceGirarConIndexarConservaElComprimidoDeOrigen}, pero al revés: Indexar abre el
+     * ZIP directo y manda a Girar con "Arreglar en Girar" (mismo riesgo, dirección contraria). */
+    @Test
+    void enlaceIndexarConGirarConservaElComprimidoDeOrigen() throws Exception {
+        File dir = Files.createTempDirectory("penlace4").toFile();
+        File tmp = Files.createTempDirectory("penlace4_pdfs").toFile();
+        File uno = MotorTest.pdfDePrueba(tmp, "uno.pdf");
+        File dos = MotorTest.pdfDePrueba(tmp, "dos.pdf");
+        File zip = new File(dir, "Expediente.zip");
+        try (var z = new java.util.zip.ZipOutputStream(Files.newOutputStream(zip.toPath()))) {
+            z.putNextEntry(new java.util.zip.ZipEntry("Enero/uno.pdf"));
+            Files.copy(uno.toPath(), z);
+            z.closeEntry();
+            z.putNextEntry(new java.util.zip.ZipEntry("Enero/dos.pdf"));
+            Files.copy(dos.toPath(), z);
+            z.closeEntry();
+        }
+
+        IndexarPanel indexar = enFx(IndexarPanel::new);
+        GirarPanel girar = enFx(GirarPanel::new);
+        enFx(() -> escena(indexar));
+        enFx(() -> escena(girar));
+
+        enFx(() -> {
+            indexar.recibir(List.of(zip));
+            return null;
+        });
+        List<File> enIndexar = esperar(indexar::archivosParaPrueba, l -> l.size() == 2, 8000);
+        assertEquals(2, enIndexar.size(), "Indexar debía abrir los 2 PDF del ZIP");
+
+        enFx(() -> {
+            indexar.arreglarEnGirarParaPrueba();
+            return null;
+        });
+        assertEquals(2, (int) esperar(girar::cuantosEnLista, n -> n == 2, 8000), "Girar recibió los 2 PDF");
+
+        assertEquals(1, (int) enFx(girar::abiertosParaPrueba),
+                "Girar debía reconstruir el ZIP de origen (no tratarlos como PDF sueltos)");
+        List<String> relativas = enFx(girar::relativasParaPrueba);
+        assertTrue(relativas.stream().allMatch(r -> r.contains("_girado.zip" + Lote.MARCA_ZIP + "/Enero/")),
+                "cada PDF debía quedar marcado como venido de un ZIP, dentro de 'Enero': " + relativas);
+    }
 }

@@ -130,8 +130,13 @@ class GirarPanel extends BorderPane {
     }
 
     /** Un comprimido (ZIP, RAR, 7z...) abierto: sus PDF van a la lista y al guardar se arma "Nombre_girado.zip"
-     * con todo lo que traía (RAR no se puede crear con programas libres: va en ZIP). */
-    record Abierto(File archivo, Lote lote, String marcada) {
+     * con todo lo que traía (RAR no se puede crear con programas libres: va en ZIP). {@code propio}: false
+     * cuando el comprimido lo abrió Indexar y solo llegó la lista para acá ("Arreglar en Girar"); en ese caso la
+     * carpeta temporal es de Indexar y esta pantalla NUNCA la borra (eso le toca a Indexar). */
+    record Abierto(File archivo, Lote lote, String marcada, boolean propio) {
+        Abierto(File archivo, Lote lote, String marcada) {
+            this(archivo, lote, marcada, true);
+        }
     }
 
     /** Lo que lleva hecho un PDF de la lista: sus hojas tal como quedaron y su deshacer/rehacer. */
@@ -700,7 +705,9 @@ class GirarPanel extends BorderPane {
         ediciones.clear();
         hojasOriginales.clear();
         for (Abierto a : abiertos) {
-            a.lote().limpiar();
+            if (a.propio()) {
+                a.lote().limpiar();
+            }
         }
         abiertos.clear();
         actual = -1;
@@ -1690,13 +1697,54 @@ class GirarPanel extends BorderPane {
     }
 
     /** Llega desde Indexar o Foliar (botón "Arreglar en Girar"): borra la lista actual y queda solo con la
-     * nueva, sin importar si se había entrado a Girar desde el menú o desde otra pantalla. */
+     * nueva, sin importar si se había entrado a Girar desde el menú o desde otra pantalla. Si alguno de los
+     * archivos venía de un comprimido abierto en Indexar, esa procedencia no se pierde (ver
+     * {@link #recibirConOrigen}). */
     @EventListener
     public void onEnviarAHerramienta(EnviarAHerramientaRequest r) {
         if (GirarTool.TOOL_ID.equals(r.destino())) {
             limpiar();
-            recibir(r.archivos());
+            if (r.origenes().isEmpty()) {
+                recibir(r.archivos());
+            } else {
+                recibirConOrigen(r.archivos(), r.relativas(), r.origenes());
+            }
         }
+    }
+
+    /** Llega desde Indexar (botón "Arreglar en Girar") cuando algunos de los archivos venían de un comprimido
+     * que se abrió allá: se reconstruye de cuál comprimido venía cada uno, con el mismo nombre de carpeta que
+     * usaría Girar si lo hubiera abierto él mismo (termina en "_girado.zip" en vez de "_indexado.zip"), para que
+     * al guardar arme igual un solo comprimido con la misma estructura. Los que no venían de ningún comprimido
+     * se agregan como siempre. */
+    private void recibirConOrigen(List<File> archivos, Map<File, String> relativas,
+            List<EnviarAHerramientaRequest.Origen> origenes) {
+        List<File> sueltos = new ArrayList<>();
+        List<Item> nuevos = new ArrayList<>();
+        for (File f : archivos) {
+            String relOrigen = relativas.get(f);
+            EnviarAHerramientaRequest.Origen o = relOrigen == null ? null : origenes.stream()
+                    .filter(x -> relOrigen.startsWith(x.marcada() + "/")).findFirst().orElse(null);
+            if (o == null) {
+                sueltos.add(f);
+                continue;
+            }
+            String marcada = marcadaParaGirar(o.archivo(), o.marcada());
+            nuevos.add(new Item(f, marcada + relOrigen.substring(o.marcada().length())));
+            if (abiertos.stream().noneMatch(a -> a.marcada().equals(marcada))) {
+                abiertos.add(new Abierto(o.archivo(), o.lote(), marcada, false));
+            }
+        }
+        agregar(sueltos, nuevos);
+    }
+
+    /** "Nombre.zip.__zip__" (como lo marca Indexar u otra pantalla) -> "Nombre_girado.zip.__zip__" (como lo
+     * marcaría Girar si hubiera abierto el comprimido él mismo), conservando las carpetas de adentro que haya
+     * antes. */
+    private static String marcadaParaGirar(File archivoOrigen, String marcadaOtraPantalla) {
+        int i = marcadaOtraPantalla.lastIndexOf('/');
+        String prefijo = i < 0 ? "" : marcadaOtraPantalla.substring(0, i + 1);
+        return prefijo + Comprimidos.base(archivoOrigen.getName()) + "_girado.zip" + Lote.MARCA_ZIP;
     }
 
     /** Solo para las pruebas: dispara el botón "Ir a Indexar" / "Ir a Foliar" (toolId = IndexarTool.TOOL_ID o
@@ -1708,6 +1756,22 @@ class GirarPanel extends BorderPane {
     /** Solo para las pruebas: cuántos PDF hay en la lista. */
     int cuantosEnLista() {
         return items.size();
+    }
+
+    /** Solo para las pruebas: cuántos comprimidos de origen quedaron registrados (0 si lo que hay son PDF sueltos
+     * sin ningún comprimido detrás, de esta pantalla o de Indexar). */
+    int abiertosParaPrueba() {
+        return abiertos.size();
+    }
+
+    /** Solo para las pruebas: la ruta relativa (con la "carpeta marcada" del comprimido de origen, si lo tiene)
+     * de cada archivo que hay ahora en la lista. */
+    List<String> relativasParaPrueba() {
+        List<String> r = new ArrayList<>();
+        for (Item it : items) {
+            r.add(it.relativa());
+        }
+        return r;
     }
 
     /** Solo para las pruebas: nombre del PDF que se está viendo (null si no hay ninguno). */
