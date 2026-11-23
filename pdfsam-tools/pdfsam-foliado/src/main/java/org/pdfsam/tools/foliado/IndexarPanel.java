@@ -23,11 +23,14 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import org.pdfsam.eventstudio.annotation.EventListener;
+import org.pdfsam.model.ui.SetActiveContentItemRequest;
 import org.pdfsam.ui.components.support.Style;
 import org.pdfsam.ui.components.support.Views;
 
@@ -42,6 +45,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
+
+import static org.pdfsam.eventstudio.StaticStudio.eventStudio;
 
 /**
  * Indexar PDF: pone leyendas en cada hoja de muchos PDF a la vez.
@@ -120,6 +125,7 @@ class IndexarPanel extends BorderPane {
     private Motor.Marco agarrada;
     private final TextField hojas = Ui.campo("");
     private final Button btnIndexar;
+    private final Button btnArreglarGirar;
     private final VistaPrevia vista;
     private final EditorHojas editor;
     /** Mejora 6: tramos de cada leyenda (en el orden de Motor.LEYENDAS); se arman con el botón
@@ -320,9 +326,16 @@ class IndexarPanel extends BorderPane {
         btnIndexar.getStyleClass().addAll("footer-button", "run-button");
         btnIndexar.setMaxWidth(Double.MAX_VALUE);
         btnIndexar.setDisable(true);
+        btnArreglarGirar = Ui.boton("Arreglar en Girar", UniconsLine.ROTATE_360, this::arreglarEnGirar);
+        btnArreglarGirar.setMaxWidth(Double.MAX_VALUE);
+        btnArreglarGirar.disableProperty().bind(btnIndexar.disableProperty());
+        btnArreglarGirar.setTooltip(new Tooltip("Manda TODA esta lista de PDF a Girar, para girar hojas, quitar "
+                + "una en blanco o reordenar antes de indexar. Lo que ya hubiera en Girar se borra y queda solo "
+                + "esta lista. Al terminar en Girar, use ahí el botón \"Ir a Indexar\" para traerlos de vuelta "
+                + "(también se borra lo que ya hubiera aquí)."));
         Button manual = Ui.boton("Manual", UniconsLine.BOOK_OPEN, () -> ManualPanel.abrir(this, "indexar"));
         manual.setMaxWidth(Double.MAX_VALUE);
-        VBox abajo = new VBox(6, btnIndexar, manual);
+        VBox abajo = new VBox(6, btnIndexar, btnArreglarGirar, manual);
         abajo.setPadding(new Insets(8));
         VBox izq = new VBox(scroll, abajo);
         izq.setPrefWidth(430);
@@ -410,6 +423,30 @@ class IndexarPanel extends BorderPane {
         extraPos.selectedToggleProperty().addListener((o, a, b) -> refrescar());
         formato.valueProperty().addListener((o, a, b) -> refrescar());
         refrescar();
+        eventStudio().addAnnotatedListeners(this);
+    }
+
+    // ------------------------------------------------------------ enlace con Girar
+    /** Manda toda la lista actual a Girar y cambia a esa pantalla (botón "Arreglar en Girar"). */
+    private void arreglarEnGirar() {
+        if (items.isEmpty()) {
+            return;
+        }
+        List<File> actuales = new ArrayList<>();
+        for (Item it : items) {
+            actuales.add(it.origen());
+        }
+        eventStudio().broadcast(new EnviarAHerramientaRequest(GirarTool.TOOL_ID, actuales));
+        eventStudio().broadcast(new SetActiveContentItemRequest(GirarTool.TOOL_ID));
+    }
+
+    /** Llega desde Girar (botón "Ir a Indexar"): borra la lista actual y queda solo con la nueva. */
+    @EventListener
+    public void onEnviarAHerramienta(EnviarAHerramientaRequest r) {
+        if (IndexarTool.TOOL_ID.equals(r.destino())) {
+            limpiar();
+            recibir(r.archivos());
+        }
     }
 
     private static VBox indentar(Node... hijos) {
