@@ -1623,19 +1623,32 @@ class GirarPanel extends BorderPane {
         }, res -> terminarEnvio((Object[]) res, toolId), e -> Ui.error(this, Ui.textoError(e)));
     }
 
+    /** Solo para las pruebas: lo que falló (si algo falló) al preparar el último envío a otra pantalla. */
+    private volatile List<String> ultimosFallosEnvio = List.of();
+
     @SuppressWarnings("unchecked")
     private void terminarEnvio(Object[] res, String toolId) {
         List<File> salidas = (List<File>) res[0];
         List<String> fallidos = (List<String>) res[1];
-        if (!fallidos.isEmpty()) {
-            Ui.aviso(this, "Algunos PDF no se pudieron preparar para enviar:\n\n" + String.join("\n",
-                    fallidos.subList(0, Math.min(10, fallidos.size()))));
-        }
+        ultimosFallosEnvio = fallidos;
         if (salidas.isEmpty()) {
+            if (!fallidos.isEmpty()) {
+                Ui.aviso(this, "No se pudo preparar ningún PDF para enviar:\n\n" + String.join("\n",
+                        fallidos.subList(0, Math.min(10, fallidos.size()))));
+            }
             return;
         }
         eventStudio().broadcast(new EnviarAHerramientaRequest(toolId, salidas));
         eventStudio().broadcast(new SetActiveContentItemRequest(toolId));
+        if (!fallidos.isEmpty()) {
+            Ui.aviso(this, "Algunos PDF no se pudieron preparar para enviar:\n\n" + String.join("\n",
+                    fallidos.subList(0, Math.min(10, fallidos.size()))));
+        }
+    }
+
+    /** Solo para las pruebas: lo que falló (si algo falló) al preparar el último envío. */
+    List<String> ultimosFallosEnvioParaPrueba() {
+        return ultimosFallosEnvio;
     }
 
     /** Nombre de archivo sin repetir dentro de la misma carpeta temporal de envío ("archivo (2).pdf"...). */

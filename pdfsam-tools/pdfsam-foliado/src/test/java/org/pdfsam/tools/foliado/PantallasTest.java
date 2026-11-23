@@ -459,12 +459,16 @@ class PantallasTest {
         });
         assertEquals(antes - 1, (int) enFx(girar::cuantasHojasEnPantalla), "la hoja se quitó en Girar");
 
+        String rutaOriginal = pdf.getAbsolutePath();
         enFx(() -> {
             girar.enviarAParaPrueba(IndexarTool.TOOL_ID);
             return null;
         });
-        List<File> vueltos = esperar(indexar::archivosParaPrueba, l -> !l.isEmpty(), 8000);
-        assertEquals(1, vueltos.size(), "Indexar quedó solo con lo que mandó Girar");
+        // ruta distinta del original: confirma que ya llegó el reemplazo de Girar (no el que Indexar ya tenía)
+        List<File> vueltos = esperar(indexar::archivosParaPrueba,
+                l -> l.size() == 1 && !l.get(0).getAbsolutePath().equals(rutaOriginal), 8000);
+        assertEquals(1, vueltos.size(), "Indexar quedó solo con lo que mandó Girar. Fallos: "
+                + enFx(girar::ultimosFallosEnvioParaPrueba));
         assertEquals(antes - 1, Motor.contarHojas(vueltos.get(0), null), "el PDF que volvió ya tiene la hoja quitada");
     }
 
@@ -492,7 +496,8 @@ class PantallasTest {
             return null;
         });
         File enFoliar = esperar(foliar::archivoParaPrueba, java.util.Objects::nonNull, 8000);
-        assertNotNull(enFoliar, "Foliar debía recibir el primer PDF que mandó Girar");
+        assertNotNull(enFoliar, "Foliar debía recibir el primer PDF que mandó Girar. Fallos: "
+                + enFx(girar::ultimosFallosEnvioParaPrueba));
         assertEquals("uno.pdf", enFoliar.getName(), "Foliar abrió el primero de los dos que llegaron");
     }
 }
