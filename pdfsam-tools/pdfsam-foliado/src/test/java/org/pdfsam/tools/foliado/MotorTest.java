@@ -253,6 +253,56 @@ class MotorTest {
         assertTrue(texto(salida).contains("Página Nº 001"));
     }
 
+    /** Diagnóstico (2026-11-23): el usuario reporta que "Leyenda inferior izquierda" no aparece en hojas
+     * horizontales (giradas), solo en verticales. Renderiza igual que la vista previa real (Motor.Previa +
+     * PDFRenderer) sobre una hoja limpia girada 90°, y cuenta píxeles no blancos arriba y abajo. */
+    @Test
+    void leyendaAbajoEnHojaHorizontal() throws Exception {
+        File dir = Files.createTempDirectory("plh").toFile();
+        File pdf = new File(dir, "a.pdf");
+        try (PDDocument d = new PDDocument()) {
+            PDPage p = new PDPage(new PDRectangle(612f, 792f)); // carta vertical...
+            p.setRotation(90); // ...pero se ve horizontal, como en Girar
+            d.addPage(p);
+            d.writeTo(pdf);
+        }
+        OpcionesIndexar o = new OpcionesIndexar();
+        o.izqOn = true;
+        o.izqTexto = "ARRIBA";
+        o.derOn = false;
+        o.abajoIzqOn = true;
+        o.abajoIzqTexto = "ABAJO";
+        o.tamano = 30;
+        try (Motor.Previa p = new Motor.Previa(pdf, null)) {
+            BufferedImage b = p.imagen(0, 800,
+                    (doc, hoja, letras) -> Motor.indexarHoja(doc, hoja, 1, 1, "a", o, null, letras));
+            ImageIO.write(b, "png", new File(SALIDA, "diagnostico_abajo_horizontal.png"));
+            int alto = b.getHeight();
+            int tira = Math.max(1, alto / 6);
+            int arriba = contarOscuros(b, 0, tira);
+            int abajo = contarOscuros(b, alto - tira, alto);
+            assertTrue(arriba > 10,
+                    "no se ve ARRIBA en hoja horizontal (" + arriba + " px, imagen " + b.getWidth() + "x" + alto
+                            + ")");
+            assertTrue(abajo > 10,
+                    "no se ve ABAJO en hoja horizontal (" + abajo + " px, imagen " + b.getWidth() + "x" + alto + ")");
+        }
+    }
+
+    private static int contarOscuros(BufferedImage b, int y0, int y1) {
+        int n = 0;
+        for (int y = Math.max(0, y0); y < Math.min(b.getHeight(), y1); y++) {
+            for (int x = 0; x < b.getWidth(); x++) {
+                int rgb = b.getRGB(x, y);
+                int r = (rgb >> 16) & 0xFF, g = (rgb >> 8) & 0xFF, bl = rgb & 0xFF;
+                if (r < 200 || g < 200 || bl < 200) {
+                    n++;
+                }
+            }
+        }
+        return n;
+    }
+
     @Test
     void vistaPreviaNoCambiaElPdf() throws Exception {
         File dir = Files.createTempDirectory("pv").toFile();
