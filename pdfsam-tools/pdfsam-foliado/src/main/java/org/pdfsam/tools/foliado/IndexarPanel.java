@@ -449,6 +449,20 @@ class IndexarPanel extends BorderPane {
         }
     }
 
+    /** Solo para las pruebas: dispara el botón "Arreglar en Girar". */
+    void arreglarEnGirarParaPrueba() {
+        arreglarEnGirar();
+    }
+
+    /** Solo para las pruebas: los archivos que hay ahora en la lista. */
+    List<File> archivosParaPrueba() {
+        List<File> r = new ArrayList<>();
+        for (Item it : items) {
+            r.add(it.origen());
+        }
+        return r;
+    }
+
     private static VBox indentar(Node... hijos) {
         VBox v = new VBox(4, hijos);
         v.setPadding(new Insets(0, 0, 0, 22));
