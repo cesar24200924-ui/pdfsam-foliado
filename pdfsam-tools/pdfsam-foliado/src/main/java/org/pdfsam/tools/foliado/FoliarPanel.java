@@ -316,42 +316,29 @@ class FoliarPanel extends BorderPane {
      * (Foliar solo trabaja un PDF a la vez). */
     @EventListener
     public void onEnviarAHerramienta(EnviarAHerramientaRequest r) {
-        vecesLlegoEvento++;
         if (FoliarTool.TOOL_ID.equals(r.destino())) {
             List<File> a = r.archivos();
-            vecesLlegoParaFoliar++;
             if (a.isEmpty()) {
-                ultimoErrorRecibir = "a.isEmpty() en onEnviarAHerramienta";
                 return;
             }
             archivo = null;
             btnFoliar.setDisable(true);
             recibir(List.of(a.get(0)));
             if (a.size() > 1) {
-                Ui.aviso(this, "Foliar trabaja un PDF a la vez: se abrió \"" + a.get(0).getName() + "\". Para "
-                        + "foliar los otros " + (a.size() - 1) + ", mándelos de nuevo desde Girar de uno en uno.");
+                // se avisa después (Platform.runLater), para no bloquear con un diálogo modal mientras todavía
+                // se está procesando el evento que llegó de Girar (que a su vez espera a que esto termine)
+                String nombre = a.get(0).getName();
+                int restantes = a.size() - 1;
+                javafx.application.Platform.runLater(() -> Ui.aviso(this,
+                        "Foliar trabaja un PDF a la vez: se abrió \"" + nombre + "\". Para foliar los otros "
+                                + restantes + ", mándelos de nuevo desde Girar de uno en uno."));
             }
         }
-    }
-
-    /** Solo para las pruebas: cuántas veces llegó CUALQUIER EnviarAHerramientaRequest a este panel. */
-    private volatile int vecesLlegoEvento;
-    /** Solo para las pruebas: cuántas veces llegó un EnviarAHerramientaRequest destinado a Foliar. */
-    private volatile int vecesLlegoParaFoliar;
-
-    /** Solo para las pruebas: diagnóstico de cuántos eventos llegaron (total, para Foliar). */
-    int[] vecesLlegoParaPrueba() {
-        return new int[] { vecesLlegoEvento, vecesLlegoParaFoliar };
     }
 
     /** Solo para las pruebas: dispara el botón "Arreglar en Girar". */
     void arreglarEnGirarParaPrueba() {
         arreglarEnGirar();
-    }
-
-    /** Solo para las pruebas: deja el panel como si no tuviera ningún PDF cargado. */
-    void limpiarParaPrueba() {
-        archivo = null;
     }
 
     /** Solo para las pruebas: el PDF que hay ahora cargado (null si ninguno). */
@@ -513,7 +500,6 @@ class FoliarPanel extends BorderPane {
         File pdf = rutas.stream().filter(f -> f.isFile() && f.getName().toLowerCase().endsWith(".pdf")).findFirst()
                 .orElse(null);
         if (pdf == null) {
-            ultimoErrorRecibir = "pdf==null para rutas=" + rutas;
             Ui.aviso(this, "Eso no es un PDF. Elija un archivo .pdf, una carpeta o un comprimido (ZIP, RAR, 7z...).");
             return;
         }
@@ -521,7 +507,6 @@ class FoliarPanel extends BorderPane {
         if (Motor.pideClave(pdf)) {
             c = Ui.pedirClave(this, pdf.getName(), null);
             if (c == null) {
-                ultimoErrorRecibir = "pideClave=true y pedirClave devolvió null para " + pdf;
                 return;
             }
         }
@@ -537,17 +522,8 @@ class FoliarPanel extends BorderPane {
             btnFoliar.setDisable(false);
             refrescar();
         } catch (Exception e) {
-            ultimoErrorRecibir = Ui.textoError(e) + " [" + e.getClass().getName() + "]";
             Ui.error(this, Ui.textoError(e));
         }
-    }
-
-    /** Solo para las pruebas: lo que falló (si algo falló) la última vez que recibir() no pudo abrir el PDF. */
-    private volatile String ultimoErrorRecibir;
-
-    /** Solo para las pruebas: ver {@link #ultimoErrorRecibir}. */
-    String ultimoErrorRecibirParaPrueba() {
-        return ultimoErrorRecibir;
     }
 
     /** Solo para pruebas: escribe el ejemplo de formato (Mejora 5) y lo aplica. */
