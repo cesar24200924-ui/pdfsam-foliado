@@ -317,8 +317,10 @@ class IndexarPanel extends BorderPane {
                 Views.titledPane("4. Letra, color y tamaño", pLetra), Views.titledPane("5. Más opciones", pMas),
                 Views.titledPane("6. Carpeta de salida",
                         Controles.nota("Al guardar elige la carpeta. Se crea la misma estructura de subcarpetas con "
-                                + "los mismos nombres. No se puede usar la carpeta donde están los originales (así "
-                                + "nunca se reemplazan).")));
+                                + "los mismos nombres. Puede ser la misma carpeta donde están los originales: los "
+                                + "que vienen de un comprimido quedan en un ZIP nuevo (con \"_indexado\") y nunca "
+                                + "se reemplazan; solo avisa si algún PDF suelto, sin comprimido, quedaría "
+                                + "exactamente sobre su original.")));
         for (Node n : opciones.getChildren()) {
             ((TitledPane) n).setMaxWidth(Double.MAX_VALUE);
         }
@@ -331,7 +333,7 @@ class IndexarPanel extends BorderPane {
         btnIndexar.getStyleClass().addAll("footer-button", "run-button");
         btnIndexar.setMaxWidth(Double.MAX_VALUE);
         btnIndexar.setDisable(true);
-        btnArreglarGirar = Ui.boton("Arreglar en Girar", UniconsLine.ROTATE_360, this::arreglarEnGirar);
+        btnArreglarGirar = Ui.boton("Arreglar en Girar", UniconsLine.ROTATE_360, this::confirmarYArreglarEnGirar);
         btnArreglarGirar.setMaxWidth(Double.MAX_VALUE);
         btnArreglarGirar.disableProperty().bind(btnIndexar.disableProperty());
         btnArreglarGirar.setTooltip(new Tooltip("Manda TODA esta lista de PDF a Girar, para girar hojas, quitar "
@@ -432,6 +434,22 @@ class IndexarPanel extends BorderPane {
     }
 
     // ------------------------------------------------------------ enlace con Girar
+    /** Botón "Arreglar en Girar": siempre pregunta si lleva los PDF actuales a Girar o si prefiere ir con la
+     * pantalla vacía (antes decidía en silencio). */
+    private void confirmarYArreglarEnGirar() {
+        int r = Ui.elegir(this, "Ir a Girar",
+                "¿Lleva los PDF que tiene abiertos aquí a Girar, o prefiere ir con la pantalla vacía?",
+                "Llevar los archivos", "Ir en blanco");
+        if (r == -1) {
+            return;
+        }
+        if (r == 0) {
+            arreglarEnGirar();
+        } else {
+            eventStudio().broadcast(new SetActiveContentItemRequest(GirarTool.TOOL_ID));
+        }
+    }
+
     /** Manda toda la lista actual a Girar y cambia a esa pantalla (botón "Arreglar en Girar"). */
     private void arreglarEnGirar() {
         if (items.isEmpty()) {
@@ -1057,18 +1075,37 @@ class IndexarPanel extends BorderPane {
             return;
         }
         Path destino = carpeta.getAbsoluteFile().toPath().normalize();
-        // nunca encima de los originales: la carpeta de salida no puede contener ningún original
-        List<File> originales = new ArrayList<>();
-        for (Item it : items) {
-            originales.add(it.origen());
+        // Mejora: con 2 o más PDF sueltos (sin comprimido), preguntar siempre cómo se quiere el resultado.
+        long cuantosSueltos = items.stream().filter(it -> !it.relativa().contains(Lote.MARCA_ZIP)).count();
+        String formatoSueltos = "carpeta";
+        if (cuantosSueltos > 1) {
+            int r = Ui.elegir3(this, "¿Cómo quiere el resultado?",
+                    "Se van a indexar " + cuantosSueltos + " PDF sueltos (sin venir de un comprimido). Las "
+                            + "carpetas y subcarpetas quedan igual en los tres casos.",
+                    "Solo ZIP", "ZIP y carpeta", "Solo carpeta", 0);
+            if (r == -1) {
+                return;
+            }
+            formatoSueltos = r == 0 ? "zip" : r == 1 ? "ambos" : "carpeta";
         }
-        for (Abierto a : abiertos) {
-            originales.add(a.archivo());
-        }
-        for (File f : originales) {
-            if (f.getAbsoluteFile().toPath().normalize().startsWith(destino)) {
-                Ui.aviso(this, "Esa carpeta tiene adentro los PDF originales y se reemplazarían. Elija otra carpeta "
-                        + "de salida (por ejemplo, una carpeta nueva).");
+        // Los que vienen de un comprimido van a un ZIP nuevo (otro nombre, con "_indexado"), así que esa carpeta
+        // puede ser la misma donde está el comprimido original sin ningún riesgo. Con los sueltos solo hay riesgo
+        // real si de verdad van a quedar escritos directo en esa carpeta (es decir, si no se pidió "Solo ZIP").
+        boolean sueltosVanADestino = !"zip".equals(formatoSueltos);
+        if (sueltosVanADestino) {
+            List<String> conflictos = new ArrayList<>();
+            for (Item it : items) {
+                if (it.relativa().contains(Lote.MARCA_ZIP)) {
+                    continue;
+                }
+                if (destino.resolve(it.relativa()).normalize().equals(it.origen().getAbsoluteFile().toPath().normalize())) {
+                    conflictos.add(it.origen().getName());
+                }
+            }
+            if (!conflictos.isEmpty()) {
+                Ui.aviso(this, "Estos PDF quedarían sobre el original porque no vienen de un comprimido y la "
+                        + "carpeta elegida es la misma donde ya están: " + String.join(", ", conflictos)
+                        + ". Elija otra carpeta, cambie el nombre del original, o escoja \"Solo ZIP\".");
                 return;
             }
         }
@@ -1079,13 +1116,16 @@ class IndexarPanel extends BorderPane {
             reglas.add(EditorHojas.porHoja(editor.reglasDe(it.origen().getAbsolutePath())));
         }
         // lo que viene de comprimidos se arma en la carpeta temporal de Windows (OneDrive no la toca) y al final
-        // solo se copia el ZIP terminado a la carpeta elegida
+        // solo se copia el ZIP terminado a la carpeta elegida; lo mismo para los sueltos si se pidió ZIP
         try {
             trabajoZip = Files.createTempDirectory("pdfsam_indexar_");
+            trabajoSueltos = "carpeta".equals(formatoSueltos) ? null
+                    : Files.createTempDirectory("pdfsam_indexar_sueltos_");
         } catch (IOException e) {
             Ui.error(this, Ui.textoError(e));
             return;
         }
+        String formatoFinal = formatoSueltos;
         Ui.enSegundoPlano(this, "Indexando", true, p -> {
             List<File> salidas = new ArrayList<>();
             List<String> fallidos = new ArrayList<>();
@@ -1112,12 +1152,12 @@ class IndexarPanel extends BorderPane {
             }
             p.poner(1, "");
             return new Object[] { salidas, fallidos, hojas, protegidos };
-        }, res -> terminar(res, destino, o, copia, reglas), null);
+        }, res -> terminar(res, destino, o, copia, reglas, formatoFinal), null);
     }
 
     @SuppressWarnings("unchecked")
     private void terminar(Object[] res, Path destino, OpcionesIndexar o, List<Item> copia,
-            List<Map<Integer, ReglaHoja>> reglas) {
+            List<Map<Integer, ReglaHoja>> reglas, String formatoSueltos) {
         List<File> salidas = (List<File>) res[0];
         List<String> fallidos = (List<String>) res[1];
         int hojas = (Integer) res[2];
@@ -1144,34 +1184,42 @@ class IndexarPanel extends BorderPane {
                 usados.add(a);
             }
         }
-        if (!usados.isEmpty()) {
-            // los comprimidos: se arma el ZIP con lo indexado y todo lo demás que traían
-            int hojasFin = hojas;
-            Ui.enSegundoPlano(this, "Armando los ZIP", false, p -> {
-                try {
-                    for (Abierto a : usados) {
-                        p.poner(-1, a.archivo().getName());
-                        armarZip(destino, trabajoZip, a);
-                    }
-                } finally {
-                    Lote.borrar(trabajoZip);
+        int hojasFin = hojas;
+        Ui.enSegundoPlano(this, usados.isEmpty() ? "Terminando" : "Armando los ZIP", false, p -> {
+            try {
+                for (Abierto a : usados) {
+                    p.poner(-1, a.archivo().getName());
+                    armarZip(destino, trabajoZip, a);
                 }
-                return null;
-            }, r -> resumen(salidas, fallidos, hojasFin, destino, true),
-                    e -> Ui.error(this, Ui.textoError(e)));
-            return;
-        }
-        Lote.borrar(trabajoZip);
-        resumen(salidas, fallidos, hojas, destino, false);
+                Lote.finalizarSueltos(destino, formatoSueltos, trabajoSueltos, "_indexado");
+            } finally {
+                Lote.borrar(trabajoZip);
+                Lote.borrar(trabajoSueltos);
+                // ya se leyó todo lo que hacía falta de la carpeta extraída: no debe quedar suelta
+                for (Abierto a : usados) {
+                    a.lote().limpiar();
+                }
+            }
+            return null;
+        }, r -> resumen(salidas, fallidos, hojasFin, destino, !usados.isEmpty()),
+                e -> Ui.error(this, Ui.textoError(e)));
     }
 
     /** destino/…/Nombre_indexado.zip con lo indexado y, tal cual, todo lo demás que traía el comprimido. */
-    /** Dónde se guarda cada PDF: los de comprimidos, en la carpeta temporal; los demás, en la carpeta elegida. */
+    /** Dónde se guarda cada PDF: los de comprimidos, en la carpeta temporal; los sueltos con ZIP pedido,
+     * también en una temporal; el resto, directo en la carpeta elegida. */
     private Path salidaDe(Item it, Path destino) {
-        return it.relativa().contains(Lote.MARCA_ZIP) ? trabajoZip.resolve(it.relativa()) : destino.resolve(it.relativa());
+        if (it.relativa().contains(Lote.MARCA_ZIP)) {
+            return trabajoZip.resolve(it.relativa());
+        }
+        if (trabajoSueltos != null) {
+            return trabajoSueltos.resolve(it.relativa());
+        }
+        return destino.resolve(it.relativa());
     }
 
     private Path trabajoZip;
+    private Path trabajoSueltos;
 
     private static void armarZip(Path destino, Path trabajo, Abierto a) throws IOException {
         Lote.armarZipDeSalida(destino, trabajo, a.lote(), a.marcada());

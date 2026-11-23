@@ -88,9 +88,9 @@ class NuevasTest {
         L.ejecutar((e, s, c) -> Motor.foliar(e, s, c, o, null, null, null), L.temp.resolve("resultado"), null);
         L.finalizar(null);
         assertTrue(new File(destino, "acta.pdf").isFile());
-        // lo extraído queda ahí, como una carpeta normal: NO se borra al terminar
-        assertTrue(new File(dir, "Expediente (2)/acta.pdf").isFile(), "lo extraído no se borra al terminar");
-        assertFalse(L.temp.toFile().exists(), "solo se borra lo temporal de trabajo");
+        // lo extraído es solo de trabajo: se borra al terminar, para no dejar copias sueltas
+        assertFalse(new File(dir, "Expediente (2)").exists(), "lo extraído se borra al terminar");
+        assertFalse(L.temp.toFile().exists(), "también se borra lo temporal de trabajo");
     }
 
     // ------------------------------------------------------------ Mejora 4: varios PDF -> "ZIP y carpeta" a la vez
@@ -113,6 +113,54 @@ class NuevasTest {
             assertNotNull(z.getEntry("Anexos/anexo uno.pdf"));
         }
         assertFalse(L.temp.toFile().exists(), "se borró lo temporal");
+    }
+
+    // ------------------------------------------------------------ Mejora: PDF sueltos -> ¿ZIP, carpeta o los dos?
+    /** {@link Lote#finalizarSueltos}: con "zip" arma un ZIP en destino y no deja nada más; con "ambos" deja el
+     * ZIP Y la carpeta; con "carpeta" no hace nada (ya se escribió directo en destino, no hay nada que armar).
+     * También prueba el nombre libre ("Sueltos... (2).zip") si ya existe uno. */
+    @Test
+    void finalizarSueltosSegunFormatoElegido() throws Exception {
+        File dir = Files.createTempDirectory("psue").toFile();
+
+        // "zip": arma el ZIP en destino, la carpeta de trabajo se borra aparte (lo hace el llamador)
+        File trabajoZip = new File(dir, "trabajo-zip");
+        trabajoZip.mkdirs();
+        Files.writeString(new File(trabajoZip, "uno.pdf").toPath(), "x");
+        File destinoZip = new File(dir, "destino-zip");
+        destinoZip.mkdirs();
+        Lote.finalizarSueltos(destinoZip.toPath(), "zip", trabajoZip.toPath(), "_indexado");
+        File zip1 = new File(destinoZip, "Sueltos_indexado.zip");
+        assertTrue(zip1.isFile(), "arma el ZIP de los sueltos");
+        assertFalse(new File(destinoZip, "uno.pdf").exists(), "con 'zip' no copia la carpeta a destino");
+
+        // otra vez "zip" al mismo destino: no pisa el anterior, usa "(2)"
+        File trabajoZip2 = new File(dir, "trabajo-zip-2");
+        trabajoZip2.mkdirs();
+        Files.writeString(new File(trabajoZip2, "dos.pdf").toPath(), "y");
+        Lote.finalizarSueltos(destinoZip.toPath(), "zip", trabajoZip2.toPath(), "_indexado");
+        assertTrue(new File(destinoZip, "Sueltos_indexado (2).zip").isFile(), "no pisa el ZIP anterior");
+
+        // "ambos": deja el ZIP Y la carpeta
+        File trabajoAmbos = new File(dir, "trabajo-ambos");
+        trabajoAmbos.mkdirs();
+        Files.writeString(new File(trabajoAmbos, "tres.pdf").toPath(), "z");
+        File destinoAmbos = new File(dir, "destino-ambos");
+        destinoAmbos.mkdirs();
+        Lote.finalizarSueltos(destinoAmbos.toPath(), "ambos", trabajoAmbos.toPath(), "_girado");
+        assertTrue(new File(destinoAmbos, "Sueltos_girado.zip").isFile(), "arma el ZIP con 'ambos'");
+        assertTrue(new File(destinoAmbos, "tres.pdf").isFile(), "y también copia la carpeta con 'ambos'");
+
+        // "carpeta": no hace nada (el llamador ya escribió directo en destino)
+        File destinoCarpeta = new File(dir, "destino-carpeta");
+        destinoCarpeta.mkdirs();
+        Lote.finalizarSueltos(destinoCarpeta.toPath(), "carpeta", new File(dir, "trabajo-no-existe").toPath(),
+                "_indexado");
+        assertEquals(0, destinoCarpeta.list().length, "'carpeta' no arma ningún ZIP extra");
+
+        // trabajoSueltos == null (0 o 1 PDF sueltos: no se preguntó nada): tampoco hace nada
+        Lote.finalizarSueltos(destinoCarpeta.toPath(), "carpeta", null, "_indexado");
+        assertEquals(0, destinoCarpeta.list().length, "sin trabajoSueltos, no hace nada");
     }
 
     // ------------------------------------------------------------ error "No se encontró …_indexado.zip.__zip__"
