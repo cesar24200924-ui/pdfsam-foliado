@@ -1626,19 +1626,34 @@ class GirarPanel extends BorderPane {
     /** Solo para las pruebas: lo que falló (si algo falló) al preparar el último envío a otra pantalla. */
     private volatile List<String> ultimosFallosEnvio = List.of();
 
+    /** Solo para las pruebas: diagnóstico de la última llamada a terminarEnvio (salidas, fallidos, si se mandó
+     * el broadcast, y el error si el broadcast falló). */
+    private volatile String ultimoDiagnosticoEnvio = "(nunca se llamó terminarEnvio)";
+
+    String ultimoDiagnosticoEnvioParaPrueba() {
+        return ultimoDiagnosticoEnvio;
+    }
+
     @SuppressWarnings("unchecked")
     private void terminarEnvio(Object[] res, String toolId) {
         List<File> salidas = (List<File>) res[0];
         List<String> fallidos = (List<String>) res[1];
         ultimosFallosEnvio = fallidos;
         if (salidas.isEmpty()) {
+            ultimoDiagnosticoEnvio = "salidas vacío, fallidos=" + fallidos;
             if (!fallidos.isEmpty()) {
                 Ui.aviso(this, "No se pudo preparar ningún PDF para enviar:\n\n" + String.join("\n",
                         fallidos.subList(0, Math.min(10, fallidos.size()))));
             }
             return;
         }
-        eventStudio().broadcast(new EnviarAHerramientaRequest(toolId, salidas));
+        try {
+            eventStudio().broadcast(new EnviarAHerramientaRequest(toolId, salidas));
+            ultimoDiagnosticoEnvio = "broadcast EnviarAHerramientaRequest OK, salidas=" + salidas;
+        } catch (Exception e) {
+            ultimoDiagnosticoEnvio = "broadcast EnviarAHerramientaRequest LANZÓ: " + e + " salidas=" + salidas;
+            throw e;
+        }
         eventStudio().broadcast(new SetActiveContentItemRequest(toolId));
         if (!fallidos.isEmpty()) {
             Ui.aviso(this, "Algunos PDF no se pudieron preparar para enviar:\n\n" + String.join("\n",

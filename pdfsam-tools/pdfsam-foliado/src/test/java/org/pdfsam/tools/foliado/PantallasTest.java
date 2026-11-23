@@ -514,7 +514,8 @@ class PantallasTest {
         assertNotNull(enFoliar, "Foliar debía recibir el primer PDF que mandó Girar. Fallos: "
                 + enFx(girar::ultimosFallosEnvioParaPrueba)
                 + " | eventos llegados (total,paraFoliar): " + java.util.Arrays.toString(enFx(foliar::vecesLlegoParaPrueba))
-                + " | ultimoErrorRecibir: " + enFx(foliar::ultimoErrorRecibirParaPrueba));
+                + " | ultimoErrorRecibir: " + enFx(foliar::ultimoErrorRecibirParaPrueba)
+                + " | diagnosticoEnvio: " + enFx(girar::ultimoDiagnosticoEnvioParaPrueba));
         assertEquals("uno.pdf", enFoliar.getName(), "Foliar abrió el primero de los dos que llegaron");
     }
 }
