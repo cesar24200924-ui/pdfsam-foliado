@@ -482,14 +482,14 @@ final class Ui {
             try {
                 T r = trabajo.hacer(p);
                 Platform.runLater(() -> {
-                    s.close();
+                    cerrarSinFallar(s);
                     if (listo != null) {
                         listo.accept(r);
                     }
                 });
             } catch (Exception e) {
                 Platform.runLater(() -> {
-                    s.close();
+                    cerrarSinFallar(s);
                     if (fallo != null) {
                         fallo.accept(e);
                     } else {
@@ -501,6 +501,16 @@ final class Ui {
         hilo.setDaemon(true);
         hilo.start();
         s.show();
+    }
+
+    /** Cierra la ventanita de progreso sin que un error al cerrarla se trague el aviso de "terminó"/"falló"
+     * que viene justo después (p. ej. si la ventana ya no es válida en ese momento). */
+    private static void cerrarSinFallar(Stage s) {
+        try {
+            s.close();
+        } catch (Exception e) {
+            // no debe impedir que se avise que el trabajo terminó o falló
+        }
     }
 
     static String textoError(Throwable e) {
