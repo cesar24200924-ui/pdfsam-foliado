@@ -497,7 +497,9 @@ class PantallasTest {
         });
         File enFoliar = esperar(foliar::archivoParaPrueba, java.util.Objects::nonNull, 8000);
         assertNotNull(enFoliar, "Foliar debía recibir el primer PDF que mandó Girar. Fallos: "
-                + enFx(girar::ultimosFallosEnvioParaPrueba));
+                + enFx(girar::ultimosFallosEnvioParaPrueba)
+                + " | eventos llegados (total,paraFoliar): " + java.util.Arrays.toString(enFx(foliar::vecesLlegoParaPrueba))
+                + " | ultimoErrorRecibir: " + enFx(foliar::ultimoErrorRecibirParaPrueba));
         assertEquals("uno.pdf", enFoliar.getName(), "Foliar abrió el primero de los dos que llegaron");
     }
 }
