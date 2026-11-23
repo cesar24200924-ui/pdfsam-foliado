@@ -25,17 +25,22 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import org.pdfsam.eventstudio.annotation.EventListener;
+import org.pdfsam.model.ui.SetActiveContentItemRequest;
 import org.pdfsam.ui.components.support.Style;
 import org.pdfsam.ui.components.support.Views;
 
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+
+import static org.pdfsam.eventstudio.StaticStudio.eventStudio;
 
 /**
  * Foliar: numeración tipo folio (Folio 001, 002…) en la esquina que se elija o en cualquier lugar (clic o arrastrar
@@ -72,6 +77,7 @@ class FoliarPanel extends BorderPane {
     private final CheckBox editable = new CheckBox("Texto editable en Adobe (Rellenar y firmar)");
     private final TextField hojas = Ui.campo("");
     private final Button btnFoliar;
+    private final Button btnArreglarGirar;
     private final VistaPrevia vista;
     private final EditorHojas editor;
     private final Label lblArchivo = new Label("");
@@ -220,9 +226,15 @@ class FoliarPanel extends BorderPane {
         btnFoliar.getStyleClass().addAll("footer-button", "run-button");
         btnFoliar.setMaxWidth(Double.MAX_VALUE);
         btnFoliar.setDisable(true);
+        btnArreglarGirar = Ui.boton("Arreglar en Girar", UniconsLine.ROTATE_360, this::arreglarEnGirar);
+        btnArreglarGirar.setMaxWidth(Double.MAX_VALUE);
+        btnArreglarGirar.disableProperty().bind(btnFoliar.disableProperty());
+        btnArreglarGirar.setTooltip(new Tooltip("Manda este PDF a Girar, para girar hojas, quitar una en blanco "
+                + "o reordenar antes de foliar. Lo que ya hubiera en Girar se borra. Al terminar en Girar, use "
+                + "ahí el botón \"Ir a Foliar\" para traerlo de vuelta (también se borra lo que ya hubiera aquí)."));
         Button manual = Ui.boton("Manual", UniconsLine.BOOK_OPEN, () -> ManualPanel.abrir(this, "foliar"));
         manual.setMaxWidth(Double.MAX_VALUE);
-        VBox abajo = new VBox(6, btnFoliar, manual);
+        VBox abajo = new VBox(6, btnFoliar, btnArreglarGirar, manual);
         abajo.setPadding(new Insets(8));
         VBox izq = new VBox(scroll, abajo);
         izq.setPrefWidth(420);
@@ -287,6 +299,36 @@ class FoliarPanel extends BorderPane {
         }
         posicion.selectedToggleProperty().addListener((o, a, b) -> refrescar());
         refrescar();
+        eventStudio().addAnnotatedListeners(this);
+    }
+
+    // ------------------------------------------------------------ enlace con Girar
+    /** Manda el PDF actual a Girar y cambia a esa pantalla (botón "Arreglar en Girar"). */
+    private void arreglarEnGirar() {
+        if (archivo == null) {
+            return;
+        }
+        eventStudio().broadcast(new EnviarAHerramientaRequest(GirarTool.TOOL_ID, List.of(archivo)));
+        eventStudio().broadcast(new SetActiveContentItemRequest(GirarTool.TOOL_ID));
+    }
+
+    /** Llega desde Girar (botón "Ir a Foliar"): borra lo que hubiera y abre el primero de los que llegaron
+     * (Foliar solo trabaja un PDF a la vez). */
+    @EventListener
+    public void onEnviarAHerramienta(EnviarAHerramientaRequest r) {
+        if (FoliarTool.TOOL_ID.equals(r.destino())) {
+            List<File> a = r.archivos();
+            if (a.isEmpty()) {
+                return;
+            }
+            archivo = null;
+            btnFoliar.setDisable(true);
+            recibir(List.of(a.get(0)));
+            if (a.size() > 1) {
+                Ui.aviso(this, "Foliar trabaja un PDF a la vez: se abrió \"" + a.get(0).getName() + "\". Para "
+                        + "foliar los otros " + (a.size() - 1) + ", mándelos de nuevo desde Girar de uno en uno.");
+            }
+        }
     }
 
     private boolean personalizando() {

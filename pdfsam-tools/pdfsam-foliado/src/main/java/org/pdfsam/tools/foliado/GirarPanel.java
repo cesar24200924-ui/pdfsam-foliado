@@ -50,6 +50,8 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.unicons.UniconsLine;
+import org.pdfsam.eventstudio.annotation.EventListener;
+import org.pdfsam.model.ui.SetActiveContentItemRequest;
 import org.pdfsam.ui.components.support.Style;
 
 import java.io.File;
@@ -70,6 +72,8 @@ import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Stream;
+
+import static org.pdfsam.eventstudio.StaticStudio.eventStudio;
 
 /**
  * Girar (y organizar) PDF viendo las hojas en miniatura:
@@ -175,7 +179,7 @@ class GirarPanel extends BorderPane {
     private final Label lblArchivo = new Label("");
     private final Label lblSel = new Label("Ninguna hoja elegida.");
     private final Label lblCambios = Controles.nota("");
-    private final Button btnDeshacer, btnRehacer, btnGuardar;
+    private final Button btnDeshacer, btnRehacer, btnGuardar, btnIrIndexar, btnIrFoliar;
     private final List<Button> conPdf = new ArrayList<>();
     private int origenArrastre = -1;
 
@@ -233,6 +237,16 @@ class GirarPanel extends BorderPane {
                 + "se copian igualitos. Los originales nunca se cambian."));
         btnGuardar = guardar;
 
+        btnIrIndexar = Ui.boton("Ir a Indexar", UniconsLine.TAG_ALT, () -> enviarA(IndexarTool.TOOL_ID));
+        btnIrIndexar.setTooltip(new Tooltip("Manda esta lista (ya arreglada) a Indexar, para ponerle las "
+                + "leyendas. Lo que ya hubiera en Indexar se borra y queda solo esta lista. Funciona aunque no "
+                + "haya entrado a Girar desde Indexar."));
+        btnIrFoliar = Ui.boton("Ir a Foliar", UniconsLine.FILE_EDIT_ALT, () -> enviarA(FoliarTool.TOOL_ID));
+        btnIrFoliar.setTooltip(new Tooltip("Manda esta lista (ya arreglada) a Foliar. Si hay más de un PDF, "
+                + "Foliar solo abre el primero (trabaja uno a la vez); los demás se pueden mandar después de "
+                + "uno en uno. Lo que ya hubiera en Foliar se borra. Funciona aunque no haya entrado a Girar "
+                + "desde Foliar."));
+
         tamano.setPrefWidth(130);
         tamano.valueProperty().addListener((o, a, b) -> redibujar());
         HBox zoom = new HBox(6, new Label("Tamaño"), tamano);
@@ -240,6 +254,7 @@ class GirarPanel extends BorderPane {
 
         FlowPane barra = new FlowPane(6, 6, elegir, lote, sep(), izq, der, voltear, todasIzq, todasDer, sep(),
                 duplicar, quitar, insertar, blanco, sep(), todo, btnDeshacer, btnRehacer, sep(), zoom, guardar,
+                btnIrIndexar, btnIrFoliar,
                 Ui.boton("Manual", UniconsLine.BOOK_OPEN, () -> ManualPanel.abrir(this, "girar")));
         barra.setAlignment(Pos.CENTER_LEFT);
         barra.setPadding(new Insets(8));
@@ -374,12 +389,12 @@ class GirarPanel extends BorderPane {
         panel.setPadding(new Insets(14));
         panel.setPrefWidth(270);
         panel.setMinWidth(230);
-        panel.setStyle("-fx-border-color: transparent transparent transparent rgba(127,127,127,0.35);");
+        panel.setStyle("-fx-border-color: transparent rgba(127,127,127,0.35) transparent transparent;");
         ScrollPane scrollPanel = new ScrollPane(panel);
         scrollPanel.setFitToWidth(true);
         scrollPanel.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPanel.setPrefWidth(285);
-        setRight(scrollPanel);
+        setLeft(scrollPanel);
 
         // teclas
         sceneProperty().addListener((o, a, s) -> {
@@ -401,6 +416,7 @@ class GirarPanel extends BorderPane {
         });
         mostrarZona(true);
         actualizarBotones();
+        eventStudio().addAnnotatedListeners(this);
     }
 
     private static Separator sep() {
@@ -1240,6 +1256,9 @@ class GirarPanel extends BorderPane {
         btnRehacer.setDisable(!hay || rehacer.isEmpty());
         boolean varios = items.size() > 1 || !abiertos.isEmpty();
         btnGuardar.setText(varios ? "Girar y guardar (" + items.size() + ")" : "Guardar PDF");
+        boolean hayLista = !items.isEmpty();
+        btnIrIndexar.setDisable(!hayLista);
+        btnIrFoliar.setDisable(!hayLista);
     }
 
     // ------------------------------------------------------------ ver en grande
@@ -1545,6 +1564,100 @@ class GirarPanel extends BorderPane {
                     (h, t) -> p.poner(t == 0 ? 1 : (double) h / t, "Hoja " + h + " de " + t));
             return salida;
         }, r -> Ui.terminado(this, r, "PDF guardado", lista.size() + (lista.size() == 1 ? " hoja" : " hojas")), null);
+    }
+
+    // ------------------------------------------------------------ enlace con Indexar y Foliar
+    /** Manda la lista actual (ya con lo girado/arreglado) a Indexar o Foliar y cambia a esa pantalla (botones
+     * "Ir a Indexar" / "Ir a Foliar"). Cada PDF se arma en una carpeta temporal con sus hojas tal como quedaron
+     * (igual que al guardar); los que no se tocaron se copian tal cual. */
+    private void enviarA(String toolId) {
+        if (items.isEmpty()) {
+            return;
+        }
+        guardarEdicionActual();
+        List<Item> copia = List.copyOf(items);
+        List<List<Motor.HojaArmada>> trabajos = new ArrayList<>();
+        for (Item it : copia) {
+            Edicion ed = ediciones.get(it.origen());
+            boolean cambio = ed != null && hayCambios(it.origen(), ed.hojas);
+            trabajos.add(cambio ? armadas(ed.hojas) : null);
+        }
+        Path trabajo;
+        try {
+            trabajo = Files.createTempDirectory("pdfsam_girar_envio_");
+        } catch (IOException e) {
+            Ui.error(this, Ui.textoError(e));
+            return;
+        }
+        Map<File, String> c = new HashMap<>(claves);
+        Set<String> usados = new HashSet<>();
+        Ui.enSegundoPlano(this, "Preparando para enviar", true, p -> {
+            List<File> salidas = new ArrayList<>();
+            List<String> fallidos = new ArrayList<>();
+            int n = copia.size();
+            for (int k = 0; k < n; k++) {
+                if (p.cancelado()) {
+                    break;
+                }
+                Item it = copia.get(k);
+                String texto = "Archivo " + (k + 1) + " de " + n + ": " + it.origen().getName();
+                String nombre = nombreUnico(usados, new File(Lote.nombreVisible(it.relativa())).getName());
+                File salida = trabajo.resolve(nombre).toFile();
+                int kk = k;
+                try {
+                    List<Motor.HojaArmada> hs = trabajos.get(k);
+                    if (hs == null) {
+                        p.poner((double) kk / n, texto);
+                        Lote.copiar(it.origen().toPath(), salida.toPath());
+                    } else {
+                        Motor.armar(it.origen(), c, hs, salida,
+                                (h, t) -> p.poner((kk + (t == 0 ? 1 : (double) h / t)) / n, texto));
+                    }
+                    salidas.add(salida);
+                } catch (Exception e) {
+                    fallidos.add(Lote.nombreVisible(it.relativa()) + ": " + Ui.textoError(e));
+                }
+            }
+            p.poner(1, "");
+            return new Object[] { salidas, fallidos };
+        }, res -> terminarEnvio((Object[]) res, toolId), e -> Ui.error(this, Ui.textoError(e)));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void terminarEnvio(Object[] res, String toolId) {
+        List<File> salidas = (List<File>) res[0];
+        List<String> fallidos = (List<String>) res[1];
+        if (!fallidos.isEmpty()) {
+            Ui.aviso(this, "Algunos PDF no se pudieron preparar para enviar:\n\n" + String.join("\n",
+                    fallidos.subList(0, Math.min(10, fallidos.size()))));
+        }
+        if (salidas.isEmpty()) {
+            return;
+        }
+        eventStudio().broadcast(new EnviarAHerramientaRequest(toolId, salidas));
+        eventStudio().broadcast(new SetActiveContentItemRequest(toolId));
+    }
+
+    /** Nombre de archivo sin repetir dentro de la misma carpeta temporal de envío ("archivo (2).pdf"...). */
+    private static String nombreUnico(Set<String> usados, String nombre) {
+        String base = nombre, n = base;
+        int i = 2;
+        while (!usados.add(n.toLowerCase(Locale.ROOT))) {
+            int punto = base.lastIndexOf('.');
+            n = punto < 0 ? base + " (" + i + ")" : base.substring(0, punto) + " (" + i + ")" + base.substring(punto);
+            i++;
+        }
+        return n;
+    }
+
+    /** Llega desde Indexar o Foliar (botón "Arreglar en Girar"): borra la lista actual y queda solo con la
+     * nueva, sin importar si se había entrado a Girar desde el menú o desde otra pantalla. */
+    @EventListener
+    public void onEnviarAHerramienta(EnviarAHerramientaRequest r) {
+        if (GirarTool.TOOL_ID.equals(r.destino())) {
+            limpiar();
+            recibir(r.archivos());
+        }
     }
 
     /** Solo para las pruebas: cuántos PDF hay en la lista. */
