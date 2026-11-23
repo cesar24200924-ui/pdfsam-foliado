@@ -1046,32 +1046,7 @@ class IndexarPanel extends BorderPane {
     private Path trabajoZip;
 
     private static void armarZip(Path destino, Path trabajo, Abierto a) throws IOException {
-        Path m = trabajo.resolve(a.marcada());
-        Lote L = a.lote();
-        Files.createDirectories(m);
-        for (String c : L.carpetas) {
-            Files.createDirectories(m.resolve(c));
-        }
-        for (String rel : L.archivos) {
-            Path t = m.resolve(rel);
-            if (!Files.exists(t)) {
-                Lote.copiar(L.raiz.resolve(rel), t);
-            }
-        }
-        Lote.cerrarZipsInternos(m);
-        String n = m.getFileName().toString();
-        String zip = n.substring(0, n.length() - Lote.MARCA_ZIP.length());
-        // el ZIP se arma en la carpeta temporal y se copia ya terminado a la carpeta elegida
-        Path listo = m.resolveSibling(zip + ".listo");
-        Lote.comprimirCarpeta(m, listo);
-        Lote.borrar(m);
-        Path relativa = trabajo.relativize(m.resolveSibling(zip));
-        Path fin = destino.resolve(relativa.toString());
-        for (int i = 2; Files.exists(fin); i++) {
-            fin = fin.resolveSibling(zip.substring(0, zip.length() - 4) + " (" + i + ").zip");
-        }
-        Lote.copiarConReintentos(listo, fin);
-        Files.deleteIfExists(listo);
+        Lote.armarZipDeSalida(destino, trabajo, a.lote(), a.marcada());
     }
 
     private void resumen(List<File> salidas, List<String> fallidos, int hojas, Path destino, boolean conZip) {
