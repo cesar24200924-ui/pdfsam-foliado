@@ -76,8 +76,13 @@ class IndexarPanel extends BorderPane {
     }
 
     /** Un comprimido (ZIP, RAR, 7z...) abierto en una carpeta temporal: sus PDF van a la lista y al guardar se arma
-     * "carpeta/Nombre.zip" con todo lo que traía (RAR no se puede crear con programas libres: va en ZIP). */
-    record Abierto(File archivo, Lote lote, String marcada) {
+     * "carpeta/Nombre.zip" con todo lo que traía (RAR no se puede crear con programas libres: va en ZIP).
+     * {@code propio}: false cuando el comprimido lo abrió Girar y solo llegó la lista para acá ("Ir a Indexar");
+     * en ese caso la carpeta temporal es de Girar y esta pantalla NUNCA la borra (eso le toca a Girar). */
+    record Abierto(File archivo, Lote lote, String marcada, boolean propio) {
+        Abierto(File archivo, Lote lote, String marcada) {
+            this(archivo, lote, marcada, true);
+        }
     }
 
     private final List<Abierto> abiertos = new ArrayList<>();
@@ -440,12 +445,19 @@ class IndexarPanel extends BorderPane {
         eventStudio().broadcast(new SetActiveContentItemRequest(GirarTool.TOOL_ID));
     }
 
-    /** Llega desde Girar (botón "Ir a Indexar"): borra la lista actual y queda solo con la nueva. */
+    /** Llega desde Girar (botón "Ir a Indexar"): borra la lista actual y queda solo con la nueva. Si alguno de
+     * los archivos venía de un comprimido que se abrió en Girar, esa procedencia no se pierde (ver
+     * {@link #recibirConOrigen}): si no fuera así, al guardar saldrían los PDF sueltos en vez de armar un solo
+     * comprimido con la misma estructura, como siempre debe pasar cuando el origen fue un comprimido. */
     @EventListener
     public void onEnviarAHerramienta(EnviarAHerramientaRequest r) {
         if (IndexarTool.TOOL_ID.equals(r.destino())) {
             limpiar();
-            recibir(r.archivos());
+            if (r.origenes().isEmpty()) {
+                recibir(r.archivos());
+            } else {
+                recibirConOrigen(r.archivos(), r.relativas(), r.origenes());
+            }
         }
     }
 
@@ -461,6 +473,22 @@ class IndexarPanel extends BorderPane {
             r.add(it.origen());
         }
         return r;
+    }
+
+    /** Solo para las pruebas: la ruta relativa (con la "carpeta marcada" del comprimido de origen, si lo tiene)
+     * de cada archivo que hay ahora en la lista, en el mismo orden que {@link #archivosParaPrueba()}. */
+    List<String> relativasParaPrueba() {
+        List<String> r = new ArrayList<>();
+        for (Item it : items) {
+            r.add(it.relativa());
+        }
+        return r;
+    }
+
+    /** Solo para las pruebas: cuántos comprimidos de origen quedaron registrados (0 si lo que hay son PDF sueltos
+     * sin ningún comprimido detrás, de esta pantalla o de Girar). */
+    int abiertosParaPrueba() {
+        return abiertos.size();
     }
 
     private static VBox indentar(Node... hijos) {
@@ -807,6 +835,41 @@ class IndexarPanel extends BorderPane {
     }
 
     // ------------------------------------------------------------ archivos
+    /** Llega de Girar cuando algunos de los archivos que manda venían de un comprimido que se abrió allá (botón
+     * "Ir a Indexar" con un PDF del RAR/ZIP/7z en la lista de Girar). Se reconstruye de cuál comprimido venía
+     * cada uno, con el mismo nombre de carpeta que usaría Indexar si lo hubiera abierto él mismo (termina en
+     * "_indexado.zip" en vez de "_girado.zip"), para que al guardar arme igual un solo comprimido con la misma
+     * estructura en vez de dejar los PDF sueltos. Los que no venían de ningún comprimido se agregan como siempre. */
+    private void recibirConOrigen(List<File> archivos, Map<File, String> relativas,
+            List<EnviarAHerramientaRequest.Origen> origenes) {
+        List<File> sueltos = new ArrayList<>();
+        List<Item> nuevos = new ArrayList<>();
+        for (File f : archivos) {
+            String relOrigen = relativas.get(f);
+            EnviarAHerramientaRequest.Origen o = relOrigen == null ? null : origenes.stream()
+                    .filter(x -> relOrigen.startsWith(x.marcada() + "/")).findFirst().orElse(null);
+            if (o == null) {
+                sueltos.add(f);
+                continue;
+            }
+            String marcada = marcadaParaIndexar(o.archivo(), o.marcada());
+            nuevos.add(new Item(f, marcada + relOrigen.substring(o.marcada().length())));
+            if (abiertos.stream().noneMatch(a -> a.marcada().equals(marcada))) {
+                abiertos.add(new Abierto(o.archivo(), o.lote(), marcada, false));
+            }
+        }
+        agregar(sueltos, nuevos);
+    }
+
+    /** "Nombre.zip.__zip__" (como lo marca Girar u otra pantalla) -> "Nombre_indexado.zip.__zip__" (como lo
+     * marcaría Indexar si hubiera abierto el comprimido él mismo), conservando las carpetas de adentro que haya
+     * antes. */
+    private static String marcadaParaIndexar(File archivoOrigen, String marcadaOtraPantalla) {
+        int i = marcadaOtraPantalla.lastIndexOf('/');
+        String prefijo = i < 0 ? "" : marcadaOtraPantalla.substring(0, i + 1);
+        return prefijo + Comprimidos.base(archivoOrigen.getName()) + "_indexado.zip" + Lote.MARCA_ZIP;
+    }
+
     void recibir(List<File> rutas) {
         // los comprimidos (sueltos o dentro de las carpetas) se abren aparte, en segundo plano
         List<File[]> comprimidos = new ArrayList<>(); // {archivo, carpeta base de la salida}
@@ -925,7 +988,9 @@ class IndexarPanel extends BorderPane {
         items.clear();
         claves.clear();
         for (Abierto a : abiertos) {
-            a.lote().limpiar();
+            if (a.propio()) {
+                a.lote().limpiar();
+            }
         }
         abiertos.clear();
         actual = -1;

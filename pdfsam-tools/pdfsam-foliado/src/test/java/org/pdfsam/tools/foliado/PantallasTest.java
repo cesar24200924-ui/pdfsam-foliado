@@ -501,4 +501,50 @@ class PantallasTest {
                 + enFx(girar::ultimosFallosEnvioParaPrueba));
         assertEquals("uno.pdf", enFoliar.getName(), "Foliar abrió el primero de los dos que llegaron");
     }
+
+    /** El usuario reportó (2026-11-23) que un PDF que venía de un .RAR/.ZIP, arreglado en Girar y mandado a
+     * Indexar con "Ir a Indexar", se guardaba SUELTO en vez de armar un solo comprimido con la misma estructura
+     * de carpetas (como si se hubiera abierto el comprimido directo en Indexar). Esta prueba confirma que, tras
+     * el enlace, Indexar reconstruye de qué comprimido venía cada PDF y en qué subcarpeta estaba. */
+    @Test
+    void enlaceGirarConIndexarConservaElComprimidoDeOrigen() throws Exception {
+        File dir = Files.createTempDirectory("penlace3").toFile();
+        File tmp = Files.createTempDirectory("penlace3_pdfs").toFile();
+        File uno = MotorTest.pdfDePrueba(tmp, "uno.pdf");
+        File dos = MotorTest.pdfDePrueba(tmp, "dos.pdf");
+        File zip = new File(dir, "Expediente.zip");
+        try (var z = new java.util.zip.ZipOutputStream(Files.newOutputStream(zip.toPath()))) {
+            z.putNextEntry(new java.util.zip.ZipEntry("Enero/uno.pdf"));
+            Files.copy(uno.toPath(), z);
+            z.closeEntry();
+            z.putNextEntry(new java.util.zip.ZipEntry("Enero/dos.pdf"));
+            Files.copy(dos.toPath(), z);
+            z.closeEntry();
+        }
+
+        GirarPanel girar = enFx(GirarPanel::new);
+        IndexarPanel indexar = enFx(IndexarPanel::new);
+        enFx(() -> escena(girar));
+        enFx(() -> escena(indexar));
+
+        enFx(() -> {
+            girar.recibir(List.of(zip));
+            return null;
+        });
+        assertEquals(2, (int) esperar(girar::cuantosEnLista, n -> n == 2, 8000), "Girar abrió los 2 PDF del ZIP");
+
+        enFx(() -> {
+            girar.enviarAParaPrueba(IndexarTool.TOOL_ID);
+            return null;
+        });
+        List<File> enIndexar = esperar(indexar::archivosParaPrueba, l -> l.size() == 2, 8000);
+        assertEquals(2, enIndexar.size(), "Indexar debía recibir los 2 PDF. Fallos: "
+                + enFx(girar::ultimosFallosEnvioParaPrueba));
+
+        assertEquals(1, (int) enFx(indexar::abiertosParaPrueba),
+                "Indexar debía reconstruir el ZIP de origen (no tratarlos como PDF sueltos)");
+        List<String> relativas = enFx(indexar::relativasParaPrueba);
+        assertTrue(relativas.stream().allMatch(r -> r.contains("_indexado.zip" + Lote.MARCA_ZIP + "/Enero/")),
+                "cada PDF debía quedar marcado como venido de un ZIP, dentro de 'Enero': " + relativas);
+    }
 }

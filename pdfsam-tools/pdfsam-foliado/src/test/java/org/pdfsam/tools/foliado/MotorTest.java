@@ -253,19 +253,11 @@ class MotorTest {
         assertTrue(texto(salida).contains("Página Nº 001"));
     }
 
-    /** Diagnóstico (2026-11-23): el usuario reporta que "Leyenda inferior izquierda" no aparece en hojas
-     * horizontales (giradas), solo en verticales. Renderiza igual que la vista previa real (Motor.Previa +
-     * PDFRenderer) sobre una hoja limpia girada 90°, y cuenta píxeles no blancos arriba y abajo. */
+    /** El usuario reportó (2026-11-23) que "Leyenda inferior izquierda" no aparecía en hojas horizontales
+     * (giradas), solo en verticales. Renderiza igual que la vista previa real (Motor.Previa + PDFRenderer) y cuenta
+     * píxeles no blancos arriba y abajo, en una hoja limpia, sin ningún movimiento aplicado. */
     @Test
     void leyendaAbajoEnHojaHorizontal() throws Exception {
-        File dir = Files.createTempDirectory("plh").toFile();
-        File pdf = new File(dir, "a.pdf");
-        try (PDDocument d = new PDDocument()) {
-            PDPage p = new PDPage(new PDRectangle(612f, 792f)); // carta vertical...
-            p.setRotation(90); // ...pero se ve horizontal, como en Girar
-            d.addPage(p);
-            d.writeTo(pdf);
-        }
         OpcionesIndexar o = new OpcionesIndexar();
         o.izqOn = true;
         o.izqTexto = "ARRIBA";
@@ -273,19 +265,49 @@ class MotorTest {
         o.abajoIzqOn = true;
         o.abajoIzqTexto = "ABAJO";
         o.tamano = 30;
+        verLeyendasVisibles(o, 90, "sin_mover");
+    }
+
+    /** La causa real: "Abajo a la izquierda" (u otra) movida con el ratón (o con un valor guardado de otra hoja)
+     * queda bien en una hoja alta (vertical), pero el mismo movimiento, en puntos, puede sacarla de una hoja más
+     * baja (horizontal) y dejarla invisible. Misma leyenda, mismo movimiento grande, hoja vertical Y horizontal. */
+    @Test
+    void leyendaMovidaDeMasNoDesaparece() throws Exception {
+        OpcionesIndexar o = new OpcionesIndexar();
+        o.izqOn = true;
+        o.izqTexto = "ARRIBA";
+        o.derOn = false;
+        o.abajoIzqOn = true;
+        o.abajoIzqTexto = "ABAJO";
+        o.tamano = 30;
+        o.movY[1] = -650; // como si se hubiera arrastrado mucho hacia arriba en una hoja vertical (792 de alto)
+        verLeyendasVisibles(o, 0, "movida_vertical");
+        verLeyendasVisibles(o, 90, "movida_horizontal");
+    }
+
+    /** Arma una hoja carta (612x792) con el giro dado, le pone las leyendas de 'o' y verifica que ARRIBA y ABAJO
+     * sigan viéndose (no quedan fuera de la hoja), guardando la imagen para revisarla a ojo. */
+    private void verLeyendasVisibles(OpcionesIndexar o, int giro, String nombre) throws Exception {
+        File dir = Files.createTempDirectory("plh").toFile();
+        File pdf = new File(dir, "a.pdf");
+        try (PDDocument d = new PDDocument()) {
+            PDPage p = new PDPage(new PDRectangle(612f, 792f));
+            p.setRotation(giro);
+            d.addPage(p);
+            d.writeTo(pdf);
+        }
         try (Motor.Previa p = new Motor.Previa(pdf, null)) {
             BufferedImage b = p.imagen(0, 800,
                     (doc, hoja, letras) -> Motor.indexarHoja(doc, hoja, 1, 1, "a", o, null, letras));
-            ImageIO.write(b, "png", new File(SALIDA, "diagnostico_abajo_horizontal.png"));
+            ImageIO.write(b, "png", new File(SALIDA, "leyendas_" + nombre + ".png"));
             int alto = b.getHeight();
             int tira = Math.max(1, alto / 6);
             int arriba = contarOscuros(b, 0, tira);
             int abajo = contarOscuros(b, alto - tira, alto);
             assertTrue(arriba > 10,
-                    "no se ve ARRIBA en hoja horizontal (" + arriba + " px, imagen " + b.getWidth() + "x" + alto
-                            + ")");
+                    "no se ve ARRIBA (" + nombre + "): " + arriba + " px, imagen " + b.getWidth() + "x" + alto);
             assertTrue(abajo > 10,
-                    "no se ve ABAJO en hoja horizontal (" + abajo + " px, imagen " + b.getWidth() + "x" + alto + ")");
+                    "no se ve ABAJO (" + nombre + "): " + abajo + " px, imagen " + b.getWidth() + "x" + alto);
         }
     }
 

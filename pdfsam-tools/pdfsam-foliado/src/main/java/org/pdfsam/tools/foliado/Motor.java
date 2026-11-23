@@ -826,6 +826,20 @@ public final class Motor {
     private static void leyenda(PDPageContentStream cs, Hoja h, float x, float y, String t, PDFont letra, float tam,
             Color color, boolean caja, int cual, List<Marco> marcos) throws IOException {
         float w = anchoTexto(letra, t, tam), cap = altoMayusculas(letra) * tam;
+        // Misma regla para las 5 leyendas (arriba o abajo): que un movimiento guardado de una hoja más alta (por
+        // ejemplo, "Abajo a la izquierda" movida con el ratón en una hoja vertical) no la deje invisible, fuera de
+        // la hoja, al aplicarse en una hoja más baja (horizontal). Nunca cambia nada si ya cabía bien.
+        float margen = 2;
+        if (x < margen) {
+            x = margen;
+        } else if (x + w > h.ancho - margen) {
+            x = h.ancho - margen - w;
+        }
+        if (y - cap < margen) {
+            y = margen + cap;
+        } else if (y > h.alto - margen) {
+            y = h.alto - margen;
+        }
         if (caja) {
             recuadro(cs, h, x - 4, y - cap - 4, x + w + 4, y + tam * 0.25f + 3, color);
         }
