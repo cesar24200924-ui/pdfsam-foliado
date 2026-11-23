@@ -26,6 +26,7 @@ import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -61,6 +62,18 @@ class PantallasTest {
             throw new AssertionError(err.get());
         }
         return r.get();
+    }
+
+    /** Para pasos que terminan en un hilo aparte (Ui.enSegundoPlano): reintenta hasta que "listo" sea cierto o
+     * se acabe el tiempo, en vez de una espera fija (más firme en una CI con carga variable). */
+    static <T> T esperar(Supplier<T> s, java.util.function.Predicate<T> listo, int maxMs) throws Exception {
+        long fin = System.currentTimeMillis() + maxMs;
+        T v = enFx(s);
+        while (!listo.test(v) && System.currentTimeMillis() < fin) {
+            Thread.sleep(150);
+            v = enFx(s);
+        }
+        return v;
     }
 
     static void foto(Scene escena, String nombre) throws Exception {
@@ -450,8 +463,7 @@ class PantallasTest {
             girar.enviarAParaPrueba(IndexarTool.TOOL_ID);
             return null;
         });
-        Thread.sleep(2000);
-        List<File> vueltos = enFx(indexar::archivosParaPrueba);
+        List<File> vueltos = esperar(indexar::archivosParaPrueba, l -> !l.isEmpty(), 8000);
         assertEquals(1, vueltos.size(), "Indexar quedó solo con lo que mandó Girar");
         assertEquals(antes - 1, Motor.contarHojas(vueltos.get(0), null), "el PDF que volvió ya tiene la hoja quitada");
     }
@@ -479,8 +491,8 @@ class PantallasTest {
             girar.enviarAParaPrueba(FoliarTool.TOOL_ID);
             return null;
         });
-        Thread.sleep(2000);
-        File enFoliar = enFx(foliar::archivoParaPrueba);
+        File enFoliar = esperar(foliar::archivoParaPrueba, java.util.Objects::nonNull, 8000);
+        assertNotNull(enFoliar, "Foliar debía recibir el primer PDF que mandó Girar");
         assertEquals("uno.pdf", enFoliar.getName(), "Foliar abrió el primero de los dos que llegaron");
     }
 }
