@@ -349,6 +349,11 @@ class FoliarPanel extends BorderPane {
         arreglarEnGirar();
     }
 
+    /** Solo para las pruebas: deja el panel como si no tuviera ningún PDF cargado. */
+    void limpiarParaPrueba() {
+        archivo = null;
+    }
+
     /** Solo para las pruebas: el PDF que hay ahora cargado (null si ninguno). */
     File archivoParaPrueba() {
         return archivo;
