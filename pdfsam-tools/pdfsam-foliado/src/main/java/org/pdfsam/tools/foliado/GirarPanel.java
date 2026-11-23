@@ -19,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
@@ -52,17 +53,23 @@ import org.kordamp.ikonli.unicons.UniconsLine;
 import org.pdfsam.ui.components.support.Style;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Stream;
 
 /**
  * Girar (y organizar) PDF viendo las hojas en miniatura:
@@ -74,6 +81,14 @@ import java.util.concurrent.Executors;
  * <li>Deshacer / Rehacer (Ctrl + Z / Ctrl + Y). Supr: quitar las elegidas.</li>
  * <li>Girar una carpeta o un comprimido (ZIP, RAR, 7z...) completo, respetando las subcarpetas.</li>
  * </ul>
+ * Trabaja con una LISTA de PDF, igual que Indexar: se le pueden agregar PDF sueltos, carpetas enteras (con sus
+ * subcarpetas) y comprimidos (ZIP, RAR, 7z...). Se hace clic en cualquiera de la lista para ver sus hojas en
+ * miniatura y arreglarlo; lo que se le hace a cada PDF se recuerda aunque se cambie a otro ({@link Edicion}).
+ * Al guardar, cada PDF se guarda POR SEPARADO: los de carpetas vuelven a su misma carpeta dentro de la carpeta
+ * elegida y los que vinieron de un comprimido se vuelven a armar en un ZIP ("Nombre_girado.zip"); los PDF que no
+ * se tocaron se copian tal cual. Aparte queda el atajo "Girar una carpeta o comprimido", que gira todo de un solo
+ * golpe sin revisarlo uno por uno ({@link #girarLote}).
+ * <p>
  * El PDF original nunca se modifica: se guarda una copia.
  */
 class GirarPanel extends BorderPane {
@@ -102,11 +117,41 @@ class GirarPanel extends BorderPane {
         }
     }
 
+    /** Un PDF de la lista: de dónde viene y cómo queda dentro de la carpeta de salida (igual que en Indexar). */
+    record Item(File origen, String relativa) {
+        @Override
+        public String toString() {
+            return Lote.nombreVisible(relativa);
+        }
+    }
+
+    /** Un comprimido (ZIP, RAR, 7z...) abierto: sus PDF van a la lista y al guardar se arma "Nombre_girado.zip"
+     * con todo lo que traía (RAR no se puede crear con programas libres: va en ZIP). */
+    record Abierto(File archivo, Lote lote, String marcada) {
+    }
+
+    /** Lo que lleva hecho un PDF de la lista: sus hojas tal como quedaron y su deshacer/rehacer. */
+    private static final class Edicion {
+        final List<Hoja> hojas = new ArrayList<>();
+        final Deque<List<Hoja>> deshacer = new ArrayDeque<>(), rehacer = new ArrayDeque<>();
+    }
+
     private static final ExecutorService HILO = Executors.newSingleThreadExecutor(r -> {
         Thread t = new Thread(r, "girar-miniaturas");
         t.setDaemon(true);
         return t;
     });
+
+    private final List<Item> items = new ArrayList<>();
+    private final List<Abierto> abiertos = new ArrayList<>();
+    private final ListView<Item> lista = new ListView<>();
+    private final Label lblArchivos = Controles.nota("Arrastre aquí PDF, carpetas o comprimidos (ZIP, RAR, 7z...).");
+    /** lo que lleva hecho cada PDF de la lista (para no perderlo al cambiar de archivo) */
+    private final Map<File, Edicion> ediciones = new HashMap<>();
+    /** cuántas hojas traía cada PDF al abrirlo (para saber si tiene cambios sin abrirlo de nuevo) */
+    private final Map<File, Integer> hojasOriginales = new HashMap<>();
+    private int actual = -1;
+    private Path trabajoZip;
 
     private File archivo;
     /** PDF abiertos para ver las miniaturas (el principal y los insertados) */
@@ -130,7 +175,7 @@ class GirarPanel extends BorderPane {
     private final Label lblArchivo = new Label("");
     private final Label lblSel = new Label("Ninguna hoja elegida.");
     private final Label lblCambios = Controles.nota("");
-    private final Button btnDeshacer, btnRehacer;
+    private final Button btnDeshacer, btnRehacer, btnGuardar;
     private final List<Button> conPdf = new ArrayList<>();
     private int origenArrastre = -1;
 
@@ -139,9 +184,14 @@ class GirarPanel extends BorderPane {
         Ui.estilo(this);
 
         // ---------- barra de arriba
-        Button elegir = Ui.boton("Elegir PDF", UniconsLine.FILE_ALT, this::elegir);
+        Button elegir = Ui.boton("Agregar PDF", UniconsLine.FILE_ALT, this::elegir);
+        elegir.setTooltip(new Tooltip("Agrega uno o varios PDF a la lista de la derecha. Después hace clic en "
+                + "cualquiera de la lista para ver sus hojas y arreglarlo. Cada PDF se guarda por separado."));
         Button lote = Ui.boton("Girar una carpeta o comprimido", UniconsLine.FOLDER, () -> {
         });
+        lote.setTooltip(new Tooltip("Atajo rápido: gira TODAS las hojas de TODOS los PDF de una carpeta o de un "
+                + "comprimido, de un solo golpe y sin revisarlos uno por uno. Si los quiere ver y arreglar a mano, "
+                + "use \"Agregar carpeta\" o \"Agregar ZIP / RAR / 7z\" de la lista de la derecha."));
         ContextMenu menu = new ContextMenu();
         MenuItem mc = new MenuItem("Elegir carpeta");
         mc.setOnAction(e -> {
@@ -167,13 +217,21 @@ class GirarPanel extends BorderPane {
         Button todasDer = conPdf(Ui.boton("Todas a la der.", UniconsLine.REDO, () -> girarTodas(90)));
         Button duplicar = conPdf(Ui.boton("Duplicar", UniconsLine.COPY_ALT, this::duplicarSeleccion));
         Button quitar = conPdf(Ui.boton("Quitar", UniconsLine.TRASH_ALT, this::quitarSeleccion));
-        Button insertar = conPdf(Ui.boton("Insertar PDF", UniconsLine.FILE_PLUS_ALT, this::insertarPdf));
+        Button insertar = conPdf(Ui.boton("Insertar hojas aquí", UniconsLine.FILE_PLUS_ALT, this::insertarPdf));
+        insertar.setTooltip(new Tooltip("Mete las hojas de OTRO PDF dentro del que está viendo ahora mismo (quedan "
+                + "después de la hoja elegida). No agrega ese PDF a la lista: lo mezcla con este. Para agregarlo a "
+                + "la lista como un archivo aparte, use \"Agregar PDF\"."));
         Button blanco = conPdf(Ui.boton("Hoja en blanco", UniconsLine.FILE_BLANK, this::hojaEnBlanco));
         Button todo = conPdf(Ui.boton("Seleccionar todo", UniconsLine.CHECK_SQUARE, this::seleccionarTodo));
         btnDeshacer = conPdf(espejo(Ui.boton("Deshacer", UniconsLine.REDO, this::deshacer)));
         btnRehacer = conPdf(Ui.boton("Rehacer", UniconsLine.REDO, this::rehacer));
         Button guardar = conPdf(Ui.boton("Guardar PDF", UniconsLine.SAVE, this::guardar));
         guardar.getStyleClass().addAll("footer-button", "run-button");
+        guardar.setTooltip(new Tooltip("Guarda el resultado. Con un solo PDF le pregunta el nombre. Con varios, "
+                + "le pregunta la carpeta y guarda CADA PDF por separado: los de carpetas vuelven a su misma "
+                + "carpeta y los que venían en un comprimido se vuelven a armar en un ZIP. Los PDF que no tocó "
+                + "se copian igualitos. Los originales nunca se cambian."));
+        btnGuardar = guardar;
 
         tamano.setPrefWidth(130);
         tamano.valueProperty().addListener((o, a, b) -> redibujar());
@@ -206,10 +264,13 @@ class GirarPanel extends BorderPane {
             }
         });
 
-        Label t1 = new Label("Arrastre aquí el PDF");
+        Label t1 = new Label("Arrastre aquí PDF, carpetas o comprimidos");
         t1.setStyle("-fx-font-size: 1.25em; -fx-font-weight: bold;");
-        Label t2 = new Label("O elíjalo con el botón. Verá todas sus hojas en miniatura.");
-        Button bElegir = Ui.boton("Elegir PDF", UniconsLine.FILE_ALT, this::elegir);
+        Label t2 = new Label("Todos van a la lista de la derecha. Haga clic en uno y verá sus hojas en miniatura "
+                + "para arreglarlo. Al final cada PDF se guarda por separado.");
+        t2.setWrapText(true);
+        t2.setMaxWidth(480);
+        Button bElegir = Ui.boton("Agregar PDF", UniconsLine.FILE_ALT, this::elegir);
         Button bLote = Ui.boton("Girar una carpeta o comprimido", UniconsLine.FOLDER,
                 () -> menu.show(lote, Side.BOTTOM, 0, 0));
         HBox bz = new HBox(8, bElegir, bLote);
@@ -241,7 +302,55 @@ class GirarPanel extends BorderPane {
             });
         }
 
-        // ---------- panel de la derecha
+        // ---------- panel de la derecha: primero la lista de PDF (igual que en Indexar)
+        Label tArchivos = new Label("Archivos PDF");
+        tArchivos.setStyle("-fx-font-size: 1.2em; -fx-font-weight: bold;");
+        Button aPdf = Ui.boton("Agregar PDF", UniconsLine.FILE_ALT, this::elegir);
+        aPdf.setTooltip(new Tooltip("Agrega uno o varios PDF a esta lista. Puede elegir varios de un solo golpe."));
+        Button aCarpeta = Ui.boton("Agregar carpeta", UniconsLine.FOLDER, () -> {
+            File f = Ui.elegirCarpeta(this, "Elegir carpeta (se incluyen todas las subcarpetas)", null);
+            if (f != null) {
+                recibir(List.of(f));
+            }
+        });
+        aCarpeta.setTooltip(new Tooltip("Agrega a la lista todos los PDF de una carpeta y de sus subcarpetas. Al "
+                + "guardar, cada PDF vuelve a su misma carpeta dentro de la carpeta que usted elija."));
+        Button aZip = Ui.boton("Agregar ZIP / RAR / 7z", UniconsLine.FILE_ALT, () -> {
+            File f = Ui.elegirComprimido(this);
+            if (f != null) {
+                recibir(List.of(f));
+            }
+        });
+        aZip.setTooltip(new Tooltip("Abre un comprimido (ZIP, RAR, 7z, TAR...) y agrega sus PDF a la lista para "
+                + "verlos y arreglarlos uno por uno. Al guardar se vuelve a armar un ZIP con todo lo que traía."));
+        Button aLimpiar = Ui.boton("Limpiar", UniconsLine.TRASH_ALT, this::limpiar);
+        aLimpiar.setTooltip(new Tooltip("Vacía la lista y olvida todos los cambios que no haya guardado."));
+        FlowPane botonesLista = new FlowPane(4, 4, aPdf, aCarpeta, aZip, aLimpiar);
+        lista.setPrefHeight(130);
+        lista.setMinHeight(90);
+        lista.setTooltip(new Tooltip("Los PDF que se van a girar. Haga clic en uno para ver sus hojas en "
+                + "miniatura y arreglarlo. Lo que le haga a cada PDF se queda guardado aunque se cambie a otro."));
+        lista.getSelectionModel().selectedIndexProperty().addListener((o, a, b) -> {
+            if (b != null && b.intValue() >= 0 && b.intValue() != actual) {
+                verArchivo(b.intValue());
+            }
+        });
+        lista.setOnDragOver(e -> {
+            if (e.getDragboard().hasFiles()) {
+                e.acceptTransferModes(TransferMode.COPY);
+                e.consume();
+            }
+        });
+        lista.setOnDragDropped(e -> {
+            if (e.getDragboard().hasFiles()) {
+                List<File> f = List.copyOf(e.getDragboard().getFiles());
+                e.setDropCompleted(true);
+                e.consume();
+                Platform.runLater(() -> recibir(f));
+            }
+        });
+        lblArchivos.setWrapText(true);
+
         Label titulo = new Label("Selección");
         titulo.setStyle("-fx-font-size: 1.2em; -fx-font-weight: bold;");
         lblSel.setWrapText(true);
@@ -260,7 +369,8 @@ class GirarPanel extends BorderPane {
         for (Button b : List.of(sDer, sIzq, sQuitar, sExtraer, sLote)) {
             b.setMaxWidth(Double.MAX_VALUE);
         }
-        VBox panel = new VBox(8, titulo, lblSel, lblCambios, ayuda, sDer, sIzq, sQuitar, sExtraer, sLote);
+        VBox panel = new VBox(8, tArchivos, botonesLista, lista, lblArchivos, new Separator(Orientation.HORIZONTAL),
+                titulo, lblSel, lblCambios, ayuda, sDer, sIzq, sQuitar, sExtraer, sLote);
         panel.setPadding(new Insets(14));
         panel.setPrefWidth(270);
         panel.setMinWidth(230);
@@ -322,63 +432,204 @@ class GirarPanel extends BorderPane {
 
     // ------------------------------------------------------------ abrir
     private void elegir() {
-        List<File> f = Ui.elegirPdfs(this, false);
+        List<File> f = Ui.elegirPdfs(this, true);
         if (f != null && !f.isEmpty()) {
             recibir(f);
         }
     }
 
+    /** Recibe PDF sueltos, carpetas y comprimidos y los deja en la lista (igual que en Indexar). */
     void recibir(List<File> rutas) {
         if (rutas.isEmpty()) {
             return;
         }
-        File primero = rutas.get(0);
-        if (rutas.size() == 1 && (primero.isDirectory() || Comprimidos.es(primero.getName()))) {
-            girarLote(primero);
+        // los comprimidos (sueltos o dentro de las carpetas) se abren aparte, en segundo plano
+        List<File[]> comprimidos = new ArrayList<>(); // {archivo, carpeta base de la salida}
+        for (File r : rutas) {
+            if (r.isFile() && Comprimidos.es(r.getName())) {
+                comprimidos.add(new File[] { r.getAbsoluteFile(), null });
+            } else if (r.isDirectory()) {
+                Path carpeta = r.getAbsoluteFile().toPath();
+                Path base = carpeta.getParent() == null ? carpeta : carpeta.getParent();
+                try (Stream<Path> s = Files.walk(carpeta)) {
+                    s.filter(Files::isRegularFile).filter(p -> Comprimidos.es(p.getFileName().toString()))
+                            .sorted().forEach(p -> comprimidos.add(new File[] { p.toFile(), base.toFile() }));
+                } catch (IOException e) {
+                    // se ven abajo
+                }
+            }
+        }
+        if (!comprimidos.isEmpty()) {
+            abrirComprimidos(comprimidos, rutas.stream().filter(f -> !(f.isFile() && Comprimidos.es(f.getName())))
+                    .toList());
             return;
         }
-        File pdf = rutas.stream().filter(f -> f.isFile() && f.getName().toLowerCase().endsWith(".pdf")).findFirst()
-                .orElse(null);
-        if (pdf == null) {
-            Ui.aviso(this, "Arrastre o elija un archivo PDF.");
+        agregar(rutas, List.of());
+    }
+
+    private void abrirComprimidos(List<File[]> comprimidos, List<File> resto) {
+        Ui.enSegundoPlano(this, "Abriendo comprimidos", false, p -> {
+            List<Item> nuevos = new ArrayList<>();
+            List<String> problemas = new ArrayList<>();
+            int k = 0;
+            for (File[] c : comprimidos) {
+                p.poner((double) k++ / comprimidos.size(), "Abriendo " + c[0].getName());
+                Lote L = new Lote(c[0]);
+                L.pide = (arch, mala) -> Ui.enFx(() -> Ui.pedirClaveComprimido(this, arch, mala));
+                try {
+                    L.preparar();
+                } catch (Exception e) {
+                    L.limpiar();
+                    problemas.add(c[0].getName() + ": " + Ui.textoError(e));
+                    continue;
+                }
+                String prefijo = c[1] == null ? "" :
+                        c[1].toPath().relativize(c[0].toPath().getParent()).toString().replace('\\', '/');
+                String marcada = (prefijo.isEmpty() ? "" : prefijo + "/") + Comprimidos.base(c[0].getName())
+                        + "_girado.zip" + Lote.MARCA_ZIP;
+                abiertos.add(new Abierto(c[0], L, marcada));
+                for (String rel : L.procesables) {
+                    nuevos.add(new Item(L.raiz.resolve(rel).toFile(), marcada + "/" + rel.replace('\\', '/')));
+                }
+                for (Lote.Fallido f : L.fallidos) {
+                    problemas.add(c[0].getName() + " › " + f.visible() + ": " + f.mensaje);
+                }
+            }
+            return new Object[] { nuevos, problemas };
+        }, res -> {
+            @SuppressWarnings("unchecked")
+            List<Item> nuevos = (List<Item>) ((Object[]) res)[0];
+            @SuppressWarnings("unchecked")
+            List<String> problemas = (List<String>) ((Object[]) res)[1];
+            if (!problemas.isEmpty()) {
+                Ui.aviso(this, "Algunos comprimidos no se abrieron completos:\n\n" + String.join("\n",
+                        problemas.subList(0, Math.min(10, problemas.size()))));
+            }
+            agregar(resto, nuevos);
+        }, e -> Ui.error(this, Ui.textoError(e)));
+    }
+
+    private void agregar(List<File> rutas, List<Item> deComprimidos) {
+        List<Item> nuevos = new ArrayList<>(deComprimidos);
+        for (File r : rutas) {
+            if (r.isDirectory()) {
+                Path carpeta = r.getAbsoluteFile().toPath();
+                Path base = carpeta.getParent() == null ? carpeta : carpeta.getParent(); // la carpeta elegida se
+                                                                                         // recrea en la salida
+                try (Stream<Path> s = Files.walk(carpeta)) {
+                    s.filter(Files::isRegularFile)
+                            .filter(p -> p.getFileName().toString().toLowerCase(Locale.ROOT).endsWith(".pdf"))
+                            .sorted((a, b) -> a.toString().compareToIgnoreCase(b.toString()))
+                            .forEach(p -> nuevos.add(new Item(p.toFile(), base.relativize(p).toString())));
+                } catch (IOException e) {
+                    Ui.error(this, Ui.textoError(e));
+                }
+            } else if (r.isFile() && r.getName().toLowerCase(Locale.ROOT).endsWith(".pdf")) {
+                nuevos.add(new Item(r.getAbsoluteFile(), r.getName()));
+            }
+        }
+        Set<String> existentes = new HashSet<>();
+        for (Item it : items) {
+            existentes.add(it.origen().getAbsolutePath().toLowerCase(Locale.ROOT));
+        }
+        int agregados = 0;
+        for (Item it : nuevos) {
+            if (existentes.add(it.origen().getAbsolutePath().toLowerCase(Locale.ROOT))) {
+                items.add(it);
+                agregados++;
+            }
+        }
+        if (agregados == 0) {
+            if (nuevos.isEmpty()) {
+                Ui.aviso(this, "No se encontraron archivos PDF.");
+            }
             return;
         }
-        if (archivo != null) {
-            // ya hay un PDF abierto: ¿abrir este otro o insertarlo?
-            int r = Ui.elegir(this, "Ya hay un PDF abierto", "¿Qué quiere hacer con \"" + pdf.getName() + "\"?",
-                    "Insertar sus hojas", "Abrir en lugar del otro");
-            if (r < 0) {
-                return;
-            }
-            if (r == 0) {
-                insertar(pdf);
-                return;
-            }
-            if (hayCambios() && !Ui.pregunta(this,
-                    "Tiene cambios sin guardar en el PDF que está abierto. ¿Quiere abrir el otro de todas formas?",
-                    "Cambios sin guardar")) {
-                return;
-            }
+        lista.getItems().setAll(items);
+        lblArchivos.setText(items.size() + (items.size() == 1 ? " archivo PDF" : " archivos PDF"));
+        if (items.size() == agregados) {
+            verArchivo(0);
+        } else {
+            actualizarSeleccion();
         }
-        Motor.Previa p = abrirPrevia(pdf);
+    }
+
+    /** Guarda lo que lleva hecho el PDF que se está viendo, para no perderlo al cambiarse a otro. */
+    private void guardarEdicionActual() {
+        if (archivo == null) {
+            return;
+        }
+        Edicion ed = ediciones.computeIfAbsent(archivo, f -> new Edicion());
+        ed.hojas.clear();
+        for (Hoja h : hojas) {
+            ed.hojas.add(h.copia());
+        }
+        ed.deshacer.clear();
+        ed.deshacer.addAll(deshacer);
+        ed.rehacer.clear();
+        ed.rehacer.addAll(rehacer);
+    }
+
+    /** Muestra en las miniaturas el PDF número k de la lista (con lo que ya llevara hecho). */
+    private void verArchivo(int k) {
+        if (k < 0 || k >= items.size()) {
+            return;
+        }
+        File pdf = items.get(k).origen();
+        Motor.Previa p = previas.get(pdf);
         if (p == null) {
-            return;
+            p = abrirPrevia(pdf);
+            if (p == null) {
+                return;
+            }
         }
-        cerrarTodo();
+        guardarEdicionActual();
+        // se cierran los PDF del archivo anterior (las miniaturas se vuelven a hacer para el nuevo)
+        List<Motor.Previa> viejas = new ArrayList<>();
+        for (Map.Entry<File, Motor.Previa> e : previas.entrySet()) {
+            if (!e.getKey().equals(pdf)) {
+                viejas.add(e.getValue());
+            }
+        }
+        previas.clear();
         previas.put(pdf, p);
+        cerrarEnSegundoPlano(viejas);
+
+        actual = k;
         archivo = pdf;
+        hojasOriginales.putIfAbsent(pdf, p.hojas());
         hojas.clear();
-        for (int i = 0; i < p.hojas(); i++) {
-            hojas.add(new Hoja(pdf, i, 0, 0, 0));
+        deshacer.clear();
+        rehacer.clear();
+        Edicion ed = ediciones.get(pdf);
+        if (ed != null) {
+            for (Hoja h : ed.hojas) {
+                hojas.add(h.copia());
+            }
+            deshacer.addAll(ed.deshacer);
+            rehacer.addAll(ed.rehacer);
+            // si había hojas insertadas de otros PDF, se vuelven a abrir para poder verlas y guardarlas
+            for (Hoja h : hojas) {
+                if (h.archivo != null && !previas.containsKey(h.archivo)) {
+                    Motor.Previa q = abrirPrevia(h.archivo);
+                    if (q != null) {
+                        previas.put(h.archivo, q);
+                    }
+                }
+            }
+        } else {
+            for (int i = 0; i < p.hojas(); i++) {
+                hojas.add(new Hoja(pdf, i, 0, 0, 0));
+            }
         }
         seleccion.clear();
         ultimo = null;
-        deshacer.clear();
-        rehacer.clear();
         imagenes.clear();
         anchoImagen.clear();
         pedidas.clear();
-        lblArchivo.setText(pdf.getName() + "  ·  " + p.hojas() + " hojas");
+        lista.getSelectionModel().select(k);
+        lista.scrollTo(k);
+        lblArchivo.setText(pdf.getName() + "  ·  " + hojas.size() + " hojas");
         mostrarZona(false);
         actualizarSeleccion();
     }
@@ -408,6 +659,13 @@ class GirarPanel extends BorderPane {
         List<Motor.Previa> viejas = new ArrayList<>(previas.values());
         previas.clear();
         claves.clear();
+        cerrarEnSegundoPlano(viejas);
+    }
+
+    private static void cerrarEnSegundoPlano(List<Motor.Previa> viejas) {
+        if (viejas.isEmpty()) {
+            return;
+        }
         HILO.submit(() -> {
             for (Motor.Previa v : viejas) {
                 try {
@@ -417,6 +675,33 @@ class GirarPanel extends BorderPane {
                 }
             }
         });
+    }
+
+    /** Vacía la lista y olvida todo lo que no se haya guardado. */
+    private void limpiar() {
+        items.clear();
+        lista.getItems().clear();
+        ediciones.clear();
+        hojasOriginales.clear();
+        for (Abierto a : abiertos) {
+            a.lote().limpiar();
+        }
+        abiertos.clear();
+        actual = -1;
+        archivo = null;
+        hojas.clear();
+        seleccion.clear();
+        ultimo = null;
+        deshacer.clear();
+        rehacer.clear();
+        imagenes.clear();
+        anchoImagen.clear();
+        pedidas.clear();
+        cerrarTodo();
+        lblArchivos.setText("Arrastre aquí PDF, carpetas o comprimidos (ZIP, RAR, 7z...).");
+        lblArchivo.setText("");
+        mostrarZona(true);
+        actualizarSeleccion();
     }
 
     // ------------------------------------------------------------ miniaturas
@@ -756,16 +1041,21 @@ class GirarPanel extends BorderPane {
     }
 
     private boolean hayCambios() {
-        Motor.Previa p = previas.get(archivo);
-        if (p == null) {
+        return archivo != null && hayCambios(archivo, hojas);
+    }
+
+    /** ¿Ese PDF quedó distinto de como estaba? (sirve también para los que no se están viendo). */
+    private boolean hayCambios(File f, List<Hoja> lista) {
+        Integer original = hojasOriginales.get(f);
+        if (original == null) {
             return false;
         }
-        if (hojas.size() != p.hojas()) {
+        if (lista.size() != original) {
             return true;
         }
-        for (int i = 0; i < hojas.size(); i++) {
-            Hoja h = hojas.get(i);
-            if (h.giro % 360 != 0 || h.pagina != i || !archivo.equals(h.archivo)) {
+        for (int i = 0; i < lista.size(); i++) {
+            Hoja h = lista.get(i);
+            if (h.giro % 360 != 0 || h.pagina != i || !f.equals(h.archivo)) {
                 return true;
             }
         }
@@ -948,6 +1238,8 @@ class GirarPanel extends BorderPane {
         }
         btnDeshacer.setDisable(!hay || deshacer.isEmpty());
         btnRehacer.setDisable(!hay || rehacer.isEmpty());
+        boolean varios = items.size() > 1 || !abiertos.isEmpty();
+        btnGuardar.setText(varios ? "Girar y guardar (" + items.size() + ")" : "Guardar PDF");
     }
 
     // ------------------------------------------------------------ ver en grande
@@ -1076,11 +1368,151 @@ class GirarPanel extends BorderPane {
         if (archivo == null) {
             return;
         }
-        if (!hayCambios() && !Ui.pregunta(this, "No hay cambios: el PDF quedaría igual. ¿Guardarlo de todas formas?",
-                "Guardar PDF")) {
+        guardarEdicionActual();
+        // un solo PDF suelto: se sigue guardando como siempre, preguntando el nombre
+        if (items.size() <= 1 && abiertos.isEmpty()) {
+            if (!hayCambios() && !Ui.pregunta(this,
+                    "No hay cambios: el PDF quedaría igual. ¿Guardarlo de todas formas?", "Guardar PDF")) {
+                return;
+            }
+            guardarComo(armadas(hojas), "girado", "Guardar el PDF");
             return;
         }
-        guardarComo(armadas(hojas), "girado", "Guardar el PDF");
+        guardarTodos();
+    }
+
+    /** Guarda TODOS los PDF de la lista, cada uno por su lado: los de carpetas vuelven a su misma carpeta dentro
+     * de la carpeta elegida, y los que vinieron de un comprimido se vuelven a armar en un ZIP. Los PDF que no se
+     * tocaron se copian tal cual. */
+    private void guardarTodos() {
+        List<Item> copia = List.copyOf(items);
+        List<List<Motor.HojaArmada>> trabajos = new ArrayList<>(); // null = ese PDF no se tocó
+        int conCambios = 0;
+        for (Item it : copia) {
+            Edicion ed = ediciones.get(it.origen());
+            boolean cambio = ed != null && hayCambios(it.origen(), ed.hojas);
+            trabajos.add(cambio ? armadas(ed.hojas) : null);
+            if (cambio) {
+                conCambios++;
+            }
+        }
+        if (conCambios == 0 && !Ui.pregunta(this, "Todavía no ha cambiado ningún PDF: quedarían igual que los "
+                + "originales. ¿Guardarlos de todas formas?", "Girar y guardar")) {
+            return;
+        }
+        File carpeta = Ui.elegirCarpeta(this, "¿En qué carpeta guardo los PDF?", null);
+        if (carpeta == null) {
+            return;
+        }
+        Path destino = carpeta.getAbsoluteFile().toPath().normalize();
+        // nunca encima de los originales: la carpeta de salida no puede contener ningún original
+        List<File> originales = new ArrayList<>();
+        for (Item it : copia) {
+            originales.add(it.origen());
+        }
+        for (Abierto a : abiertos) {
+            originales.add(a.archivo());
+        }
+        for (File f : originales) {
+            if (f.getAbsoluteFile().toPath().normalize().startsWith(destino)) {
+                Ui.aviso(this, "Esa carpeta tiene adentro los PDF originales y se reemplazarían. Elija otra carpeta "
+                        + "de salida (por ejemplo, una carpeta nueva).");
+                return;
+            }
+        }
+        // lo que vino de comprimidos se arma en la carpeta temporal de Windows (OneDrive no la toca) y al final
+        // solo se copia el ZIP terminado a la carpeta elegida
+        try {
+            trabajoZip = Files.createTempDirectory("pdfsam_girar_");
+        } catch (IOException e) {
+            Ui.error(this, Ui.textoError(e));
+            return;
+        }
+        Path trabajo = trabajoZip;
+        Map<File, String> c = new HashMap<>(claves);
+        Ui.enSegundoPlano(this, "Girando", true, p -> {
+            List<File> salidas = new ArrayList<>();
+            List<String> fallidos = new ArrayList<>();
+            int n = copia.size();
+            for (int k = 0; k < n; k++) {
+                if (p.cancelado()) {
+                    break;
+                }
+                Item it = copia.get(k);
+                String texto = "Archivo " + (k + 1) + " de " + n + ": " + it.origen().getName();
+                File salida = salidaDe(it, destino, trabajo).toFile();
+                int kk = k;
+                try {
+                    List<Motor.HojaArmada> hs = trabajos.get(k);
+                    if (hs == null) {
+                        p.poner((double) kk / n, texto);
+                        Lote.copiar(it.origen().toPath(), salida.toPath());
+                    } else {
+                        Motor.armar(it.origen(), c, hs, salida,
+                                (h, t) -> p.poner((kk + (t == 0 ? 1 : (double) h / t)) / n, texto));
+                    }
+                    salidas.add(salida);
+                } catch (Exception e) {
+                    fallidos.add(Lote.nombreVisible(it.relativa()) + ": " + Ui.textoError(e));
+                }
+            }
+            p.poner(1, "");
+            return new Object[] { salidas, fallidos };
+        }, res -> terminarGuardado((Object[]) res, destino), e -> {
+            Lote.borrar(trabajo);
+            Ui.error(this, Ui.textoError(e));
+        });
+    }
+
+    /** Dónde se guarda cada PDF: los de comprimidos, en la carpeta temporal; los demás, en la carpeta elegida. */
+    private static Path salidaDe(Item it, Path destino, Path trabajo) {
+        return it.relativa().contains(Lote.MARCA_ZIP) ? trabajo.resolve(it.relativa())
+                : destino.resolve(it.relativa());
+    }
+
+    @SuppressWarnings("unchecked")
+    private void terminarGuardado(Object[] res, Path destino) {
+        List<File> salidas = (List<File>) res[0];
+        List<String> fallidos = (List<String>) res[1];
+        List<Abierto> usados = new ArrayList<>();
+        for (Abierto a : abiertos) {
+            if (items.stream().anyMatch(it -> it.relativa().startsWith(a.marcada() + "/"))) {
+                usados.add(a);
+            }
+        }
+        Path trabajo = trabajoZip;
+        if (!usados.isEmpty()) {
+            Ui.enSegundoPlano(this, "Armando los ZIP", false, p -> {
+                try {
+                    for (Abierto a : usados) {
+                        p.poner(-1, a.archivo().getName());
+                        Lote.armarZipDeSalida(destino, trabajo, a.lote(), a.marcada());
+                    }
+                } finally {
+                    Lote.borrar(trabajo);
+                }
+                return null;
+            }, r -> resumenGuardado(salidas, fallidos, destino, true), e -> Ui.error(this, Ui.textoError(e)));
+            return;
+        }
+        Lote.borrar(trabajo);
+        resumenGuardado(salidas, fallidos, destino, false);
+    }
+
+    private void resumenGuardado(List<File> salidas, List<String> fallidos, Path destino, boolean conZip) {
+        StringBuilder d = new StringBuilder(
+                salidas.size() + (salidas.size() == 1 ? " archivo guardado" : " archivos guardados"));
+        if (!fallidos.isEmpty()) {
+            d.append("\n\nNo se pudieron procesar:\n");
+            for (int i = 0; i < Math.min(8, fallidos.size()); i++) {
+                d.append(fallidos.get(i)).append('\n');
+            }
+        }
+        if (conZip) {
+            d.append("\n\nLo que venía en comprimidos (ZIP, RAR, 7z...) quedó en un ZIP con el mismo nombre y "
+                    + "\"_girado\" al final, con todas sus carpetas y archivos.");
+        }
+        Ui.terminado(this, destino.toFile(), "PDF guardados", d.toString());
     }
 
     /** Guardar selección como PDF: un PDF nuevo solo con las hojas elegidas (con sus giros). */
@@ -1113,6 +1545,36 @@ class GirarPanel extends BorderPane {
                     (h, t) -> p.poner(t == 0 ? 1 : (double) h / t, "Hoja " + h + " de " + t));
             return salida;
         }, r -> Ui.terminado(this, r, "PDF guardado", lista.size() + (lista.size() == 1 ? " hoja" : " hojas")), null);
+    }
+
+    /** Solo para las pruebas: cuántos PDF hay en la lista. */
+    int cuantosEnLista() {
+        return items.size();
+    }
+
+    /** Solo para las pruebas: nombre del PDF que se está viendo (null si no hay ninguno). */
+    String nombreEnPantalla() {
+        return archivo == null ? null : archivo.getName();
+    }
+
+    /** Solo para las pruebas: cuántas hojas se están viendo. */
+    int cuantasHojasEnPantalla() {
+        return hojas.size();
+    }
+
+    /** Solo para las pruebas: ¿el PDF que se está viendo quedó distinto del original? */
+    boolean tieneCambiosEnPantalla() {
+        return hayCambios();
+    }
+
+    /** Solo para las pruebas: cambiarse al PDF número k de la lista. */
+    void verParaPrueba(int k) {
+        verArchivo(k);
+    }
+
+    /** Solo para las pruebas: quitar la primera hoja del PDF que se está viendo. */
+    void quitarPrimeraParaPrueba() {
+        quitar(List.of(0));
     }
 
     /** Solo para la prueba de pantallas: hojas elegidas, una girada, una duplicada y una en blanco. */

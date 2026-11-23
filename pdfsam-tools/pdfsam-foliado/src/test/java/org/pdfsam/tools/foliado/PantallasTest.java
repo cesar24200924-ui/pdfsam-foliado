@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -358,5 +359,56 @@ class PantallasTest {
         assertEquals("DE", o.palabraDe);
         assertTrue(o.enLetras);
         assertEquals("FOLIO ", o.textoLetras);
+    }
+
+    /** Girar como Indexar: una carpeta entera va a la LISTA (no al giro masivo), se puede ir de un PDF a otro
+     * y lo que se le hizo a cada uno se recuerda al volver. */
+    @Test
+    void girarVariosPdfRecuerdaLoDeCadaUno() throws Exception {
+        File dir = Files.createTempDirectory("pglista").toFile();
+        File sub = new File(dir, "Expediente");
+        assertTrue(sub.mkdirs());
+        MotorTest.pdfDePrueba(sub, "uno.pdf");
+        MotorTest.pdfDePrueba(sub, "dos.pdf");
+        MotorTest.pdfDePrueba(sub, "tres.pdf");
+        GirarPanel panel = enFx(GirarPanel::new);
+        enFx(() -> escena(panel));
+        enFx(() -> {
+            panel.recibir(List.of(sub));
+            return null;
+        });
+        Thread.sleep(1500);
+        assertEquals(3, (int) enFx(panel::cuantosEnLista), "los 3 PDF de la carpeta van a la lista");
+        assertEquals("uno.pdf", enFx(panel::nombreEnPantalla), "se muestra el primero de la lista");
+        assertFalse(enFx(panel::tieneCambiosEnPantalla), "recién abierto, sin cambios");
+
+        int antes = enFx(panel::cuantasHojasEnPantalla);
+        assertTrue(antes > 1, "el PDF de prueba tiene varias hojas");
+        enFx(() -> {
+            panel.quitarPrimeraParaPrueba();
+            return null;
+        });
+        assertEquals(antes - 1, (int) enFx(panel::cuantasHojasEnPantalla));
+        assertTrue(enFx(panel::tieneCambiosEnPantalla));
+
+        // cambiarse al segundo: está sin tocar
+        enFx(() -> {
+            panel.verParaPrueba(1);
+            return null;
+        });
+        Thread.sleep(800);
+        assertEquals("dos.pdf", enFx(panel::nombreEnPantalla));
+        assertEquals(antes, (int) enFx(panel::cuantasHojasEnPantalla), "el segundo está completo");
+        assertFalse(enFx(panel::tieneCambiosEnPantalla), "el segundo está sin tocar");
+
+        // volver al primero: sigue con su cambio
+        enFx(() -> {
+            panel.verParaPrueba(0);
+            return null;
+        });
+        Thread.sleep(800);
+        assertEquals("uno.pdf", enFx(panel::nombreEnPantalla));
+        assertEquals(antes - 1, (int) enFx(panel::cuantasHojasEnPantalla), "se recordó lo que se le hizo");
+        assertTrue(enFx(panel::tieneCambiosEnPantalla));
     }
 }

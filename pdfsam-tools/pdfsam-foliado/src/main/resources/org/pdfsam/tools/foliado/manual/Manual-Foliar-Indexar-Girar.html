@@ -203,12 +203,22 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
 </ul>
 
 <h2 id="girar">7. Girar — viendo las hojas en miniatura</h2>
-<p>El <b>Girar</b> de PDFsam ahora es interactivo: ve todas las hojas en pequeño (miniaturas) y las gira viéndolas, una por una, varias o todas. Además puede <b>quitar</b> hojas, <b>duplicarlas</b>, <b>cambiarlas de lugar</b>, <b>insertar otro PDF</b> u <b>hojas en blanco</b> y <b>guardar solo las hojas elegidas</b> como un PDF nuevo. El PDF original no se toca: se guarda una copia.</p>
+<p>El <b>Girar</b> de PDFsam ahora es interactivo: ve todas las hojas en pequeño (miniaturas) y las gira viéndolas, una por una, varias o todas. Además puede <b>quitar</b> hojas, <b>duplicarlas</b>, <b>cambiarlas de lugar</b>, <b>insertar hojas de otro PDF</b> u <b>hojas en blanco</b> y <b>guardar solo las hojas elegidas</b> como un PDF nuevo. El PDF original no se toca: se guarda una copia.</p>
 
-<figure><img src="img/girar.png" alt="La pantalla de Girar: arriba los botones, al centro todas las hojas en miniatura y a la derecha la selección."/></figure>
+<p><b>Trabaja con una lista de PDF, igual que Indexar.</b> Puede meter muchos PDF de una vez (sueltos, una carpeta entera con sus subcarpetas, o un ZIP / RAR / 7z) y arreglarlos <b>uno por uno viendo las hojas</b>. Lo que le haga a cada PDF se queda guardado aunque se cambie a otro, y al final <b>cada PDF se guarda por separado</b>, en su misma carpeta o dentro de su ZIP.</p>
 
-<h3>Paso 1 — Abrir el PDF</h3>
-<div class="paso">En el menú de PDFsam toque <b>Girar</b>. Luego <b>Elegir PDF</b>, o arrastre el PDF a la pantalla. Aparecen todas las hojas en miniatura (las imágenes se van cargando, primero las que se están viendo).</div>
+<figure><img src="img/girar.png" alt="La pantalla de Girar: arriba los botones, al centro todas las hojas en miniatura y a la derecha la lista de archivos y la selección."/></figure>
+
+<h3>Paso 1 — Agregar los PDF a la lista</h3>
+<div class="paso">En el menú de PDFsam toque <b>Girar</b>. Arriba a la derecha, en <b>Archivos PDF</b>, tiene tres botones:
+<ul>
+  <li><b>Agregar PDF</b>: uno o varios PDF sueltos (puede elegir varios de un solo golpe).</li>
+  <li><b>Agregar carpeta</b>: todos los PDF de una carpeta y de sus subcarpetas.</li>
+  <li><b>Agregar ZIP / RAR / 7z</b>: abre el comprimido y mete sus PDF a la lista.</li>
+</ul>
+También puede <b>arrastrar</b> los PDF, la carpeta o el comprimido a la pantalla. El botón <b>Limpiar</b> vacía la lista.</div>
+
+<div class="paso"><b>Para arreglar un PDF, haga clic en él en la lista.</b> Abajo aparecen todas sus hojas en miniatura (las imágenes se van cargando, primero las que se están viendo). Cámbiese de uno a otro cuantas veces quiera: <b>lo que ya le hizo a cada PDF no se pierde</b>.</div>
 
 <h3>Paso 2 — Elegir hojas</h3>
 <table>
@@ -235,7 +245,7 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
 <tr><th>Para…</th><th>Haga esto</th></tr>
 <tr><td><b>Quitar</b> (eliminar) hojas</td><td>Pase el ratón sobre la hoja y toque el botón del <b>basurero</b>. Para varias: elíjalas y toque <b>Quitar</b> (arriba), <b>Quitar seleccionadas</b> (a la derecha) o la tecla <b>Supr</b>. Si se equivocó: <b>Deshacer</b>.</td></tr>
 <tr><td><b>Duplicar</b> una hoja</td><td>Botón de <b>dos hojitas</b> sobre la hoja, o elija varias y toque <b>Duplicar</b>. La copia queda justo al lado y dice <i>(copia de 3)</i>.</td></tr>
-<tr><td><b>Insertar otro PDF</b></td><td>Elija la hoja después de la cual quiere meterlo y toque <b>Insertar PDF</b>. Si no elige ninguna, va al final. También puede arrastrar el otro PDF a la pantalla y elegir <b>Insertar sus hojas</b>. Esas hojas dicen debajo de qué PDF vienen.</td></tr>
+<tr><td><b>Insertar hojas de otro PDF</b></td><td>Elija la hoja después de la cual quiere meterlas y toque <b>Insertar hojas aquí</b>. Si no elige ninguna, van al final. Esas hojas dicen debajo de qué PDF vienen. <b>Ojo:</b> esto <i>mezcla</i> ese otro PDF dentro del que está viendo. Si lo que quiere es arreglarlo aparte, use <b>Agregar PDF</b> para mandarlo a la lista.</td></tr>
 <tr><td><b>Hoja en blanco</b></td><td>Elija la hoja de antes y toque <b>Hoja en blanco</b>. Sale del mismo tamaño que la hoja de al lado.</td></tr>
 <tr><td><b>Guardar selección como PDF</b></td><td>Elija las hojas que quiere sacar y toque <b>Guardar selección como PDF</b> (a la derecha). Se crea un PDF nuevo solo con esas hojas (con sus giros); el resto no cambia.</td></tr>
 </table>
@@ -249,17 +259,26 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
 
 <h3>Paso 7 — Deshacer y guardar</h3>
 <ul>
-  <li><b>Deshacer</b> / <b>Rehacer</b> (o <b>Ctrl + Z</b> / <b>Ctrl + Y</b>) regresan o repiten los cambios.</li>
+  <li><b>Deshacer</b> / <b>Rehacer</b> (o <b>Ctrl + Z</b> / <b>Ctrl + Y</b>) regresan o repiten los cambios. Cada PDF de la lista tiene su propio deshacer.</li>
   <li><b>Tamaño</b>: la barrita de arriba agranda o achica las miniaturas.</li>
-  <li><b>Guardar PDF</b>: elija dónde guardarlo; el nombre sugerido termina en <code>_girado</code>.</li>
+  <li><b>Con un solo PDF</b> el botón dice <b>Guardar PDF</b>: elija dónde guardarlo; el nombre sugerido termina en <code>_girado</code>.</li>
+  <li><b>Con varios PDF</b> el botón dice <b>Girar y guardar (3)</b>: le pregunta <b>en qué carpeta</b> guardar y deja <b>cada PDF por separado</b>, con su mismo nombre:
+    <ul>
+      <li>Los que vinieron de una carpeta vuelven a su <b>misma subcarpeta</b> dentro de la carpeta que eligió.</li>
+      <li>Los que vinieron de un comprimido se vuelven a armar en un <b>ZIP</b> con el mismo nombre y <code>_girado</code> al final, con todas sus carpetas y hasta lo que no era PDF.</li>
+      <li>Los PDF que <b>no tocó</b> se copian igualitos, sin cambios.</li>
+    </ul>
+  </li>
 </ul>
+<p>Los PDF originales <b>nunca</b> se cambian. Por eso el programa no lo deja guardar en una carpeta que tenga adentro los originales: elija otra carpeta (por ejemplo, una nueva).</p>
 
-<h3>Girar una carpeta o un comprimido (ZIP, RAR, 7z…)</h3>
-<div class="paso">Toque <b>Girar una carpeta o comprimido</b> (o arrastre la carpeta, el ZIP, RAR o 7z a la pantalla), elija <b>A la derecha</b>, <b>A la izquierda</b> o <b>Voltear (180°)</b> y toque <b>Girar</b>. Se giran <b>todas las hojas de todos los PDF</b>, igual que al foliar una carpeta: vista previa del árbol, misma estructura de subcarpetas, comprimidos dentro de comprimidos, lo que no es PDF se copia igual y al final se avisa de los PDF con contraseña.</div>
+<h3>Atajo: girar una carpeta o un comprimido de un solo golpe</h3>
+<div class="paso">Si no necesita revisarlos uno por uno y solo quiere girar <b>todo</b> parejo, toque el botón <b>Girar una carpeta o comprimido</b> de arriba, elija <b>A la derecha</b>, <b>A la izquierda</b> o <b>Voltear (180°)</b> y toque <b>Girar</b>. Se giran <b>todas las hojas de todos los PDF</b>, igual que al foliar una carpeta: vista previa del árbol, misma estructura de subcarpetas, comprimidos dentro de comprimidos, lo que no es PDF se copia igual y al final se avisa de los PDF con contraseña.</div>
+<p>La diferencia: con el <b>atajo</b> no ve las hojas y todo se gira igual; con la <b>lista</b> (Paso 1) ve cada PDF y le hace lo que quiera a cada uno.</p>
 
 <h2 id="comprimidos">8. Comprimidos: ZIP, RAR, 7z y más</h2>
 <p>Foliar, Indexar y Girar abren casi cualquier archivo comprimido: <b>ZIP, RAR</b> (también los nuevos RAR5 y los que vienen en partes), <b>7z</b> (también en partes .001, .002…), <b>TAR, TAR.GZ / TGZ, GZ, BZ2, XZ, LZMA, Z, CAB, ISO, ARJ, LZH, CPIO, RPM, DEB, WIM, XAR</b>.</p>
-<div class="paso"><b>Paso 1.</b> En Foliar o Girar toque el botón de carpeta → <b>Elegir comprimido (ZIP, RAR, 7z...)</b>. En Indexar toque <b>Agregar ZIP / RAR / 7z</b>. También puede arrastrar el archivo.</div>
+<div class="paso"><b>Paso 1.</b> En Foliar toque el botón de carpeta → <b>Elegir comprimido (ZIP, RAR, 7z...)</b>. En Indexar y en Girar toque <b>Agregar ZIP / RAR / 7z</b> (en Girar, si lo que quiere es girarlo todo de un solo golpe sin revisarlo, use el botón <b>Girar una carpeta o comprimido</b>). También puede arrastrar el archivo.</div>
 <div class="paso"><b>Paso 2.</b> Si el comprimido tiene <b>contraseña</b>, sale un cuadrito para escribirla. Si la escribe mal, dice <i>“La contraseña no es correcta. Pruebe otra vez.”</i> y la vuelve a pedir. Si no la sabe, toque <b>Cancelar</b>: ese comprimido se copia tal cual, sin abrirlo, y se avisa al final.</div>
 <div class="paso"><b>Paso 3.</b> El programa abre todo (también los comprimidos que vengan adentro de otros) y sigue igual que con una carpeta: vista previa del árbol, procesar, guardar.</div>
 <div class="paso"><b>Paso 4.</b> El resultado sale en <b>ZIP</b>, con las mismas carpetas y archivos que traía. Los RAR, 7z y demás que venían adentro también quedan como ZIP.</div>
@@ -401,7 +420,21 @@ Haga clic en un archivo de la lista para verlo en la vista previa.</div>
 
 <h3>Girar</h3>
 <details><summary>¿Dónde quedó el Girar de antes de PDFsam?</summary>
-<p>Se cambió por este, con miniaturas. Lo que hacía el de antes (girar muchos PDF de una vez) se hace con <b>Girar una carpeta o comprimido</b>.</p></details>
+<p>Se cambió por este, con miniaturas. Lo que hacía el de antes (girar muchos PDF de una vez) se hace con el atajo <b>Girar una carpeta o comprimido</b>.</p></details>
+<details><summary>Agregué varios PDF y antes solo me cargaba uno. ¿Ya se puede con varios?</summary>
+<p>Sí. Ahora Girar trabaja con una <b>lista de archivos</b>, igual que Indexar: puede agregar varios PDF sueltos, una carpeta entera o un comprimido, y todos quedan en la lista de la derecha. Haga clic en cualquiera para ver sus hojas y arreglarlo.</p></details>
+<details><summary>Agarré un ZIP y antes me salía solo la ventanita de girar todo. ¿Puedo verlos uno por uno?</summary>
+<p>Sí. Con <b>Agregar ZIP / RAR / 7z</b> (o arrastrando el comprimido) sus PDF entran a la lista y los revisa uno por uno con las miniaturas. La ventanita de girar todo de un solo golpe sigue estando, en el botón <b>Girar una carpeta o comprimido</b> de arriba, para cuando no quiera revisar nada.</p></details>
+<details><summary>Si me cambio a otro PDF de la lista, ¿pierdo lo que ya le hice al anterior?</summary>
+<p>No. Cada PDF se acuerda de todo lo suyo: las hojas que giró, las que quitó, el orden y hasta su propio <b>Deshacer</b>. Cámbiese cuantas veces quiera; se pierde solo si toca <b>Limpiar</b> o cierra el programa sin guardar.</p></details>
+<details><summary>Con varios PDF, ¿dónde me quedan guardados?</summary>
+<p>El programa le pregunta <b>una sola carpeta</b> y ahí deja cada PDF por separado con su mismo nombre: los que venían de subcarpetas vuelven a su misma subcarpeta, y los que venían de un comprimido salen en un ZIP con <code>_girado</code> al final. Los PDF que no tocó se copian igualitos.</p></details>
+<details><summary>No me deja guardar en la carpeta que quiero.</summary>
+<p>Es a propósito: esa carpeta tiene adentro los PDF originales y se reemplazarían. Elija otra carpeta, por ejemplo una nueva al lado.</p></details>
+<details><summary>¿Cuál es la diferencia entre “Agregar PDF” e “Insertar hojas aquí”?</summary>
+<p><b>Agregar PDF</b> manda el PDF a la lista para arreglarlo aparte, y al final sale como su propio archivo. <b>Insertar hojas aquí</b> mete las hojas de ese otro PDF <i>adentro</i> del que está viendo, y salen todas juntas en un solo archivo.</p></details>
+<details><summary>¿Tengo que tocar todos los PDF de la lista?</summary>
+<p>No. Los que no abra o no cambie se copian tal cual a la carpeta de salida, sin modificarse.</p></details>
 <details><summary>¿Girar le baja la calidad al PDF?</summary>
 <p>No. Solo se cambia el giro de la hoja; las imágenes y el texto quedan exactamente igual.</p></details>
 <details><summary>Giré una hoja de más. ¿Cómo la regreso?</summary>

@@ -470,6 +470,43 @@ final class Lote {
         }
     }
 
+    /** Arma el ZIP de salida de un comprimido que se abrió para trabajarlo (lo usan Indexar y Girar): junta lo ya
+     * procesado con todo lo demás que traía el comprimido, cierra los comprimidos de adentro, comprime en la
+     * carpeta de trabajo y copia el ZIP ya terminado a la carpeta que eligió el usuario (así OneDrive no estorba
+     * mientras se arma). Si ya existe uno con ese nombre, le pone " (2)", " (3)"...
+     *
+     * @param destino carpeta que eligió el usuario
+     * @param trabajo carpeta temporal donde se arma
+     * @param L el lote del comprimido abierto
+     * @param marcada ruta relativa de la carpeta marcada (termina en {@link #MARCA_ZIP}) */
+    static void armarZipDeSalida(Path destino, Path trabajo, Lote L, String marcada) throws IOException {
+        Path m = trabajo.resolve(marcada);
+        Files.createDirectories(m);
+        for (String c : L.carpetas) {
+            Files.createDirectories(m.resolve(c));
+        }
+        for (String rel : L.archivos) {
+            Path t = m.resolve(rel);
+            if (!Files.exists(t)) {
+                copiar(L.raiz.resolve(rel), t);
+            }
+        }
+        cerrarZipsInternos(m);
+        String n = m.getFileName().toString();
+        String zip = n.substring(0, n.length() - MARCA_ZIP.length());
+        // el ZIP se arma en la carpeta temporal y se copia ya terminado a la carpeta elegida
+        Path listo = m.resolveSibling(zip + ".listo");
+        comprimirCarpeta(m, listo);
+        borrar(m);
+        Path relativa = trabajo.relativize(m.resolveSibling(zip));
+        Path fin = destino.resolve(relativa.toString());
+        for (int i = 2; Files.exists(fin); i++) {
+            fin = fin.resolveSibling(zip.substring(0, zip.length() - 4) + " (" + i + ").zip");
+        }
+        copiarConReintentos(listo, fin);
+        Files.deleteIfExists(listo);
+    }
+
     /** Lo contrario: cada carpeta "x.zip.__zip__" vuelve a ser "x.zip" (de adentro hacia afuera).
      * Solo las de ADENTRO de {@code carpeta}: si {@code carpeta} misma termina en MARCA_ZIP (como pasa al
      * armar el ZIP final de Indexar), no se incluye, o se cerraría y se borraría a sí misma antes de tiempo

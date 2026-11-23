@@ -159,6 +159,46 @@ class NuevasTest {
     }
 
     /** Carpeta "Expediente" con 2 PDF (uno en subcarpeta) y una nota. */
+    // ------------------------------------------------------------ ZIP de salida (lo usan Indexar y Girar)
+    /** Lo que hacen Indexar y Girar con un comprimido: sus PDF se procesan en una carpeta de trabajo y al final
+     * {@link Lote#armarZipDeSalida} junta lo procesado con TODO lo demás que traía el comprimido (los PDF que no
+     * se tocaron y lo que ni siquiera es PDF) y deja el ZIP ya terminado en la carpeta que eligió el usuario. */
+    @Test
+    void armarZipDeSalidaJuntaLoProcesadoYLoQueNoSeToco() throws Exception {
+        File dir = Files.createTempDirectory("pzs").toFile();
+        File exp = contenido(dir);
+        File zip = new File(dir, "Expediente.zip");
+        try (java.util.zip.ZipOutputStream z = new java.util.zip.ZipOutputStream(Files.newOutputStream(zip.toPath()))) {
+            for (File f : List.of(new File(exp, "acta.pdf"), new File(exp, "Anexos/anexo uno.pdf"),
+                    new File(exp, "nota.txt"))) {
+                z.putNextEntry(new ZipEntry(exp.toPath().relativize(f.toPath()).toString().replace('\\', '/')));
+                Files.copy(f.toPath(), z);
+                z.closeEntry();
+            }
+        }
+        Lote L = new Lote(zip).preparar();
+        assertEquals(2, L.procesables.size(), L.procesables.toString());
+
+        java.nio.file.Path trabajo = Files.createTempDirectory("pzs_trabajo");
+        java.nio.file.Path destino = new File(dir, "Salida").toPath();
+        String marcada = "Expediente_girado.zip" + Lote.MARCA_ZIP;
+        // solo se "procesa" uno de los PDF: el otro y el .txt los tiene que poner armarZipDeSalida
+        String primero = L.procesables.get(0);
+        Lote.copiar(L.raiz.resolve(primero), trabajo.resolve(marcada).resolve(primero));
+
+        Lote.armarZipDeSalida(destino, trabajo, L, marcada);
+
+        File salida = new File(destino.toFile(), "Expediente_girado.zip");
+        assertTrue(salida.isFile(), "se armó el ZIP de salida");
+        try (ZipFile z = new ZipFile(salida)) {
+            assertNotNull(z.getEntry("acta.pdf"));
+            assertNotNull(z.getEntry("Anexos/anexo uno.pdf"));
+            assertNotNull(z.getEntry("nota.txt"), "lo que no es PDF también va");
+        }
+        assertFalse(trabajo.resolve(marcada).toFile().exists(), "se borró la carpeta marcada");
+        L.limpiar();
+    }
+
     private static File contenido(File dir) throws Exception {
         File exp = new File(dir, "Expediente");
         new File(exp, "Anexos").mkdirs();
