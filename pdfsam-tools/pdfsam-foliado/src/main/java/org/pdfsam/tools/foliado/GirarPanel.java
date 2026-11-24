@@ -1671,7 +1671,10 @@ class GirarPanel extends BorderPane {
                 origenes.add(new EnviarAHerramientaRequest.Origen(a.archivo(), a.lote(), a.marcada()));
             }
         }
-        Ui.enSegundoPlano(this, "Preparando para enviar", true, p -> {
+        // conCancelar=false: este paso es corto (copiar/armar unos pocos PDF) y no conviene que se pueda
+        // cancelar sin querer (un clic de más, o cerrar la ventanita) — antes eso cortaba la lista a la mitad
+        // en silencio y la mandaba igual, como si estuviera completa.
+        Ui.enSegundoPlano(this, "Preparando para enviar", false, p -> {
             List<File> salidas = new ArrayList<>();
             List<String> fallidos = new ArrayList<>();
             int n = copia.size();
@@ -1715,7 +1718,8 @@ class GirarPanel extends BorderPane {
             }
             p.poner(1, "");
             return new Object[] { salidas, fallidos };
-        }, res -> terminarEnvio((Object[]) res, toolId, relativas, origenes), e -> Ui.error(this, Ui.textoError(e)));
+        }, res -> terminarEnvio((Object[]) res, toolId, relativas, origenes, copia.size()),
+                e -> Ui.error(this, Ui.textoError(e)));
     }
 
     /** Solo para las pruebas: lo que falló (si algo falló) al preparar el último envío a otra pantalla. */
@@ -1723,7 +1727,7 @@ class GirarPanel extends BorderPane {
 
     @SuppressWarnings("unchecked")
     private void terminarEnvio(Object[] res, String toolId, Map<File, String> relativas,
-            List<EnviarAHerramientaRequest.Origen> origenes) {
+            List<EnviarAHerramientaRequest.Origen> origenes, int total) {
         List<File> salidas = (List<File>) res[0];
         List<String> fallidos = (List<String>) res[1];
         ultimosFallosEnvio = fallidos;
@@ -1732,6 +1736,14 @@ class GirarPanel extends BorderPane {
                 Ui.aviso(this, "No se pudo preparar ningún PDF para enviar:\n\n" + String.join("\n",
                         fallidos.subList(0, Math.min(10, fallidos.size()))));
             }
+            return;
+        }
+        // si se cerró la ventanita "Preparando para enviar" a la mitad, no hay que mandar una lista a medias
+        // como si estuviera completa: mejor avisar claro y no mandar nada, que el usuario decide si reintentar.
+        if (salidas.size() + fallidos.size() < total) {
+            Ui.aviso(this, "Se interrumpió antes de terminar: solo se alcanzaron a preparar " + salidas.size()
+                    + " de " + total + " PDF. No se envió nada todavía; vuelva a intentarlo sin cerrar la "
+                    + "ventanita de \"Preparando para enviar\" hasta que termine.");
             return;
         }
         eventStudio().broadcast(new EnviarAHerramientaRequest(toolId, salidas, relativas, origenes));
