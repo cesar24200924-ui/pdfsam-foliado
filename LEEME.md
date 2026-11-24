@@ -5,7 +5,7 @@ cualquier conversación nueva (con Claude o con quien sea) lea SOLO este archivo
 programa, cómo trabajar con el usuario, cómo está hecho por dentro, qué cuidados hay que tener al programar,
 qué ya se decidió (para no volver a preguntarlo) y qué falta.
 
-Última actualización: **23 de noviembre de 2026**.
+Última actualización: **24 de noviembre de 2026**.
 
 ---
 
@@ -124,7 +124,7 @@ pdfsam-tools/pdfsam-foliado/src/main/java/org/pdfsam/tools/foliado/
 | `ManualPanel` | El manual dentro del programa; lee el mismo HTML que viene en el portable. |
 | `VistaPrevia`, `Controles`, `Ui`, `LetrasInstaladas` | Piezas de pantalla y utilidades. |
 | `Comprobar` | Revisión del programa ya armado: abre un comprimido y dice cuántos archivos trae. |
-| `EnviarAHerramientaRequest` | Evento (record) para el enlace entre Girar, Indexar y Foliar: lleva el `destino` (TOOL_ID) y la lista de archivos. Ver "Enlace entre Girar, Indexar y Foliar" más abajo. |
+| `EnviarAHerramientaRequest` | Evento (record) para el enlace entre Girar, Indexar y Foliar: lleva el `destino` (TOOL_ID), la lista de archivos, y desde el 24/11/2026 también `relativas` (ruta dentro del comprimido de origen, para cada archivo que venía de uno) y `origenes` (de qué `Lote`/comprimido original viene cada grupo, para que la pantalla destino arme un solo ZIP de salida en vez de dejar PDF sueltos). Ver "Enlace entre Girar, Indexar y Foliar" más abajo. |
 
 ### Enlace entre Girar, Indexar y Foliar
 
@@ -142,6 +142,18 @@ usan el bus de eventos que ya trae PDFsam, sin tocar nada de la lógica propia d
   llegó — igual que si el usuario lo hubiera agregado a mano.
 - Girar manda sus archivos **ya armados** (con las hojas tal como quedaron: giradas, quitadas, insertadas…)
   a una carpeta temporal, igual que al guardar; los que no se tocaron se copian tal cual.
+- **Desde el 24/11/2026, el botón siempre pregunta primero** ("¿Lleva los archivos o va con la pantalla
+  vacía?", `Ui.elegir`) antes de mandar nada — antes decidía solo, sin avisar, y a veces parecía que el botón
+  "no respondía" (en realidad sí cambiaba de pantalla, pero sin decir nada). Esto está en un método wrapper
+  nuevo (`confirmarYEnviarA` en Girar, `confirmarYArreglarEnGirar` en Indexar y en Foliar) que llama al método
+  real (`enviarA`/`arreglarEnGirar`) solo si el usuario elige "Llevar los archivos" — las pruebas siguen
+  llamando al método real directo, sin pasar por el diálogo (ver sección 11).
+- **Girar es la única de las tres que necesita armar los PDF antes de mandarlos** (tiene que aplicar las
+  páginas giradas/insertadas primero), así que `enviarA` usa `Ui.enSegundoPlano` con una ventanita
+  "Preparando para enviar...". Indexar y Foliar no modifican el PDF antes de mandarlo, así que mandan la lista
+  directo, sin ese paso. **Ojo con esa ventanita**: ver el cuidado nuevo en la sección 7 sobre cancelación
+  silenciosa — fue la causa real de un bug donde a veces hacía falta darle doble clic al botón, o llegaban
+  menos PDF de los que se mandaron (6 de 8, sin ningún aviso).
 - **Ojo con los diálogos modales (`Ui.aviso`, `Ui.error`, `Ui.pregunta`) dentro de un `@EventListener` que se
   dispara desde el callback de `Ui.enSegundoPlano` de OTRO panel:** si el diálogo se muestra de forma
   sincrónica ahí mismo (`showAndWait()`), bloquea el hilo de JavaFX **antes** de que el panel que mandó el
@@ -267,8 +279,14 @@ Si solo pide el código fuente, un solo ZIP (o uno por programa) con el código,
    Usar `Lote.armarZipDeSalida`, que ya hace esto bien.
 8. **Nunca escribir encima de los originales.** Antes de guardar en lote se comprueba que la carpeta de
    salida no contenga ningún archivo original, y se avisa en palabras claras.
-9. **Los comprimidos se extraen AL LADO del original** y **no** se borran al terminar (quedan como carpeta
-   normal, con "(2)", "(3)"… si ya existía).
+9. **Los comprimidos se extraen AL LADO del original**, con "(2)", "(3)"… si ya existía esa carpeta
+   (`Lote.carpetaExtraida`). **Desde el 24/11/2026 esa carpeta SE BORRA SOLA** (`Lote.limpiar()`) en cuanto el
+   `Lote` ya no hace falta — al terminar bien, al cancelar, o cuando la pantalla que la recibió por el puente
+   (sección 4) ya terminó de leerla. Antes quedaba sin borrar "por si alguien la quería revisar", pero eso
+   dejaba una carpeta descomprimida suelta junto al ZIP/RAR original en cada uso, que el usuario no quería. Si
+   se toca el guardado de Girar o Indexar, hay que seguir llamando `a.lote().limpiar()` justo DESPUÉS de que
+   `armarZip`/`armarZipDeSalida` ya terminó de leer esa carpeta (si se llama antes de tiempo, se borra algo que
+   todavía hacía falta).
 10. **Tema claro y tema oscuro:** revisar los colores en los dos. Hay CSS propio en
     `src/main/resources/org/pdfsam/tools/foliado/*.css`.
 11. **La palabra "Curiosity" no debe aparecer** en la versión Auditoría PDF (es otro proyecto del usuario).
@@ -282,6 +300,31 @@ Si solo pide el código fuente, un solo ZIP (o uno por programa) con el código,
     que revisar que no se rompan.
 16. **No hay checkstyle**, así que el estilo no rompe el build, pero el código del proyecto va con líneas de
     ~120 caracteres y comentarios en español. Seguir ese estilo.
+17. **`Ui.enSegundoPlano` y la cancelación silenciosa.** El parámetro `conCancelar` solo controla si el botón
+    "Cancelar" se VE — pero **cerrar la ventanita (la X) cuenta como cancelar siempre**, tenga o no botón
+    visible (`s.setOnCloseRequest` está puesto sin condición). Si el `trabajo` de adentro hace un
+    `for (...) { if (p.cancelado()) break; ... }` y el código que recibe el resultado no distingue "se
+    completó todo" de "se cortó a la mitad", un resultado parcial se puede terminar usando como si fuera
+    completo, **sin ningún aviso**. Esto pasó de verdad: al mandar archivos de Girar a Indexar, un clic de más
+    (o cerrar sin querer esa ventanita) cortaba la preparación a la mitad y los PDF que sí se alcanzaron a
+    preparar se mandaban igual, como si estuviera completo. Se corrigió en `GirarPanel.enviarA`/
+    `terminarEnvio`: (1) ese paso puntual ya no se puede cancelar (`conCancelar=false`), y (2) como cerrar la
+    ventana igual cuenta como cancelación pase lo que pase, `terminarEnvio` compara cuántos PDF se alcanzaron
+    a procesar contra el total esperado y, si no coincide, avisa claro y no manda nada (en vez de mandar una
+    lista incompleta). **Si se encuentra el mismo patrón en otro lado** (por ejemplo los guardados principales
+    "Girando"/"Indexando" en `GirarPanel.guardarTodos()`/`IndexarPanel.procesar()` tienen una estructura
+    parecida, aunque no fue reportado como bug todavía — ver sección 10), conviene aplicar la misma idea: quitar
+    la cancelación si el paso es corto, o avisar claro cuando el resultado quedó incompleto.
+18. **Guardar en la misma carpeta de los originales.** Desde el 24/11/2026 Girar e Indexar permiten guardar en
+    la MISMA carpeta donde está el comprimido (ZIP/RAR) de origen: es seguro porque la salida siempre lleva un
+    nombre distinto (`_indexado.zip`/`_girado.zip`, con "(2)" si ya existe). El riesgo real es **solo** con PDF
+    sueltos (sin comprimido): si el nombre de salida coincide EXACTO con el original y además tiene cambios que
+    reescribir, ahí sí se bloquea (mensaje claro). Si se toca esta lógica, no volver a poner un bloqueo "por
+    carpeta completa" como había antes (bloqueaba también los casos seguros).
+19. **PDF sueltos: ¿ZIP, carpeta o los dos?** Con 2+ PDF sueltos (sin comprimido) en Girar o Indexar, al
+    guardar siempre pregunta (`Ui.elegir3`, "Solo ZIP" resaltado de fábrica) — ver `Lote.finalizarSueltos`. Con
+    0 o 1 suelto no pregunta nada (se guarda directo, como siempre). Está entrelazado con el cuidado 18: con
+    "Solo ZIP" elegido no hay riesgo de pisar el original porque nada se escribe suelto en la carpeta destino.
 
 ---
 
@@ -312,10 +355,61 @@ Si solo pide el código fuente, un solo ZIP (o uno por programa) con el código,
     entró a Girar desde el menú o desde otra pantalla.
   - Las tres herramientas **deben seguir funcionando de forma completamente independiente**: el enlace es
     un atajo opcional, nunca una dependencia obligatoria entre ellas.
+- **Carpetas descomprimidas, guardado en la misma carpeta, y PDF sueltos** (decidido el 24/11/2026):
+  - La carpeta extraída al lado de un comprimido **nunca** debe quedar, bajo ninguna circunstancia, en
+    ninguna de las tres herramientas (antes era al revés: se dejaba a propósito).
+  - Se debe poder guardar en la misma carpeta donde está el ZIP/RAR original.
+  - Con 2+ PDF sueltos (sin comprimido), preguntar siempre si el resultado va en ZIP, carpeta, o los dos
+    ("Solo ZIP" resaltado de fábrica, pero la pregunta sale siempre con 2 o más).
+  - Los botones de enlace entre pantallas deben preguntar siempre "¿lleva los archivos o va en blanco?" en
+    vez de decidir solos — esto aplica a Foliar, Girar e Indexar por igual, en cualquier combinación.
 
 ---
 
 ## 9. Historial de mejoras
+
+### Entrega del 2026-11-24 — Carpetas sueltas, guardar junto al original, ZIP/carpeta, y confirmación de enlace
+
+**El pedido** (5 reportes del usuario probando el portable, dados "solo para que los lea" al principio, sin
+tocar nada hasta confirmar la lista completa):
+
+1. Al usar el puente Girar→Indexar, quedaba una carpeta descomprimida en el Escritorio junto al ZIP/RAR
+   original — "en ninguna circunstancia" debía quedar, en las tres herramientas por igual.
+2. Al guardar algo que venía de un comprimido, no dejaba elegir la misma carpeta donde estaba el ZIP/RAR
+   original.
+3. Con 2+ PDF sueltos (sin comprimido) en Indexar, Girar o Foliar, no preguntaba si guardar en ZIP o
+   individuales (ya se había decidido antes, pero no estaba implementado).
+4. Los botones de enlace a veces no respondían al primer clic.
+5. Propuesta del usuario para el punto 4: que el botón siempre pregunte "¿llevo los archivos o voy en
+   blanco?" en vez de decidir solo — en las tres pantallas, en cualquier combinación.
+
+**Lo que se hizo:**
+
+- `Lote.limpiar()` ahora borra `carpetaExtraida` (antes solo cerraba los ZIP internos y dejaba la carpeta).
+  Se llama explícitamente en `GirarPanel`/`IndexarPanel` justo después de que `armarZip`/`armarZipDeSalida`
+  ya leyó todo lo que hacía falta de esa carpeta, para cada `Abierto` usado en el guardado.
+- El bloqueo "no se puede guardar en la carpeta de los originales" pasó de ser por CARPETA completa a ser por
+  ARCHIVO exacto: ahora permite guardar en la misma carpeta del comprimido original (la salida siempre lleva
+  otro nombre), y solo avisa si un PDF suelto sin comprimido quedaría exactamente sobre su original.
+- `Lote.finalizarSueltos(destino, formatoSueltos, trabajoSueltos, sufijo)` (método nuevo, reutilizado por
+  Girar e Indexar): con 2+ PDF sueltos, pregunta con `Ui.elegir3` (mismo estilo que ya usaba `LoteUi` para los
+  lotes) si el resultado va en ZIP nuevo, en la carpeta elegida, o en los dos.
+- Los tres botones de enlace ahora pasan por un método "confirmar" nuevo
+  (`confirmarYEnviarA` en Girar, `confirmarYArreglarEnGirar` en Indexar y en Foliar) que pregunta con
+  `Ui.elegir` antes de llamar al método real — las pruebas siguen llamando al método real directo (sin pasar
+  por el diálogo), así que no hubo que tocar ninguna prueba existente para este punto.
+- **La causa real del punto 4** (investigada después, con el usuario confirmando que SÍ veía la ventanita de
+  "llevar o en blanco" pero algo fallaba, y que en el caso de 8→6 PDF ya los había editado antes de mandarlos
+  — no fue un problema de la tabla todavía cargando): ver el cuidado 17 de la sección 7. Un clic de más (o
+  cerrar) la ventanita de "Preparando para enviar" cancelaba en silencio, cortando la lista a la mitad sin
+  ningún aviso, y esa lista incompleta se mandaba igual, como si fuera el resultado completo. Corregido en
+  `GirarPanel.enviarA`/`terminarEnvio`.
+
+**Pruebas nuevas:** `NuevasTest.extraeComprimidoAlLadoDelArchivoYConNombreLibre` (actualizada: ahora comprueba
+que la carpeta extraída SÍ se borra al terminar, antes comprobaba lo contrario) y
+`NuevasTest.finalizarSueltosSegunFormatoElegido` (los 4 casos: zip, zip con nombre repetido, ambos, carpeta).
+
+### Entrega del 2026-11-23 — Enlace entre Girar, Indexar y Foliar
 
 ### Entrega del 2026-11-23 — Enlace entre Girar, Indexar y Foliar
 
@@ -428,10 +522,18 @@ tramo con separadores, o JSON con una librería chica).
 La Mejora 2 cubrió Foliar y Girar reusando `LoteUi`. Indexar tiene su propia lista (`Item`/`EditorHojas`),
 que ya deja ver y editar uno por uno, pero no tiene el incluir/excluir ni el Subir/Bajar.
 
-### 10.3 Las 3 opciones de resultado en Indexar
-Indexar guarda cada PDF suelto directo en la carpeta elegida y solo arma ZIP para lo que vino de un
-comprimido. Darle las mismas 3 opciones que tienen Foliar y Girar (Solo ZIP / ZIP y carpeta / Solo carpeta)
-requiere que escriba primero a una carpeta temporal, como ya hace `Lote`.
+### 10.3 (resuelto el 24/11/2026) Las 3 opciones de resultado en Indexar y Girar con PDF sueltos
+Ya implementado: `Lote.finalizarSueltos` + la pregunta `Ui.elegir3` en `IndexarPanel.procesar()` y
+`GirarPanel.guardarTodos()`. Ver la entrega del 24/11/2026, sección 9.
+
+### 10.7 Revisar el mismo patrón de cancelación silenciosa en los guardados principales
+El cuidado 17 de la sección 7 (un `for` con `if (p.cancelado()) break;` cuyo resultado parcial se puede usar
+sin aviso) se corrigió en `GirarPanel.enviarA`/`terminarEnvio` (botones de enlace), pero **no** se revisó
+todavía si el mismo riesgo existe en los guardados principales
+(`GirarPanel.guardarTodos()`/`IndexarPanel.procesar()`, títulos "Girando"/"Indexando"), que tienen una
+estructura de loop parecida y sí dejan ver el botón "Cancelar". No fue reportado como bug real por el usuario
+todavía, así que no se tocó sin que él lo pida — queda anotado para revisar si alguna vez reporta algo
+parecido (un guardado que "faltó" algún PDF sin ningún error).
 
 ### 10.4 Amigabilidad (de entregas anteriores, sigue en pie)
 Botón "Personalizar ✎" con pasos numerados, bienvenida de 3 pasos, "Volver a lo de fábrica", "¿Cómo se
@@ -543,3 +645,20 @@ paso de la cadena (evento recibido → función que procesa → justo antes y de
 cuál de esos pasos se quedó la última vez — no hace falta ver el código de la librería de eventos para
 encontrarlo así. La corrección es mostrar esos diálogos con `Platform.runLater(...)` en vez de mostrarlos
 directo.
+
+**Un botón que lanza un trabajo en segundo plano (`Ui.enSegundoPlano`) a veces parece "no responder" al
+primer clic, o el resultado llega incompleto sin ningún error. ¿Qué reviso primero?**
+Revise si el `trabajo` tiene un loop con `if (p.cancelado()) break;` y si el código que recibe el resultado
+distingue "se completó todo" de "se cortó a la mitad". `s.setOnCloseRequest` en `Ui.enSegundoPlano` cancela
+SIEMPRE que se cierre la ventanita (tenga o no botón "Cancelar" visible), así que un clic de más sobre esa
+ventanita, o cerrarla sin querer, corta el trabajo a la mitad en silencio. Si nadie compara el resultado
+parcial contra el total esperado, ese resultado incompleto se puede terminar usando como si fuera completo.
+Ver el cuidado 17 de la sección 7 y la entrega del 24/11/2026 (el bug real fue: "Ir a Indexar" a veces
+necesitaba dos clics, y una vez llegaron 6 de 8 PDF sin ningún aviso).
+
+**¿Por qué antes se dejaba la carpeta descomprimida de un comprimido sin borrar, y ahora sí se borra?**
+Al principio (Mejora 1, 14/11/2026) se decidió dejarla "por si el usuario la quería revisar o reusar". El
+24/11/2026 el usuario pidió lo contrario: que nunca quede, bajo ninguna circunstancia, en ninguna de las tres
+herramientas — es trabajo interno, no algo que él necesite ver. Si en algún momento alguien pregunta por qué
+`Lote.limpiar()` borra `carpetaExtraida` cuando el comentario viejo decía lo contrario, es por este cambio de
+decisión, no un descuido.
