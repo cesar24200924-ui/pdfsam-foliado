@@ -10,6 +10,7 @@ package org.pdfsam.tools.foliado;
 
 import org.kordamp.ikonli.unicons.UniconsLine;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -471,8 +472,10 @@ class IndexarPanel extends BorderPane {
                 origenes.add(new EnviarAHerramientaRequest.Origen(a.archivo(), a.lote(), a.marcada()));
             }
         }
-        eventStudio().broadcast(new EnviarAHerramientaRequest(GirarTool.TOOL_ID, actuales, relativas, origenes));
+        // primero se abre Girar y recién ahí se manda la lista: igual que con "Ir a Indexar", si Girar no se
+        // había abierto nunca en esta sesión, su "oreja" no existe todavía y la lista se perdía en el aire.
         eventStudio().broadcast(new SetActiveContentItemRequest(GirarTool.TOOL_ID));
+        eventStudio().broadcast(new EnviarAHerramientaRequest(GirarTool.TOOL_ID, actuales, relativas, origenes));
     }
 
     /** Llega desde Girar (botón "Ir a Indexar"): borra la lista actual y queda solo con la nueva. Si alguno de
@@ -969,6 +972,10 @@ class IndexarPanel extends BorderPane {
 
     private void agregar(List<File> rutas, List<Item> deComprimidos) {
         List<Item> nuevos = new ArrayList<>(deComprimidos);
+        // lo que se descarta antes de intentar agregarlo (no es PDF, o no se encontró), para avisar al final en
+        // vez de quedarse callado: antes, un archivo así desaparecía sin dejar ni rastro ni en pantalla ni en el
+        // registro, y parecía que "no había pasado" sin ninguna pista de por qué.
+        List<String> noValidos = new ArrayList<>();
         for (File r : rutas) {
             if (r.isDirectory()) {
                 Path carpeta = r.getAbsoluteFile().toPath();
@@ -984,31 +991,61 @@ class IndexarPanel extends BorderPane {
                 }
             } else if (r.isFile() && r.getName().toLowerCase(Locale.ROOT).endsWith(".pdf")) {
                 nuevos.add(new Item(r.getAbsoluteFile(), r.getName()));
+            } else if (!r.exists()) {
+                noValidos.add(r.getName() + ": no se encontró el archivo.");
+            } else if (r.isFile()) {
+                noValidos.add(r.getName() + ": no es un PDF (debe terminar en .pdf).");
             }
         }
         Set<String> existentes = new HashSet<>();
         for (Item it : items) {
             existentes.add(it.origen().getAbsolutePath().toLowerCase(Locale.ROOT));
         }
+        // los que sí eran PDF válidos pero no se agregaron porque ya estaban en la lista (mismo archivo repetido)
+        List<String> repetidos = new ArrayList<>();
         int agregados = 0;
         for (Item it : nuevos) {
             if (existentes.add(it.origen().getAbsolutePath().toLowerCase(Locale.ROOT))) {
                 items.add(it);
                 agregados++;
+            } else {
+                repetidos.add(Lote.nombreVisible(it.relativa()) + ": ya estaba en la lista, no se repitió.");
             }
         }
         if (agregados == 0) {
-            if (nuevos.isEmpty()) {
+            if (nuevos.isEmpty() && noValidos.isEmpty()) {
                 Ui.aviso(this, "No se encontraron archivos PDF.");
+            } else if (!noValidos.isEmpty() || !repetidos.isEmpty()) {
+                avisarDescartados(noValidos, repetidos);
             }
             return;
+        }
+        if (!noValidos.isEmpty() || !repetidos.isEmpty()) {
+            avisarDescartados(noValidos, repetidos);
         }
         lista.getItems().setAll(items);
         lblArchivos.setText(items.size() + " archivos PDF");
         btnIndexar.setDisable(false);
         if (items.size() == agregados) {
-            verArchivo(0);
+            // se deja para después de que la lista termine de dibujarse: pedido en el mismo instante en que esta
+            // pantalla recién se está mostrando (p.ej. al llegar de Girar con "Ir a Indexar"), el "ir arriba" a
+            // veces no se aplicaba todavía y la lista quedaba mostrando la mitad de abajo, con los primeros
+            // archivos (que sí estaban cargados, el contador de abajo nunca mintió) fuera de la vista hasta que
+            // uno mismo subía la barra a mano.
+            Platform.runLater(() -> verArchivo(0));
         }
+    }
+
+    /** Avisa con nombre y motivo de los archivos que se descartaron al agregar (en vez de quedarse callado como
+     * antes): los que no se encontraron o no eran PDF, y los que venían repetidos (mismo archivo ya en la lista,
+     * por ejemplo por un nombre que coincide con otro dentro de un comprimido). */
+    private void avisarDescartados(List<String> noValidos, List<String> repetidos) {
+        List<String> todo = new ArrayList<>();
+        todo.addAll(noValidos);
+        todo.addAll(repetidos);
+        Ui.aviso(this, "Algunos archivos no se agregaron:\n\n" + String.join("\n",
+                todo.subList(0, Math.min(10, todo.size())))
+                + (todo.size() > 10 ? "\n... y " + (todo.size() - 10) + " más." : ""));
     }
 
     private void limpiar() {

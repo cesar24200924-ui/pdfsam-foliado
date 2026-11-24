@@ -571,7 +571,10 @@ class GirarPanel extends BorderPane {
         lista.getItems().setAll(items);
         lblArchivos.setText(items.size() + (items.size() == 1 ? " archivo PDF" : " archivos PDF"));
         if (items.size() == agregados) {
-            verArchivo(0);
+            // se deja para después de que la lista termine de dibujarse (ver el mismo comentario en
+            // IndexarPanel.agregar): si no, al llegar aquí recién mostrada la pantalla la lista a veces quedaba
+            // mostrando la mitad de abajo, con los primeros archivos fuera de la vista.
+            Platform.runLater(() -> verArchivo(0));
         } else {
             actualizarSeleccion();
         }
@@ -1746,8 +1749,12 @@ class GirarPanel extends BorderPane {
                     + "ventanita de \"Preparando para enviar\" hasta que termine.");
             return;
         }
-        eventStudio().broadcast(new EnviarAHerramientaRequest(toolId, salidas, relativas, origenes));
+        // primero se abre la pantalla de destino y recién ahí se manda la lista: si la pantalla (p.ej. Indexar)
+        // no se había abierto nunca en esta sesión, su "oreja" que escucha este aviso no existe todavía hasta que
+        // se crea la pantalla, y la lista se perdía en el aire (quedaba vacía a la primera, había que repetir
+        // "Ir a Indexar" una segunda vez para que ahí sí la tomara).
         eventStudio().broadcast(new SetActiveContentItemRequest(toolId));
+        eventStudio().broadcast(new EnviarAHerramientaRequest(toolId, salidas, relativas, origenes));
         if (!fallidos.isEmpty()) {
             Ui.aviso(this, "Algunos PDF no se pudieron preparar para enviar:\n\n" + String.join("\n",
                     fallidos.subList(0, Math.min(10, fallidos.size()))));
