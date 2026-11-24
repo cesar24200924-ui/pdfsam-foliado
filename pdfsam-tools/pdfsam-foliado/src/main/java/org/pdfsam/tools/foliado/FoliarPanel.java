@@ -328,8 +328,10 @@ class FoliarPanel extends BorderPane {
         if (archivo == null) {
             return;
         }
-        eventStudio().broadcast(new EnviarAHerramientaRequest(GirarTool.TOOL_ID, List.of(archivo)));
+        // primero se abre Girar y recién ahí se manda el archivo: si Girar no se había abierto nunca en esta
+        // sesión, su "oreja" no existe todavía y el envío se perdía en el aire.
         eventStudio().broadcast(new SetActiveContentItemRequest(GirarTool.TOOL_ID));
+        eventStudio().broadcast(new EnviarAHerramientaRequest(GirarTool.TOOL_ID, List.of(archivo)));
     }
 
     /** Llega desde Girar (botón "Ir a Foliar"): borra lo que hubiera y abre el primero de los que llegaron
