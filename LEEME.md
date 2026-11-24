@@ -325,6 +325,12 @@ Si solo pide el código fuente, un solo ZIP (o uno por programa) con el código,
     guardar siempre pregunta (`Ui.elegir3`, "Solo ZIP" resaltado de fábrica) — ver `Lote.finalizarSueltos`. Con
     0 o 1 suelto no pregunta nada (se guarda directo, como siempre). Está entrelazado con el cuidado 18: con
     "Solo ZIP" elegido no hay riesgo de pisar el original porque nada se escribe suelto en la carpeta destino.
+20. **Orden de los dos `broadcast` al cambiar de pantalla.** Siempre `SetActiveContentItemRequest` primero y
+    `EnviarAHerramientaRequest` después, nunca al revés. La pantalla de destino (`GirarPanel`/`IndexarPanel`/
+    `FoliarPanel`) se crea de forma perezosa y recién al final de su constructor se registra con
+    `eventStudio().addAnnotatedListeners(this)`; si se manda el aviso con los archivos antes de que la pantalla
+    exista, nadie lo escucha y se pierde en el aire sin ningún error. Si se agrega un cuarto botón de enlace en
+    el futuro, mantener este mismo orden.
 
 ---
 
@@ -367,6 +373,53 @@ Si solo pide el código fuente, un solo ZIP (o uno por programa) con el código,
 ---
 
 ## 9. Historial de mejoras
+
+### Entrega del 2026-11-24 (tarde) — Doble clic al cambiar de pantalla, lista escondida, y aviso de archivos descartados
+
+**El pedido:** el usuario reportó que "Ir a Indexar" a veces no llevaba los archivos a la primera (había que
+darle dos veces), y que a veces, al llegar a Indexar, los primeros 1 o 2 archivos parecían no haber pasado
+(contó 6 de 8). Se investigó con varias rondas de capturas de pantalla y archivos de prueba antes de tocar
+nada, como pide la sección 2.
+
+**Lo que resultó ser, confirmado por el usuario con sus propias capturas:** los archivos **siempre** estuvieron
+los 8 — el contador de abajo nunca mintió. Lo que pasaba es que la lista de `ListView` quedaba con la barra de
+desplazamiento corrida hacia abajo, escondiendo los primeros 1-2 archivos arriba. No se perdió ningún
+expediente en ningún momento.
+
+**Lo que sí era un bug real, encontrado aparte:** el doble clic en los tres botones de enlace (`GirarPanel`
+→ Indexar/Foliar, `IndexarPanel`/`FoliarPanel` → Girar). Es un bug **distinto** del de la cancelación
+silenciosa de la entrega de la mañana (ver el punto siguiente, ya documentado en la sección 7 y 9 de antes):
+este es de orden de eventos, no de cancelación.
+
+**Causa:** en los tres lugares, el código mandaba `eventStudio().broadcast(new EnviarAHerramientaRequest(...))`
+**antes** de `eventStudio().broadcast(new SetActiveContentItemRequest(...))`. Los tres paneles
+(`GirarPanel`/`IndexarPanel`/`FoliarPanel`) se crean de forma perezosa (`Tool.panel()`, llamado desde
+`AppContentController.onSetActiveContentItem`) y solo ahí, al final de su constructor, se registran con
+`eventStudio().addAnnotatedListeners(this)`. Si la pantalla de destino nunca se había abierto en esa sesión,
+el `EnviarAHerramientaRequest` se mandaba a un panel que todavía no existía (nadie escuchando) y se perdía en
+el aire; recién el segundo clic funcionaba porque para entonces el panel ya se había creado la primera vez
+(aunque fuera con la lista vacía).
+
+**Arreglo:** se invirtió el orden en los tres lugares — primero `SetActiveContentItemRequest` (que crea la
+pantalla si hace falta), después `EnviarAHerramientaRequest`.
+
+**Arreglo adicional (cosmético, preventivo):** en `GirarPanel.agregar` e `IndexarPanel.agregar`, el
+`verArchivo(0)` (que selecciona y hace scroll al primer archivo) ahora se envuelve en `Platform.runLater(...)`,
+para que se aplique después de que la lista termine de dibujarse — por si el "ir arriba" se pedía demasiado
+pronto, en el mismo instante en que la pantalla recién se estaba mostrando.
+
+**Arreglo adicional (preventivo, no fue la causa real):** `IndexarPanel.agregar` ya no descarta archivos en
+silencio (no encontrado, no es `.pdf`, o repetido): ahora avisa con el nombre y el motivo. No se encontró
+ningún caso real donde esto estuviera pasando — se agregó para que, si alguna vez vuelve a parecer que
+"faltan" archivos, el programa lo diga en vez de quedarse callado como pasó esta vez (costó varias rondas de
+descartar PDF, ZIP y rearmado antes de notar, por las propias capturas del usuario, que la lista solo estaba
+desplazada).
+
+**Pruebas:** no se agregó ninguna prueba de pantalla nueva para el reordenamiento de eventos, porque las
+pruebas existentes (`PantallasTest`) llaman a los métodos reales (`enviarA`/`arreglarEnGirar`) directo, sin
+pasar por `AppContentController` ni por la creación perezosa del panel — ese es justamente el camino donde
+vivía el bug. **Queda pendiente** evaluar una prueba que sí pase por `AppContentController` para cubrir este
+camino (ver sección 10).
 
 ### Entrega del 2026-11-24 — Carpetas sueltas, guardar junto al original, ZIP/carpeta, y confirmación de enlace
 
@@ -534,6 +587,14 @@ todavía si el mismo riesgo existe en los guardados principales
 estructura de loop parecida y sí dejan ver el botón "Cancelar". No fue reportado como bug real por el usuario
 todavía, así que no se tocó sin que él lo pida — queda anotado para revisar si alguna vez reporta algo
 parecido (un guardado que "faltó" algún PDF sin ningún error).
+
+### 10.8 Prueba que cubra el camino real del enlace entre pantallas (vía `AppContentController`)
+El bug del doble clic (entrega del 24/11/2026, tarde) vivía en el orden de los dos `broadcast` al cambiar de
+pantalla (ver cuidado 20). Las pruebas de `PantallasTest` para el enlace llaman a los métodos reales
+(`enviarA`/`arreglarEnGirar`) directo, sin pasar por `AppContentController.onSetActiveContentItem` ni por la
+creación perezosa del panel de destino — ese es justo el camino donde vivía el bug, así que esas pruebas no lo
+habrían detectado. Falta una prueba que sí simule una sesión real (sin abrir antes la pantalla de destino) y
+confirme que los archivos llegan al primer clic.
 
 ### 10.4 Amigabilidad (de entregas anteriores, sigue en pie)
 Botón "Personalizar ✎" con pasos numerados, bienvenida de 3 pasos, "Volver a lo de fábrica", "¿Cómo se
